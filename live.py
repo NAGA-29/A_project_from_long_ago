@@ -23,6 +23,7 @@ from Components.lines import lines
 from Components.tweet import tweet_components
 from Components.screenshot import ScreenShot
 from ImageProcessing.photoFabrication import PhotoFabrication
+from Components import bitly
 
 '''
 Initial Setting
@@ -281,7 +282,7 @@ while True:
                                     if int(concurrentViewers) >= _VIEWER:
                                         compared_point = (int(concurrentViewers)//_DIVISION_VIEWER)
                                         if (dt_now - live_table['notification_last_time_at']).seconds >= _NOTIFICATION_SEC or compared_point > live_table['compared_point']:
-                                            message = '✨{}✨\n{}\n\n{} \n\n現在ホットなLIVE!!🔥{}人が視聴中!!👀\n{}'.format(live_table['holo_name'], tag, live_title, concurrentViewers,live_table['channel_url'])
+                                            message = '✨{}✨\n{}\n\n{} \n\n現在ホットなLIVE!!🔥{}人が視聴中!!👀\n{}'.format(live_table['holo_name'], tag, live_title, concurrentViewers,bitly.make_yURL(live_table['channel_url']) )
                                             '''
                                             DBに対応画像があるか確認
                                             live_table[11] : 最大サイズ画像URL
@@ -295,8 +296,6 @@ while True:
                                             img_path = (live_table['image_L'] if live_table['image_L'] else live_table['image_default'])
                                             photo.imgTrim(img_path)
                                             tweet.tweetWithIMG(message,img_path,TRIM_IMG_DIR)
-                                            # tweetWithIMG(message,img_path)
-                                            # tweetWithIMG(message,live_table[12])
                                             print(message)
                                             
                                     print('<<{}>> {}  LIVE中!!! {}人が視聴中!!'.format(live_table['holo_name'], tubeTabelOne[0]['title'], concurrentViewers))

@@ -11,7 +11,10 @@ load_dotenv(dotenv_path)
 #bitly本番アカウント
 ACCESS_TOKEN = os.environ.get('BITLY_ACCESS_TOKEN')
 
-###Bitly(url短縮サービス)____________________________________
+
+'''
+Bitly(url短縮サービス)_
+'''
 def get_shortenURL(longUrl:str):
 
     url = "https://api-ssl.bitly.com/v4/shorten"
@@ -28,3 +31,11 @@ def get_shortenURL(longUrl:str):
 
     r = requests.post(url, json= query, headers= headers)
     return r.json()['link']
+
+
+'''
+Youtube専用 短縮URL
+'''
+def make_yURL(l_URL:str):
+	_list = l_URL.split('=')
+	return 'https://youtu.be/' + _list[1]

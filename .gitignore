@@ -1,0 +1,16 @@
+/.env
+/logs/
+/Trim_images/
+/live_temporary_image/
+/live_thumbnail_image/
+/other_temporaryimage/
+/screenshot_image/
+/Trim_images/
+chromdriver
+/.history/
+/client_secrets.json
+/client_secrets01.json
+/client_secrets02.json
+/Hololive-Project-53189f1c6d5f.json
+/hololive-project-283213-104af0cbb175.json
+/chromdriver

@@ -231,7 +231,7 @@ def searchSubscriber():
                         # Hololive
                         profile = hSql.selectHolo(channel_ID)
                         if subJudge(int(subscriberCount), profile):
-                            message = '速報！！ ✨{}チャンネル✨\n{}\n\nチャンネル登録者が\n🎉{}万人到達!!!🎉`\nおめでとう!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_url'])
+                            message = '速報！！ ✨{}チャンネル✨\n{}\n\nチャンネル登録者が\n🎉{}万人到達!!!🎉`\nおめでとう!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloJP_ProfileTable(channel_ID, channel_info_list)
@@ -239,7 +239,7 @@ def searchSubscriber():
                         # Hololive 海外
                         profile = hSql.selectOSHolo(channel_ID)
                         if subJudge(int(subscriberCount), profile):
-                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達!!!🎉`\nおめでとう!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_url'])
+                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達!!!🎉`\nおめでとう!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloOS_ProfileTable(channel_ID, channel_info_list)
@@ -247,7 +247,7 @@ def searchSubscriber():
                         # Friends
                         profile = hSql.selectFriendsHolo(channel_ID)
                         if subJudge(int(subscriberCount), profile):
-                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達！！🎉`\nおめでとうございます!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_url'])
+                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達！！🎉`\nおめでとうございます!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloFri_ProfileTable(channel_ID, channel_info_list)
