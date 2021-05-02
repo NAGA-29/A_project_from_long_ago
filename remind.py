@@ -182,12 +182,13 @@ def getLiveTag(ID:str)->str:
     elif ID == 'UC8NZiqKx6fsDT3AVcMiVFyA' : HoloName, live_tag, holo_tag  = '犬山たまき', '#犬山たまき', '🐶'
     elif ID == 'UCC0i9nECi4Gz7TU63xZwodg' : HoloName, live_tag, holo_tag  = '白雪みしろ', '#白雪みしろ', '❄️'
     elif ID == 'UCJCzy0Fyrm0UhIrGQ7tHpjg' : HoloName, live_tag, holo_tag  = '愛宮みるく', '#愛宮みくる', '🍼'
-    elif ID == 'UCle1cz6rcyH0a-xoMYwLlAg' : HoloName, live_tag, holo_tag  = '姫咲ゆずる', '姫咲ゆずる', '🐰'
+    elif ID == 'UCle1cz6rcyH0a-xoMYwLlAg' : HoloName, live_tag, holo_tag  = '姫咲ゆずる', '#姫咲ゆずる', '🐰'
     elif ID == 'UCLyTXfCZtl7dyhta9Jg3pZg' : HoloName, live_tag, holo_tag  = '鬼灯わらべ', '#鬼灯わらべ', '👹'
     elif ID == 'UCH11P1Hq4PXdznyw1Hhr3qw' : HoloName, live_tag, holo_tag  = '夢乃リリス', '#夢乃リリス', '🏩'
     elif ID == 'UCxrmkJf_X1Yhte_a4devFzA' : HoloName, live_tag, holo_tag  = '胡桃澤もも', '#胡桃澤もも', '🎀'
     elif ID == 'UCBAeKqEIugv69Q2GIgcH7oA' : HoloName, live_tag, holo_tag  = '逢魔きらら', '#逢魔きらら', '👿'
     elif ID == 'UCIRzELGzTVUOARi3Gwf1-yg' : HoloName, live_tag, holo_tag  = '看谷にぃあ', '#看谷にぃあ', '🌙❤️'
+    elif ID == 'UCCXME7oZmXB2VFHJbz5496A' : HoloName, live_tag, holo_tag  = '熊谷タクマ', '#熊谷タクマ', '🧸'
     return live_tag, holo_tag 
 
 
@@ -205,7 +206,7 @@ schedule.every().day.at("07:00").do(reMind)
 schedule.every().day.at("12:00").do(reMind)
 schedule.every().day.at("18:00").do(reMind)
 # schedule.every().day.at("01:15").do(reMind)
-schedule.every().day.at("23:15").do(tomorrowRemind)
+schedule.every().day.at("23:00").do(tomorrowRemind)
 
 while True:
     schedule.run_pending()

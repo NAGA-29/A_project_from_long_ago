@@ -1,6 +1,7 @@
 # 
 # RSSから最新の動画を取得して通知する
 # 
+from xml.sax import make_parser
 import feedparser
 import pandas as pd
 import numpy as np
@@ -36,7 +37,9 @@ from YoutubeAPI.YoutubeAPI import Youtube_API as yApi
 from ImageProcessing.photoFabrication import PhotoFabrication
 from Components.holo_date import HoloDate
 from Components.tweet import tweet_components
+from Components import bitly
 
+from playlist_detect import playlist_detect
 
 
 load_dotenv(verbose=True)
@@ -153,19 +156,7 @@ Channel = {
 
     # friends他
     'SHIGURE_UI_ch' : 'UCt30jJgChL8qeT9VPadidSw', #時雨うい
-    'TAMAKI_ch' : 'UC8NZiqKx6fsDT3AVcMiVFyA',     #佃煮のりお
-    'SHIRAYUKI_ch' : 'UCC0i9nECi4Gz7TU63xZwodg',  #白雪みしろ
-    'MILK_ch' : 'UCJCzy0Fyrm0UhIrGQ7tHpjg',       #愛宮みるく
-    'YUZURU_ch' : 'UCle1cz6rcyH0a-xoMYwLlAg',     #姫咲ゆずる
-    'HOOZUKI_ch' : 'UCLyTXfCZtl7dyhta9Jg3pZg',    #鬼灯わらべ
-    'YUMENO_ch' : 'UCH11P1Hq4PXdznyw1Hhr3qw',     #夢乃リリス
-    'KURUMIZAWA_ch' : 'UCxrmkJf_X1Yhte_a4devFzA', #胡桃澤もも
-    'OUMAKI_ch' : 'UCBAeKqEIugv69Q2GIgcH7oA',     #逢魔きらら
-}
-
-Friend_Channel = {
-    # friends他
-    'SHIGURE_UI_ch' : 'UCt30jJgChL8qeT9VPadidSw', #時雨うい
+    'TAKUMA_ch' : 'UCCXME7oZmXB2VFHJbz5496A',     #熊谷タクマ
     'TAMAKI_ch' : 'UC8NZiqKx6fsDT3AVcMiVFyA',     #佃煮のりお
     'SHIRAYUKI_ch' : 'UCC0i9nECi4Gz7TU63xZwodg',  #白雪みしろ
     'MILK_ch' : 'UCJCzy0Fyrm0UhIrGQ7tHpjg',       #愛宮みるく
@@ -175,6 +166,27 @@ Friend_Channel = {
     'KURUMIZAWA_ch' : 'UCxrmkJf_X1Yhte_a4devFzA', #胡桃澤もも
     'OUMAKI_ch' : 'UCBAeKqEIugv69Q2GIgcH7oA',     #逢魔きらら
     'NIA_ch' : 'UCIRzELGzTVUOARi3Gwf1-yg',        #看谷にぃあ
+}
+
+Friend_Channel = {
+    # friends他
+    'SHIGURE_UI_ch' : 'UCt30jJgChL8qeT9VPadidSw', #時雨うい
+    'TAKUMA_ch' : 'UCCXME7oZmXB2VFHJbz5496A',     #熊谷タクマ
+    'TAMAKI_ch' : 'UC8NZiqKx6fsDT3AVcMiVFyA',     #佃煮のりお
+    'SHIRAYUKI_ch' : 'UCC0i9nECi4Gz7TU63xZwodg',  #白雪みしろ
+    'MILK_ch' : 'UCJCzy0Fyrm0UhIrGQ7tHpjg',       #愛宮みるく
+    'YUZURU_ch' : 'UCle1cz6rcyH0a-xoMYwLlAg',     #姫咲ゆずる
+    'HOOZUKI_ch' : 'UCLyTXfCZtl7dyhta9Jg3pZg',    #鬼灯わらべ
+    'YUMENO_ch' : 'UCH11P1Hq4PXdznyw1Hhr3qw',     #夢乃リリス
+    'KURUMIZAWA_ch' : 'UCxrmkJf_X1Yhte_a4devFzA', #胡桃澤もも
+    'OUMAKI_ch' : 'UCBAeKqEIugv69Q2GIgcH7oA',     #逢魔きらら
+    'NIA_ch' : 'UCIRzELGzTVUOARi3Gwf1-yg',        #看谷にぃあ
+}
+
+Play_Lists = {
+    # ホロライブアイドル道ラジオ
+    'idol_do_radio' : 'PLOzC5vqgb2w9AVrTjx_t6WNqpNRSUncy4',
+    'heikosen_scramble' : 'PLOzC5vqgb2w_r7zlJjt9zaQ4nWMrmc2F1',
 }
 
 
@@ -330,7 +342,7 @@ liveStreamingDetails.activeLiveChatId　（チャット取得用ID）
 #     else:
 #         pprint('エラー発生')
 #         return  video_time_datas
-                
+
 
 # ---------------------------------------Main---------------------------------------
 # ----------------------------------------------------------------------------------
@@ -416,8 +428,9 @@ if __name__ == '__main__':
             elif ID == 'UCt30jJgChL8qeT9VPadidSw' : HoloName,live_tag = 'しぐれうい', '#ういなま'
             # のりプロ
             elif ID == 'UC8NZiqKx6fsDT3AVcMiVFyA' : HoloName,live_tag = '犬山たまき', '#犬山たまき'
+            elif ID == 'UCCXME7oZmXB2VFHJbz5496A' : HoloName,live_tag = '熊谷タクマ', '#熊谷タクマ'
             elif ID == 'UCC0i9nECi4Gz7TU63xZwodg' : HoloName,live_tag = '白雪みしろ', '#白雪みしろ'
-            elif ID == 'UCJCzy0Fyrm0UhIrGQ7tHpjg' : HoloName,live_tag = '愛宮みるく', '#愛宮みくる'
+            elif ID == 'UCJCzy0Fyrm0UhIrGQ7tHpjg' : HoloName,live_tag = '愛宮みるく', '#愛宮みるく'
             elif ID == 'UCle1cz6rcyH0a-xoMYwLlAg' : HoloName,live_tag = '姫咲ゆずる', '#姫咲ゆずる'
             elif ID == 'UCLyTXfCZtl7dyhta9Jg3pZg' : HoloName,live_tag = '鬼灯わらべ', '#鬼灯わらべ'
             elif ID == 'UCH11P1Hq4PXdznyw1Hhr3qw' : HoloName,live_tag = '夢乃リリス', '#夢乃リリス'
@@ -482,7 +495,6 @@ if __name__ == '__main__':
                 else:
                 # 同じIDがある(既存)
                     time_lag = dt.now() - result[0]['notification_last_time_at']
-                    # pprint(time_lag.total_seconds())
                     if time_lag.total_seconds() >= _TIMELAG:
                         download_Result = rssImgDownload(entry['media_thumbnail'][0]['url'], LIVE_TMB_TMP_DIR)
                         if not download_Result:
@@ -586,7 +598,7 @@ if __name__ == '__main__':
                         entry['title'],
                         entry['yt_videoid'],
                         entry['yt_channelid'],
-                        entry['link'],
+                        bitly.make_yURL(entry['link']),
                         updateJST,
                         entry['media_thumbnail'][0]['url'],
                         scheduledStartTimeJPT if scheduledStartTimeJPT else updateJST,
@@ -598,7 +610,7 @@ if __name__ == '__main__':
                         entry['title'],
                         entry['yt_videoid'],
                         entry['yt_channelid'],
-                        entry['link'],
+                        bitly.make_yURL(entry['link']),
                         # updateJST,
                         result[0]['scheduled_start_time_at'] if result[0]['scheduled_start_time_at'] else updateJST,
                         # result[0][13],
@@ -668,5 +680,8 @@ if __name__ == '__main__':
         photo = None
         hTime = None
 
-        time.sleep(180)
-        # time.sleep(1800)
+        subscript = playlist_detect()
+        subscript.main()
+        subscript = None
+
+        time.sleep(120)
