@@ -1,5 +1,5 @@
 from PIL import Image
-
+import cv2
 
 class PhotoFabrication:
     # 画像の読込先
@@ -27,10 +27,10 @@ class PhotoFabrication:
         img2.save(self.IMG_TRIM_DIR + img_name) #切り抜いた画像を保存
 
 
-    '''
-    画像連結加工
-    '''
     def get_concat_v(self, oldImg, newImg):
+        '''
+        画像連結加工
+        '''
         im1 = Image.open(oldImg)
         im2 = Image.open(newImg)
         dst = Image.new('RGB', (im1.width, im1.height + im2.height))
@@ -39,12 +39,11 @@ class PhotoFabrication:
         return dst
 
 
-
-    '''
-    画像トリミング & 画像連結
-    param img_url:画像url
-    '''
     def imgTrim_Linking(self, top_path:str, bottom_path:str, save_path:str):
+        '''
+        画像トリミング & 画像連結
+        param img_url:画像url
+        '''
         # img_name = img_url.split('/')[-2] + '.jpg'
         # FILE_NAME = '../live_temporary_image/'+ img_name
         img = Image.open(top_path) #画像の読み込み
@@ -55,3 +54,13 @@ class PhotoFabrication:
         dst.paste(bottom, (0, 0))
         dst.paste(top, (0, top.height))
         dst.save(save_path) #切り抜いた画像を保存
+        img = cv2.imread(save_path)
+        cv2.arrowedLine(img,
+                        pt1=(240, 250), 
+                        pt2=(240, 290), 
+                        color=(255, 255, 0),
+                        thickness=4,
+                        line_type=cv2.LINE_4,
+                        shift=0,
+                        tipLength=0.5)
+        cv2.imwrite(save_path, img)

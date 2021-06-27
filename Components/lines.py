@@ -23,9 +23,9 @@ class lines:
     LINE
     '''
     def lineNotify(self,message):
-        payload = {'message': message}
         line_notify_token = os.environ.get('LINE_NOTIFY_TOKEN')
         line_notify_api = 'https://notify-api.line.me/api/notify'
+        payload = {'message': message}
         headers = {'Authorization': 'Bearer ' + line_notify_token}
         requests.post(line_notify_api, data=payload, headers=headers,)
 
@@ -35,7 +35,7 @@ class lines:
     def lineNotify_Img(self,message,imageUrl):
         line_notify_token = os.environ.get('LINE_NOTIFY_TOKEN')
         line_notify_api = 'https://notify-api.line.me/api/notify'
-        payload = {   'type': 'image',
+        payload = { 'type': 'image',
                     'imageFullsize': imageUrl,
                     'imageThumbnail': imageUrl,
                     'message': message

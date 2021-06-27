@@ -31,7 +31,7 @@ class Youtube_API:
     """
     エラー処理s
     """
-    def error_catch(error):
+    def error_catch(self, error):
         print("NG ", error)
 
 
@@ -73,12 +73,12 @@ class Youtube_API:
 
 
     @retry(stop_max_attempt_number=5, wait_fixed=5000)
-    def videoInfo(youtubeObject, video_ID):
+    def videoInfo(self, youtubeObject, video_ID):
         """
         動画の内容を返す
         @param youtubeObject 
         @param video_ID
-        @return dict
+        @return youtubeObject.videos().list() video情報
         """
         return youtubeObject.videos().list(
                 part = 'snippet,statistics,liveStreamingDetails',    #snippetがデフォ,liveStreamingDetailsにするとライブ開始予定時間が取得できる
