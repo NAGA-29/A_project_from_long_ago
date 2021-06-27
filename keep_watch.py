@@ -75,6 +75,7 @@ while True:
     for i in range(_1DAY):
         hTime = HoloDate()
         hSql = holo_sql.holo_sql()
+        yt = yApi()
         dt_now = dt.now()
         # dt_now = dt.now(datetime.timezone( datetime.timedelta(hours=9) ))
         db_data_list = hSql.selectAllKeepWatchTable()
@@ -96,7 +97,7 @@ while True:
                 if time_lag.days == 0:
                     if time_lag.seconds <= _2HOURS :
                         # @TODO IDが存在しなかった場合はwatchテーブルから削除しなくてはいけない なんとエラーが出るかわからない調査が必要
-                        results = yApi.videoInfo(youtubeObject,db_data['video_id'])
+                        results = yt.videoInfo(youtubeObject,db_data['video_id'])
                         tube_video_live_details = results.get("items", None)
                         if tube_video_live_details:
                             for video_info_result in tube_video_live_details:
@@ -134,7 +135,8 @@ while True:
                                         # LIVE開始前倒し対策
                                         elif status == 'live':
                                             print('liveが前倒で開始されています')
-                                            if hSql.insertLiveKeepWatchTable(db_data,update_time):
+                                            # if hSql.insertLiveKeepWatchTable(db_data,update_time):
+                                            if hSql.insertLiveKeepWatchTable_test(db_data,update_time):
                                                 hSql.deleteKeepWatchTable(db_data['video_id'])
                                         # none対策
                                         else:
@@ -183,7 +185,7 @@ while True:
                 print('{}日と{}時間{}分経過しています'.format(time_lag.days,hours,min)) if time_lag.days > 0 else print('{}時間{}分経過しています'.format(hours,min))
                 # hSql.deleteKeepWatchTable(db_data[1])    #削除する
                 # @TODO IDが存在しなかった場合はwatchテーブルから削除しなくてはいけない なんとエラーが出るかわからない調査が必要
-                results = yApi.videoInfo(youtubeObject, db_data['video_id'])
+                results = yt.videoInfo(youtubeObject, db_data['video_id'])
                 tube_video_live_details = results.get("items", None)
                 if tube_video_live_details:
                     for video_info_result in tube_video_live_details:
@@ -216,7 +218,8 @@ while True:
                                     live_title,
                                 ])
                                 if status == 'live':
-                                    if hSql.insertLiveKeepWatchTable(db_data,update_time):
+                                    # if hSql.insertLiveKeepWatchTable(db_data, update_time):
+                                    if hSql.insertLiveKeepWatchTable_test(db_data, update_time):
                                         hSql.deleteKeepWatchTable(db_data['video_id'])
                                 elif status == 'upcoming':
                                     hSql.updateKeepWatchTable(update_time)
@@ -239,7 +242,7 @@ while True:
     hSql = holo_sql.holo_sql()
     db_data_list = hSql.selectAllKeepWatchTable()
     for db_data in db_data_list:
-        results = yApi.videoInfo(youtubeObject,db_data['video_id'])
+        results = yt.videoInfo(youtubeObject,db_data['video_id'])
         update_time = []
         tube_video_live_details = results.get("items", None)
         if tube_video_live_details:
@@ -279,3 +282,4 @@ while True:
     hSql.dbClose()
     hSql = None
     hTime = None
+    yt = None

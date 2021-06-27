@@ -258,6 +258,7 @@ class holo_sql:
                     'favorite':values[0][3],'retweet':values[0][4],'file_name1':values[0][5],'creator_path':values[0][6],'uploadJST':values[0][1],'url':values[0][7]})
             conn.commit()
         except IndexError as e:
+            conn.rollback()
             pprint(e)
 
 
@@ -309,10 +310,21 @@ class holo_sql:
             )""")
         conn.commit()
 
+    # def insertKeepWatchTable_old(self,values):
+    #     try:
+    #         cur.execute("INSERT INTO keep_watchs VALUES(0,%(video_id)s,%(holo_name)s,%(title)s,%(channel_id)s,%(channel_url)s,%(uploaded_at)s,%(scheduled_start_time_at)s,%(actual_start_time_at)s,%(concurrent_viewers)s,%(active_live_chat_id)s,%(image_L)s,%(image_default)s,%(status)s)", 
+    #                 {'holo_name': values[0],'title': values[1],'video_id': values[2], 'channel_id': values[3], 'channel_url': values[4], 'uploaded_at': values[11], 
+    #                 'scheduled_start_time_at': values[12], 'actual_start_time_at': values[13], 'concurrent_viewers': values[15],
+    #                 'active_live_chat_id': values[16], 'image_L': values[17], 'image_default': values[21], 'status': values[22] })
+    #         conn.commit()
+    #     except Exception as err:
+    #         conn.rollback()
+    #         pprint('insertKeepWatchTable:{}'.format(err))
+
     def insertKeepWatchTable(self,values):
         try:
-            cur.execute("INSERT INTO keep_watchs VALUES(0,%(video_id)s,%(holo_name)s,%(title)s,%(channel_id)s,%(channel_url)s,%(uploaded_at)s,%(scheduled_start_time_at)s,%(actual_start_time_at)s,%(concurrent_viewers)s,%(active_live_chat_id)s,%(image_L)s,%(image_default)s,%(status)s)", 
-                    {'holo_name': values[0],'title': values[1],'video_id': values[2], 'channel_id': values[3], 'channel_url': values[4], 'uploaded_at': values[11], 
+            cur.execute("INSERT INTO keep_watchs VALUES(0,%(video_id)s,%(holo_name)s,%(belongs)s,%(title)s,%(channel_id)s,%(channel_url)s,%(uploaded_at)s,%(scheduled_start_time_at)s,%(actual_start_time_at)s,%(concurrent_viewers)s,%(active_live_chat_id)s,%(image_L)s,%(image_default)s,%(status)s)", 
+                    {'holo_name': values[0], 'belongs': values[24], 'title': values[1],'video_id': values[2], 'channel_id': values[3], 'channel_url': values[4], 'uploaded_at': values[11], 
                     'scheduled_start_time_at': values[12], 'actual_start_time_at': values[13], 'concurrent_viewers': values[15],
                     'active_live_chat_id': values[16], 'image_L': values[17], 'image_default': values[21], 'status': values[22] })
             conn.commit()
@@ -341,13 +353,21 @@ class holo_sql:
         result = cur.fetchall()
         return result
 
-    def selectTodayKeepWatchTable(self):
-        cur.execute("SELECT * FROM keep_watchs where DATE(scheduled_start_time_at) = CURDATE() ORDER BY scheduled_start_time_at ASC;")
+    def selectTodayKeepWatchTable(self, target):
+        cur.execute("SELECT * FROM keep_watchs where belongs = %(belongs)s AND DATE(scheduled_start_time_at) = CURDATE() ORDER BY scheduled_start_time_at ASC;"
+                    ,{ 'belongs': target })
         result = cur.fetchall()
         return result
 
-    def selectTomorrow_KeepWatch(self):
-        cur.execute("SELECT * FROM keep_watchs where DATE(scheduled_start_time_at) = DATE_ADD(CURDATE(), INTERVAL 1 DAY) ORDER BY scheduled_start_time_at ASC;")
+    def selectTomorrow_KeepWatch(self, target):
+        cur.execute("SELECT * FROM keep_watchs where belongs = %(belongs)s AND DATE(scheduled_start_time_at) = DATE_ADD(CURDATE(), INTERVAL 1 DAY) ORDER BY scheduled_start_time_at ASC;"
+                    ,{ 'belongs': target })
+        result = cur.fetchall()
+        return result
+
+    def one_year_ago_TubeTable(self):
+        cur.execute("SELECT * FROM youtube_videos where DATE(scheduled_start_time_at) =  DATE_SUB(CURDATE(), INTERVAL 1 YEAR);")
+                    # ,{ 'belongs': target })
         result = cur.fetchall()
         return result
 
@@ -370,11 +390,37 @@ class holo_sql:
             pprint(live_data)
             return False
 
+    def insertLiveKeepWatchTable_test(self,values:dict,live_data:list)->Boolean:
+        try:
+            cur.execute("INSERT INTO now_live_keep_watchs VALUES(0,%(video_id)s,%(holo_name)s,%(belongs)s,%(title)s,%(channel_id)s,%(channel_url)s,%(uploaded_at)s,%(scheduled_start_time_at)s,%(actual_start_time_at)s,%(concurrent_viewers)s,%(active_live_chat_id)s,%(image_L)s,%(image_default)s,%(notification_last_time_at)s,%(compared_point)s,%(status)s)", 
+                {'holo_name': values['holo_name'], 'belongs': values['belongs'], 'title': live_data[0][7],'video_id': values['video_id'], 'channel_id': values['channel_id'], 'channel_url': values['channel_url'], 'uploaded_at': values['uploaded_at'], 
+                'scheduled_start_time_at': live_data[0][1], 'actual_start_time_at': live_data[0][2], 'concurrent_viewers': live_data[0][4],
+                'active_live_chat_id': live_data[0][5], 'image_L': values['image_L'], 'image_default': values['image_default'], 
+                'notification_last_time_at': '2020-01-01 00:00:00', 'compared_point': 0, 'status': live_data[0][6] })
+                # 'notification_last_time_at': live_data[0][2],
+            conn.commit()
+            return True
+        except Exception as err:
+            conn.rollback()
+            pprint('insertLiveKeepWatchTableメソッドエラー:{}'.format(err))
+            pprint(values)
+            pprint(live_data)
+            return False
 
-    def selectAllLiveTable(self):
-        cur.execute("SELECT * FROM now_live_keep_watchs ;")
+    # def selectAllLiveTable(self):
+    #     cur.execute("SELECT * FROM now_live_keep_watchs ;")
+    #     result = cur.fetchall()
+    #     # データが存在する
+    #     if result:
+    #         return result
+    #     # データが存在しない
+    #     else:
+    #         return False
+
+    def selectAllLiveTable(self, Belongs):
+        cur.execute("SELECT * FROM now_live_keep_watchs WHERE belongs = %(belongs)s;"
+                    ,{'belongs': Belongs })
         result = cur.fetchall()
-
         # データが存在する
         if result:
             return result
@@ -477,6 +523,19 @@ class holo_sql:
     def searchVideoIdFromYoutubeVideoTable(self,values):
         cur.execute("SELECT * FROM youtube_videos WHERE video_id = %(video_id)s ORDER BY id DESC LIMIT 1;",
                     {'video_id': values['yt_videoid']}
+                    )
+        result = cur.fetchall()
+
+        # video_idが存在する(既存)
+        if result:
+            return result
+        # video_idが存在しない（新規）
+        else:
+            return False
+
+    def searchVideoIdFromYoutubeVideoTable_test(self,video_id):
+        cur.execute("SELECT * FROM youtube_videos WHERE video_id = %(video_id)s ORDER BY id DESC LIMIT 1;",
+                    {'video_id': video_id}
                     )
         result = cur.fetchall()
 

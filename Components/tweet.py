@@ -50,8 +50,8 @@ class tweet_components:
     EVENT_IMG_DIR = os.environ.get('EVENT_IMG_DIR')
 
 
-    def __init__(self,CONSUMER_KEY = os.environ.get('CONSUMER_KEY'), CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET'),
-            ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN'),ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET'),):
+    def __init__(self, CONSUMER_KEY = os.environ.get('CONSUMER_KEY'), CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET'),
+            ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN'), ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET'),):
 
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         self.auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
@@ -78,7 +78,7 @@ class tweet_components:
         return result
 
 
-    def tweetWithIMG(self, message, img_url, DIR=None)->bool:
+    def tweetWithIMG(self, message:str, img_url:str, DIR=None)->bool:
         """
         ツイートメソッド 画像付き url分解機能
         """
@@ -172,11 +172,40 @@ class tweet_components:
                 pprint("Succeed!")
                 result = True
             else:
+                pprint(tweet_status)
                 result = False
         except Exception as e:
                 pprint(e)
                 result = False
         return result
+
+    def remind_tweetWithIMG_test(self, message:str, media:list, reply_id=None)->bool:
+        """
+        ツイートメソッド 画像付き 
+        """
+        #ツイート内容
+        TWEET_TEXT = message
+        try :
+            MEDIA = ','.join(media)
+            MEDIA  = []
+            for filename in media:
+                res = self.API.media_upload(filename)
+                MEDIA.append(res.media_id)
+
+            if reply_id:
+                tweet_status = self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT, in_reply_to_status_id=reply_id)
+            else:
+                tweet_status = self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT,)
+
+            # if tweet_status == 200: #成功
+            #     result = True
+            # else:
+            #     pprint(tweet_status)
+            #     result = False
+
+        except Exception as e:
+                pprint(e)
+        return tweet_status
 
 
     def reTweet(self, tweet_id:str)->bool:

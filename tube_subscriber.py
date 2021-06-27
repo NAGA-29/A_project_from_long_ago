@@ -40,15 +40,21 @@ load_dotenv(dotenv_path)
 
 # ==========================================================================
 #twitterアカウントAPI
+# MyHoloP　アカウント用
 CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
 CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
+# MyNoriP　アカウント用
+CONSUMER_KEY_B = os.environ.get('CONSUMER_KEY_B')
+CONSUMER_SECRET_B = os.environ.get('CONSUMER_SECRET_B')
+ACCESS_TOKEN_B = os.environ.get('ACCESS_TOKEN_B')
+ACCESS_TOKEN_SECRET_B = os.environ.get('ACCESS_TOKEN_SECRET_B')
 # ==========================================================================
 
-auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-API = tweepy.API(auth)
+# auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+# auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+# API = tweepy.API(auth)
 
 # ==========================================================================
 # 画像の保存先
@@ -156,16 +162,22 @@ Channels = [Channel_JP, Channel_OSea,]
 All_Channels = [Channel_JP, Channel_OSea, Channel_Friends]
 
 #th_val人刻みでツイートするための条件設定。th_val = 10000 なら10000人刻み
-def subJudge(sub_num,value,sub_val=50000)->Boolean:
+def subJudge(sub_num, value, belongs)->Boolean:
+    sub_val = 0
+    if belongs == 'hololive':
+        sub_val = 50000
+    elif belongs == 'noripro':
+        sub_val = 10000
+
     if (sub_num // sub_val)  > (value[0]['youtube_subscriber'] // sub_val):
         return True
     else:
         return False
 
-'''
-全体の登録者を足す
-'''
 def OverallInfo(): 
+    '''
+    全体の登録者を足す
+    '''
     tw = tweet_components()
     hTime = HoloDate()
     youAPI = Youtube_API()
@@ -196,20 +208,19 @@ def OverallInfo():
 
 
     data_list.append([All_Subscriber, All_VideoCount, All_ViewCount, hTime.convertToJST(updated_at)])
-    message = '現在のHololive全体報告!\nHololive全体チャンネル登録者数は\n🌟約{}万人!🌟\n止まらないHololive!😎\n #Hololive'.format((All_Subscriber)//10000)
+    message = 'Hololive全体報告!\n全体チャンネル登録者数\n🌟約{}万人!\n全体動画数\n🌟{}本!\n全体再生回数\n🌟{}回!\n\n #Hololive'.format((All_Subscriber)//10000, All_VideoCount, All_ViewCount)
     tw.sub_tweetWithIMG(message,DEFAULT_IMG)
     hSql.insertHoloData(data_list)
 
     pprint(str(All_Subscriber+10000) + '万人')
 
-
-
-def searchSubscriber():
+def searchSubscriber(belongs: str):
+    """
+    登録者検知/通知
+    """
     pprint('起動開始')
-    tw = tweet_components()
     youAPI = Youtube_API()
     hSql = holo_sql.holo_sql()
-
 
     for Channel in All_Channels:
     # for Channel in Channels:
@@ -230,24 +241,27 @@ def searchSubscriber():
                     if Channel == Channel_JP: 
                         # Hololive
                         profile = hSql.selectHolo(channel_ID)
-                        if subJudge(int(subscriberCount), profile):
-                            message = '速報！！ ✨{}チャンネル✨\n{}\n\nチャンネル登録者が\n🎉{}万人到達!!!🎉`\nおめでとう!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
+                        if subJudge(int(subscriberCount), profile, belongs):
+                            tw = tweet_components()
+                            message = '速報！！\n✨{} チャンネル✨\n{}\n\nチャンネル登録者\n\n🎉{}万人到達!!!🎉`\n\nおめでとうございます!!\nチャンネル登録がまだの方はこちらから!\n {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloJP_ProfileTable(channel_ID, channel_info_list)
                     elif Channel == Channel_OSea: 
                         # Hololive 海外
                         profile = hSql.selectOSHolo(channel_ID)
-                        if subJudge(int(subscriberCount), profile):
-                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達!!!🎉`\nおめでとう!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
+                        if subJudge(int(subscriberCount), profile, belongs):
+                            tw = tweet_components()
+                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達!!!🎉`\nおめでとうございます!!\nチャンネル登録はこちらから!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloOS_ProfileTable(channel_ID, channel_info_list)
                     elif Channel == Channel_Friends:
                         # Friends
                         profile = hSql.selectFriendsHolo(channel_ID)
-                        if subJudge(int(subscriberCount), profile):
-                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達！！🎉`\nおめでとうございます!!🥳\nチャンネル登録はこちら!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
+                        if subJudge(int(subscriberCount), profile, belongs):
+                            tw = tweet_components(CONSUMER_KEY_B, CONSUMER_SECRET_B, ACCESS_TOKEN_B, ACCESS_TOKEN_SECRET_B)
+                            message = '速報！！ ✨{}✨ チャンネル\n{}\n\nチャンネル登録者が\n🎉{}万人到達！！🎉`\nおめでとうございます!!\nチャンネル登録はこちらから!: {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloFri_ProfileTable(channel_ID, channel_info_list)
@@ -260,17 +274,21 @@ def searchSubscriber():
     youAPI = None
     pprint('終了')
 
+def main():
+    searchSubscriber('hololive')
+    searchSubscriber('noripro')
 
-# 毎時0分に実行
-schedule.every().hour.at(":00").do(searchSubscriber)
-schedule.every().hour.at(":30").do(searchSubscriber)
-# schedule.every().hour.at(":49").do(searchSubscriber)
 
-# PM00:05 AM12:05にjob実行
-schedule.every().day.at("00:05").do(OverallInfo)
-# schedule.every().day.at("12:05").do(OverallInfo)
-# schedule.every().day.at("18:56").do(OverallInfo)
+if __name__ == '__main__':
+    # 登録者検知/通知
+    schedule.every().hour.at(":00").do(main)
+    schedule.every().hour.at(":30").do(main)
+    # schedule.every().hour.at(":49").do(searchSubscriber)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+    # 全体登録者通知
+    schedule.every().day.at("00:05").do(OverallInfo)
+    # schedule.every().day.at("12:05").do(OverallInfo)
+    # schedule.every().day.at("18:56").do(OverallInfo)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

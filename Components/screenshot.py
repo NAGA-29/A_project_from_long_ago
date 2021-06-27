@@ -7,6 +7,9 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import SessionNotCreatedException
+
+from webdriver_manager.chrome import ChromeDriverManager
 
 import time
 
@@ -26,6 +29,7 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 _DRIVER_PATH = os.environ.get('DRIVER_PATH')
+
 SCREENSHOT_FILE = './screenshot_image/'
 
 #twitter本番アカウント
@@ -63,8 +67,15 @@ class ScreenShot:
 
 
     def screenshot(self, url):
-        # DRIVER_PATH = '/Users/nagaki/Documents/naga-sample-code/python/test/chromedriver'
-        driver = selenium.webdriver.Chrome(executable_path=_DRIVER_PATH, chrome_options=self.options)
+        # driver = selenium.webdriver.Chrome(executable_path=_DRIVER_PATH, chrome_options=self.options)
+        driver_path = _DRIVER_PATH
+        try:
+            driver = selenium.webdriver.Chrome(executable_path=driver_path, chrome_options=self.options)
+            # driver = selenium.webdriver.Chrome(executable_path=DRIVER_PATH, chrome_options=self.options)
+        except SessionNotCreatedException:
+            driver_path = ChromeDriverManager('../').install()
+            driver = selenium.webdriver.Chrome(executable_path=driver_path, chrome_options=self.options)
+        
         driver.get(url)
         
         # driver.set_window_size(1024, 768)

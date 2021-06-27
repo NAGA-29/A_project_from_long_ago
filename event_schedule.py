@@ -29,8 +29,8 @@ def Main():
     dt_now = dt.now()
     all_schedules = hSql.selectEventSchedulesTable()
     for schedule in all_schedules:
-        if schedule[4]:
-            time_lag = schedule[4] - dt_now
+        if schedule['scheduled_start_time_at']:
+            time_lag = schedule['scheduled_start_time_at'] - dt_now
             # pprint(time_lag)
             '''
             time_lag.days >= 0 予定時前
@@ -42,8 +42,8 @@ def Main():
                 min, sec = divmod(time_lag.seconds, 60)
                 hours, min= divmod(min, 60)
                 if day > 0:
-                    message = '{}まで\nあと{}日と{}時間!!✨\n{}✨'.format(schedule[2],day,hours,schedule[5])
-                    tw.event_tweetWithIMG(message,schedule[6])
+                    message = '{}まで\nあと{}日と{}時間!!✨\n{}✨'.format(schedule['title'],day,hours,schedule['message'])
+                    tw.event_tweetWithIMG(message,schedule['image'])
                     pprint(message)
                 else:
                     '''
@@ -52,31 +52,31 @@ def Main():
                     その他                      1分未満かつ0秒以上ある場合(何もしない)
                     '''
                     if hours >= 1:
-                        message = '{}まで\nあと「{}時間{}分」!!✨\n{}✨'.format(schedule[2],hours,min,schedule[5])
-                        tw.event_tweetWithIMG(message,schedule[6])
+                        message = '{}まで\n\nあと「{}時間{}分」!!✨\n\n{}✨'.format(schedule['title'],hours,min,schedule['message'])
+                        tw.event_tweetWithIMG(message,schedule['image'])
                         pprint(message)
                     elif hours == 0 and min > 1:
-                        message = '{}まで\nあと{}分!!✨\n{}✨'.format(schedule[2],min,schedule[5])
-                        tw.event_tweetWithIMG(message,schedule[6])
+                        message = '{}まで\n\nあと{}分!!✨\n\n{}✨'.format(schedule['title'],min,schedule['message'])
+                        tw.event_tweetWithIMG(message,schedule['image'])
                         pprint(message)
                     else:
-                        hSql.updateStatus_SchedulesTable(schedule[4])
+                        hSql.updateStatus_SchedulesTable(schedule['scheduled_start_time_at'])
                         pass
 
             else:
-                hSql.updateStatus_SchedulesTable(schedule[4])
+                hSql.updateStatus_SchedulesTable(schedule['scheduled_start_time_at'])
                 pprint('予定時間を過ぎています')
                 # 予定まで24時間を切った場合
 
 # 毎時0分に実行
 # schedule.every().hour.at(":46").do(Main)
-schedule.every().hour.at(":10").do(Main)
+# schedule.every().hour.at(":15").do(Main)
 
 # # PM00:05 AM12:05にjob実行
-# schedule.every().day.at("00:05").do(Main)
-# schedule.every().day.at("12:05").do(Main)
-# schedule.every().day.at("20:00").do(Main)
-# schedule.every().day.at("08:00").do(Main)
+schedule.every().day.at("15:00").do(Main)
+schedule.every().day.at("12:00").do(Main)
+schedule.every().day.at("17:30").do(Main)
+schedule.every().day.at("08:00").do(Main)
 
 while True:
     schedule.run_pending()

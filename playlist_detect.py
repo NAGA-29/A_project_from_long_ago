@@ -188,8 +188,8 @@ class playlist_detect:
 
 
     Play_Lists = {
-        # ホロライブアイドル道ラジオ
         'heikosen_scramble' : 'PLOzC5vqgb2w_r7zlJjt9zaQ4nWMrmc2F1',
+        # ホロライブアイドル道ラジオ
         'idol_do_radio' : 'PLOzC5vqgb2w9AVrTjx_t6WNqpNRSUncy4',
     }
 
@@ -202,6 +202,7 @@ class playlist_detect:
         hSql = holo_sql.holo_sql()
         photo = PhotoFabrication(self.LIVE_TMB_IMG_DIR, self.TRIM_IMG_DIR)
         tw = tweet_components(self.CONSUMER_KEY, self.CONSUMER_SECRET, self.ACCESS_TOKEN, self.ACCESS_TOKEN_SECRET)
+        yt = yApi()
         print('########################################################################')
 
         for Name,ID in self.Play_Lists.items():
@@ -290,7 +291,7 @@ class playlist_detect:
 
                 if newdata:
                 # 新規
-                    results = yApi.videoInfo(self.youtubeObject,entry['yt_videoid'])
+                    results = yt.videoInfo(self.youtubeObject,entry['yt_videoid'])
                     tube_video_live_details = results.get("items", [])
                     for video_info_result in tube_video_live_details:
                         if video_info_result["kind"] == "youtube#video":
@@ -437,6 +438,8 @@ class playlist_detect:
         imgPro = None
         photo = None
         hTime = None
+        yt = None
 
-# i = playlist_detect()
-# i.main()
+if __name__ == '__main__':
+    i = playlist_detect()
+    i.main()
