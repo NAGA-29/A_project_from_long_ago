@@ -402,42 +402,25 @@ class YoutubeChannelMonitor:
                             high_img,
                             scheduledStartTimeJPT if scheduledStartTimeJPT else updateJST,
                             ])
-
-
-                    for new in get_news:
-                        message = '新着!🆕\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, new[6], hTime.convert_To_LON(new[6]), hTime.convert_To_NY(new[6]), new[0], new[3])
-                        line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, new[6], new[0], new[3]), new[5])
-                        photo.imgTrim(new[5])
-                        tw.tweetWithIMG(message, new[5], self.TRIM_IMG_DIR)
-
-                    for videos_data in videos_datas:
-                        if videos_data[22] == 'live' or videos_data[22] == 'upcoming':
-                            hSql.insertKeepWatchTable(videos_data)
-                        hSql.insertYoutubeVideoTable_R(videos_data)
-                        # dataDone.append(videos_data)
-                        pprint(videos_data)
-
-
-                            
                 else:
                     # 同じIDがある(既存)
                     pprint(video_id)
                     pass
             time.sleep(1)
 
-        # for new in get_news:
-        #     message = '新着!🆕\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, new[6], hTime.convert_To_LON(new[6]), hTime.convert_To_NY(new[6]), new[0], new[3])
-        #     line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, new[6], new[0], new[3]), new[5])
-        #     photo.imgTrim(new[5])
-        #     tw.tweetWithIMG(message, new[5], self.TRIM_IMG_DIR)
+        for new in get_news:
+            message = '新着!🆕\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, new[6], hTime.convert_To_LON(new[6]), hTime.convert_To_NY(new[6]), new[0], new[3])
+            line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, new[6], new[0], new[3]), new[5])
+            photo.imgTrim(new[5])
+            tw.tweetWithIMG(message, new[5], self.TRIM_IMG_DIR)
 
-        # for videos_data in videos_datas:
-        #     if videos_data[22] == 'live' or videos_data[22] == 'upcoming':
-        #         hSql.insertKeepWatchTable(videos_data)
-        #     hSql.insertYoutubeVideoTable_R(videos_data)
-        #     # dataDone.append(videos_data)
-        #     pprint(videos_data)
-        #     time.sleep(1)
+        for videos_data in videos_datas:
+            if videos_data[22] == 'live' or videos_data[22] == 'upcoming':
+                hSql.insertKeepWatchTable(videos_data)
+            hSql.insertYoutubeVideoTable_R(videos_data)
+            # dataDone.append(videos_data)
+            pprint(videos_data)
+            time.sleep(1)
 
 if __name__ == '__main__':
     while True:

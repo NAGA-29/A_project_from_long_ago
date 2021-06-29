@@ -468,7 +468,7 @@ if __name__ == '__main__':
                 updateKind = ''
                 imgPro = None
 
-            dataDone = []
+            # dataDone = []
             if len(getRss) + len(getRss_News) == 0:
                 print('更新ナシです')
                 time.sleep(1)
@@ -510,8 +510,9 @@ if __name__ == '__main__':
                     if videos_data[22] == 'live' or videos_data[22] == 'upcoming':
                         hSql.insertKeepWatchTable(videos_data)
                     hSql.insertYoutubeVideoTable_R(videos_data)
-                    dataDone.append(videos_data)
-                    pprint(dataDone)
+                    # dataDone.append(videos_data)
+                    # pprint(dataDone)
+                    pprint(videos_data)
                     time.sleep(1)
 
         hSql.dbClose()
