@@ -1,13 +1,4 @@
 /.env
-/logs/
-/Trim_images/
-/live_temporary_image/
-/live_temporary_image_NoriP/
-/live_thumbnail_image/
-/Combine_Image/
-/other_temporaryimage/
-/screenshot_image/
-/chat_csv/
 /old_code/
 /client_secrets.json
 /client_secrets01.json

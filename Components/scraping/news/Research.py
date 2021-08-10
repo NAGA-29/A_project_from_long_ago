@@ -130,7 +130,7 @@ def blackFilter(url:str)->bool:
     BLACK_LIST = ['http://yaraon-blog.com/','https://www.mdn.co.jp/','https://togetter.com/',
                     'http://onecall2ch.com/','http://alfalfalfa.com/','https://it.srad.jp/',
                     'http://jin115.com/','http://blog.esuteru.com/','https://anond.hatelabo.jp/',
-                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/']
+                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/','http://himasoku.com/','http://www.scienceplus2ch.com/']
     for black in BLACK_LIST:
         if res.group() == black:
             return False

@@ -1,5 +1,6 @@
 import random
 
+import sys
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -10,15 +11,17 @@ import schedule
 
 from pprint import pprint
 
-"""
-Original Modules
-"""
+# Original Modules
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 import holo_sql
 from Components.tweet import tweet_components
 from Components.scraping.news import Research as reCh
 from Components import bitly
+from model.TwitchVideo import TwitchVideo
 
-
+load_dotenv(verbose=True)
+dotenv_path = join(dirname(__file__), '../.env')
+load_dotenv(dotenv_path)
 """
 指定時間にDBから検索
 tweet idを取得
@@ -70,6 +73,9 @@ def artTweet():
     hSql = None
 
 def holoNews():
+    '''
+    Hololive関連ニュースを取得 & tweet
+    '''
     # 日本時間 - 7日前
     base_toDay = datetime.date.today() - datetime.timedelta(days=1) 
     base_fromDay = base_toDay - datetime.timedelta(days=7)
@@ -102,10 +108,10 @@ schedule.every().hour.at(":30").do(artTweet)
 # PM00:05 AM12:05にjob実行
 schedule.every().day.at("08:10").do(holoNews)
 schedule.every().day.at("12:10").do(holoNews)
-schedule.every().day.at("15:10").do(holoNews)
 schedule.every().day.at("19:10").do(holoNews)
-schedule.every().day.at("23:10").do(holoNews)
+schedule.every().day.at("22:10").do(holoNews)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+if __name__ == '__main__':
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
