@@ -9,19 +9,23 @@ from pprint import pprint
 from pyasn1.type.univ import Boolean
 
 class ImageProcessing: 
+    # 画像の一時保存先
+    _LIVE_TMB_TMP_DIR = ''
     # 画像の保存先
-    _LIVE_TMB_IMG_DIR = './live_thumbnail_image/'
-    _LIVE_TMB_TMP_DIR = './live_temporary_image/'
+    _LIVE_TMB_IMG_DIR = ''
     _OTHER_TMB_TMP_DIR = './other_temporary_image/'
-    _TMB_IMG_FilePath = ''
+
     _TMB_TMP_FilePath = ''
+    _TMB_IMG_FilePath = ''
     _OTHER_TMP_FilePath = ''
 
 
 
-    def __init__(self,file_path:str):
-        self._TMB_IMG_FilePath = self._LIVE_TMB_IMG_DIR + file_path.split('/')[-2] + '.jpg'
+    def __init__(self, file_path:str, TMP_DIR = './live_temporary_image/', IMG_DIR = './live_thumbnail_image/'):
+        self._LIVE_TMB_TMP_DIR = TMP_DIR
+        self._LIVE_TMB_IMG_DIR = IMG_DIR
         self._TMB_TMP_FilePath = self._LIVE_TMB_TMP_DIR + file_path.split('/')[-2] + '.jpg'
+        self._TMB_IMG_FilePath = self._LIVE_TMB_IMG_DIR + file_path.split('/')[-2] + '.jpg'
         self._OTHER_TMP_FilePath = self._OTHER_TMB_TMP_DIR + file_path.split('/')[-2] + '.jpg'
 
     """
@@ -30,9 +34,13 @@ class ImageProcessing:
     """
     def imageComparison_hash(self) ->Boolean:
         try:
+            # print(self._TMB_IMG_FilePath)
+            # print(self._TMB_TMP_FilePath)
             hash_A = imagehash.average_hash(Image.open(self._TMB_IMG_FilePath))
             hash_B = imagehash.average_hash(Image.open(self._TMB_TMP_FilePath))
             num_difference = hash_A - hash_B
+            # print(hash_A)
+            # print(hash_B)
             
             if(num_difference == 0):
                 result = True
@@ -41,6 +49,7 @@ class ImageProcessing:
             return result
         except FileNotFoundError as e:
             pprint(e)
+            print('アウチ')
 
 
     """

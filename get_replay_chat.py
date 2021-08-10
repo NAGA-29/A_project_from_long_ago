@@ -76,11 +76,10 @@ def csvfileExists(holo_name:str, video_id:str)->bool:
     file_path = './chat_csv/' + holo_name  + '/' + video_id + '.csv'
     return os.path.exists(file_path)
 
-# def purseVideoInfo():
-#     video_info_details = yApi.videoInfo(youtubeObject,video_ID).get("items", [])
-
 if __name__ == '__main__':
-    video_info_details = yApi.videoInfo(youtubeObject,'YDwzDiyXa-8')
+    yt = yApi()
+    # video_info_details = yApi.videoInfo(youtubeObject,'YDwzDiyXa-8')
+    video_info_details = yt.videoInfo(youtubeObject,'YDwzDiyXa-8')
     pprint(video_info_details)
 
 # if not csvfileExists():

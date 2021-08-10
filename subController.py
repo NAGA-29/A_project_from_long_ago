@@ -35,13 +35,21 @@ apiを使用してretweet
 
 
 """
-# twitter本番アカウント My_Hololive_Art_project
-CONSUMER_KEY = os.environ.get('CONSUMER_KEY_A')
-CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET_A')
-ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN_A')
-ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET_A')
+# twitter本番アカウント My_Hololive_project
+CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
+CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
+ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
+ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
 
-tw = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+# twitter本番アカウント My_Hololive_Art_project
+CONSUMER_KEY_A = os.environ.get('CONSUMER_KEY_A')
+CONSUMER_SECRET_A = os.environ.get('CONSUMER_SECRET_A')
+ACCESS_TOKEN_A = os.environ.get('ACCESS_TOKEN_A')
+ACCESS_TOKEN_SECRET_A = os.environ.get('ACCESS_TOKEN_SECRET_A')
+
+tw_m = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+tw_a = tweet_components(CONSUMER_KEY_A, CONSUMER_SECRET_A, ACCESS_TOKEN_A, ACCESS_TOKEN_SECRET_A)
+
 
 _FILE = './src/news_file/news.csv'
 
@@ -54,7 +62,7 @@ def artTweet():
     holo_arts = hSql.searchArtsById(arts_id)
     if holo_arts:
         try:
-            tw.reTweet(holo_arts[0]['tweet_id'])
+            tw_a.reTweet(holo_arts[0]['tweet_id'])
         except Exception as err:
             print(err)
             pass
@@ -77,8 +85,8 @@ def holoNews():
     #     reCh.csvFileWrite(_FILE, news)
     # else:
     #     pass
-    print(_MESSAGE)
-    tw.tweet(_MESSAGE)
+    # print(_MESSAGE)
+    tw_m.tweet(_MESSAGE)
     reCh.csvFileWrite(_FILE, news)
 
 
@@ -92,9 +100,10 @@ schedule.every().hour.at(":30").do(artTweet)
 # schedule.every().hour.at(":09").do(searchSubscriber)
 
 # PM00:05 AM12:05にjob実行
-schedule.every().day.at("08:45").do(holoNews)
-schedule.every().day.at("12:45").do(holoNews)
-schedule.every().day.at("19:45").do(holoNews)
+schedule.every().day.at("08:10").do(holoNews)
+schedule.every().day.at("12:10").do(holoNews)
+schedule.every().day.at("19:10").do(holoNews)
+schedule.every().day.at("23:10").do(holoNews)
 
 while True:
     schedule.run_pending()
