@@ -380,7 +380,6 @@ if __name__ == '__main__':
 
                 if newdata:
                 # 新規
-                    # results = yApi.videoInfo(youtubeObject,entry['yt_videoid'])
                     results = yt.videoInfo(youtubeObject,entry['yt_videoid'])
                     tube_video_live_details = results.get("items", [])
                     for video_info_result in tube_video_live_details:
@@ -491,7 +490,7 @@ if __name__ == '__main__':
                             # タイトル更新
                             del rss[8]
                             hSql.updateTitleYoutubeVideoTable(rss)
-                            message = 'タイトル更新✅\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
+                            message = 'Title Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
                             line.lineNotify_Img('\n{}チャンネル\nタイトル更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
                             tw.tweetWithIMG(message,rss[5],TRIM_IMG_DIR)
@@ -499,7 +498,7 @@ if __name__ == '__main__':
                             # サムネ更新
                             del rss[8]
                             hSql.updateTitleYoutubeVideoTable(rss)
-                            message = '画像更新✅\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
+                            message = 'Image Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
                             line.lineNotify_Img('\n{}チャンネル\n画像更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
                             tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR)
@@ -507,18 +506,18 @@ if __name__ == '__main__':
                             # タイトル・サムネ更新
                             del rss[8]
                             hSql.updateTitleYoutubeVideoTable(rss)
-                            message = 'タイトル・画像更新✅\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
+                            message = 'Title & Image Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
                             line.lineNotify_Img('\n{}チャンネル\nタイトル・画像更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
                             tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR)
 
                 for getRss_New in getRss_News:
                     if getRss_New[7] == 'upcoming':
-                        message = '新着!🆕\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
+                        message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
                     elif getRss_New[7] == 'live':
-                        message = '新着!🆕\n{}チャンネル\n{}\n\nLive On Air!\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
+                        message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\nLive On Air!\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
                     elif getRss_New[7] == 'none':
-                        message = '新着!🆕\n{}チャンネル\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
+                        message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
                     line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, getRss_New[6], getRss_New[0], getRss_New[3]), getRss_New[5])
                     photo.imgTrim(getRss_New[5])
                     tw.tweetWithIMG(message,getRss_New[5],TRIM_IMG_DIR)

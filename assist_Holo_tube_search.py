@@ -193,13 +193,15 @@ class YoutubeChannelMonitor:
         #ホロライブ ID
         elif ID == 'UCOyYb1c43VlX9rc_lT6NKQw' : HoloName,live_tag = 'アユンダ・リス', '#Risu_Live'
         elif ID == 'UCP0BspO_AMEe3aQqqpo89Dg' : HoloName,live_tag = 'ムーナ・ホシノヴァ', '#MoonA_Live'
-        elif ID == 'UCAoy6rzhSf4ydcYjJw3WoVg' : HoloName,live_tag =  'アイラニ・イオフィフティーン', '#ioLYFE'
-        elif ID == 'UCYz_5n-uDuChHtLo7My1HnQ' : HoloName,live_tag =  'クレイジー・オリー', '#Kureiji_Ollie'
-        elif ID == 'UC727SQYUvx5pDDGQpTICNWg' : HoloName,live_tag =  'アーニャ・メルフィッサ', '#Anya_Melfissa'
-        elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName,live_tag =  'パヴォリア・レイネ', '#Pavolive'
+        elif ID == 'UCAoy6rzhSf4ydcYjJw3WoVg' : HoloName,live_tag = 'アイラニ・イオフィフティーン', '#ioLYFE'
+        elif ID == 'UCYz_5n-uDuChHtLo7My1HnQ' : HoloName,live_tag = 'クレイジー・オリー', '#Kureiji_Ollie'
+        elif ID == 'UC727SQYUvx5pDDGQpTICNWg' : HoloName,live_tag = 'アーニャ・メルフィッサ', '#Anya_Melfissa'
+        elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName,live_tag = 'パヴォリア・レイネ', '#Pavolive'
         # 運営
         elif ID == 'UCJFZiqLMntJufDCHc6bQixg' : HoloName,live_tag = 'Hololive','#Hololive'
         elif ID == 'UCotXwY6s8pWmuWd_snKYjhg' : HoloName,live_tag = 'holo EN','#Hololive'
+        elif ID == 'UCfrWoRGlawPQDQxxeIDRP0Q' : HoloName,live_tag = 'holo ID','#Hololive'
+        
         print(HoloName)
         return HoloName,live_tag
 
@@ -437,7 +439,7 @@ class YoutubeChannelMonitor:
                     #     photo.imgTrim(new[5])
                     #     tw.tweetWithIMG(message, new[5], self.TRIM_IMG_DIR)
 
-                        message = '新着!🆕\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, get_news[6], hTime.convert_To_LON(get_news[6]), hTime.convert_To_NY(get_news[6]), get_news[0], get_news[3])
+                        message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, get_news[6], hTime.convert_To_LON(get_news[6]), hTime.convert_To_NY(get_news[6]), get_news[0], get_news[3])
                         line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, get_news[6], get_news[0], get_news[3]), get_news[5])
                         photo.imgTrim(get_news[5])
                         tw.tweetWithIMG(message, get_news[5], self.TRIM_IMG_DIR)

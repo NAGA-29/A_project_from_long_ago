@@ -10,9 +10,9 @@ import setting
 
 class TwitchVideo(setting.Base):
     """
-    twitch_videosテーブル用モデル
+    twitcasting_videosテーブル用モデル
     """
-    __tablename__ = 'twitch_videos'
+    __tablename__ = 'twitcasting_videos'
     id = Column('id', BIGINT, primary_key = True)
     holo_name = Column('holo_name', String(255))
     belongs = Column('belongs', String(255))

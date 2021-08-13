@@ -18,14 +18,16 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-import holo_sql
-
+# import holo_sql
 from pprint import pprint
 
-
 load_dotenv(verbose=True)
-dotenv_path = join(dirname(__file__), '.env')
+dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
+
+import sys
+sys.path.append(os.path.join(dirname(__file__), '../'))
+import holo_sql
 
 ##twitterテストアカウント
 CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
@@ -126,6 +128,7 @@ Holo_tags = {
     'OLLIE_tg' : ['#graveyART'],     #Kureiji Ollie / クレイジー・オリー 
     'ANYA_tg' : ['#anyatelier'],      #Anya Melfissa / アーニャ・メルフィッサ
     'REINE_tg' : ['#Reinessance'],     #Pavolia Reine / パヴォリア・レイネ
+    'IRYS_tg' : ['#IRySart'],           #IRyS / アイリス
 
     'SHIGURE_UI_tg' : ['#ういしぐれぇ'],     #しぐれうい
     'TAMAKI_tg' : ['#たまきあーと'],     #犬山たまき
@@ -156,9 +159,9 @@ print(since_daytime)
 
 
 # ディレクトリを作成
-new_dir_path = './Tweet_Tag/{}/'.format(str(d_today))
-if not os.path.exists(new_dir_path) :
-    os.makedirs(new_dir_path)
+# new_dir_path = './images/{}/'.format(str(d_today))
+# if not os.path.exists(new_dir_path) :
+#     os.makedirs(new_dir_path)
 
 
 hSql = holo_sql.holo_sql()  # DBインスタンス作成
@@ -213,6 +216,7 @@ for Account,Tag in Holo_tags.items():
         elif Account  == 'INANIS_tg' : HoloName = '一伊那尓栖'
         elif Account  == 'GURA_tg' : HoloName = 'がうる・ぐら'
         elif Account  == 'AMELIA_tg' : HoloName = 'ワトソン・アメリア'
+        elif Account  == 'IRYS_tg' : HoloName = 'アイリス'
         # ホロライブID
         elif Account  == 'RISU_tg' : HoloName = 'アユンダ・リス'
         elif Account  == 'MOONA_tg' : HoloName = 'ムーナ・ホシノヴァ'
@@ -243,13 +247,12 @@ for Account,Tag in Holo_tags.items():
                     MAX_ID = tweet.id
                     # DBに同一tweetIDがないかチェック(既存データかチェック)
                     result = hSql.searchTweetId(tweet.id)
-                    # pprint(result)
                     if result:
                         # 更新されているかチェックして、アップデート
-                        if tweet.favorite_count != result[0][5]: 
-                            hSql.updateArtsFavorite(result[0][3],tweet.favorite_count)
-                        if tweet.retweet_count != result[0][6]:
-                            hSql.updateArtsRetweet(result[0][3],tweet.retweet_count)
+                        if tweet.favorite_count != result[0]['favorite']: 
+                            hSql.updateArtsFavorite(result[0]['tweet_id'],tweet.favorite_count)
+                        if tweet.retweet_count != result[0]['retweet']:
+                            hSql.updateArtsRetweet(result[0]['tweet_id'],tweet.retweet_count)
                     else:
                         # 投稿時間を日本時間に変換
                         jst_timestamp = pytz.timezone('Asia/Tokyo').localize( tweet.created_at + datetime.timedelta(hours=9) )
@@ -324,7 +327,6 @@ for Account,Tag in Holo_tags.items():
                                 break
 
 
-
 # ===========================================================================================
                 else:
                     MAX_ID = tweet.id
@@ -335,12 +337,11 @@ for Account,Tag in Holo_tags.items():
                 print('ブレイク入ります')
                 break
 
-        filename = new_dir_path + Account + csv_base
+        # filename = new_dir_path + Account + csv_base
         # # CSV登録
         # lives_report = pd.DataFrame(final_data)
         # # pprint(lives_report)
         # lives_report.to_csv(filename, header=False, index=False, mode='w')
-
 
 hSql.dbClose()  #  DBクローズ
 hSql = None

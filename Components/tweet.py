@@ -109,10 +109,10 @@ class tweet_components:
         try :
             self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
         except Exception as e:
-                message = e
+                # message = e
                 pprint(e)
-                result = False
-                return result
+                # result = False
+                return False
 
 
     def sub_tweetWithIMG(self,message,img_url):

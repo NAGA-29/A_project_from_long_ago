@@ -2,11 +2,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, BIGINT, Integer, String, TEXT, Float, DateTime
 
 import sys
-sys.path.append('../')
-from config import Base
-from config import ENGINE
+# sys.path.append('../')
+import setting
+# from config import Base
+# from config import ENGINE
 
-class YoutubeVideo(Base):
+class YoutubeVideo(setting.Base):
     """
     YoutubeVideoモデル
     """

@@ -1,3 +1,5 @@
+# 参考サイト:https://ogp.buta3.net/
+
 from typing import List
 import requests
 from pprint import pprint 
@@ -6,11 +8,10 @@ import time
 import dateutil.parser
 from pytz import timezone
 
-import sys
-sys.path.append('../../../model/')
-from DB_config import session
-from TwitchVideo import TwitchVideo
-
+# import sys
+# sys.path.append('../../../model/')
+# from setting import session
+# from TwitchVideo import TwitchVideo
 class Twitch_Wrapper():
 
     _AUTH_URL = 'https://id.twitch.tv/oauth2/token'

@@ -128,7 +128,7 @@ def check_schedule_time(belongs: str):
                             v_name, live_tag = NoriPro.get_name_tag(db_data['channel_id'])
 
                         if hSql.update_schedule_keep_watch(db_data['video_id'], jst) and hSql.update_schedule_youtube_videos_table(db_data['video_id'], jst):
-                            message = f"LIVE開始時間の変更⏰\n{v_name}チャンネル\n{live_tag}\n\n時間変更されました。注意してください。\n配信予定時間\n{jst}🇯🇵\n{hTime.convert_To_LON(jst)}🇬🇧\n{hTime.convert_To_NY(jst)}🇺🇸🗽\n\n{db_data['title']}\n{bitly.make_yURL(db_data['channel_url'])}"
+                            message = f"LIVE Time Change⏰\n\n{v_name}チャンネル\n{live_tag}\n\n時間変更されたので注意してください。\n\n配信予定時間\n{jst}🇯🇵\n{hTime.convert_To_LON(jst)}🇬🇧\n{hTime.convert_To_NY(jst)}🇺🇸🗽\n\n{db_data['title']}\n{bitly.make_yURL(db_data['channel_url'])}"
                             tw.tweetWithIMG(message, db_data['image_default'], TRIM_IMG_DIR)
                             message = f"\n{v_name}チャンネル\n時間変更⏰\n{jst}\n\n{db_data['title']}\n{db_data['channel_url']}"
                             line.lineNotify(message)
@@ -213,7 +213,7 @@ def main():
             min, sec = divmod(time_lag.seconds, 60)
             hours, min= divmod(min, 60)
             if time_lag.days == 0:
-                if time_lag.seconds <= _3HOURS :
+                if time_lag.seconds <= _2HOURS :
                     # @TODO IDが存在しなかった場合はwatchテーブルから削除しなくてはいけない なんとエラーが出るかわからない調査が必要
                     results = yt.videoInfo(youtubeObject,db_data['video_id'])
                     tube_video_live_details = results.get("items", None)
