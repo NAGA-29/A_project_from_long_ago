@@ -148,6 +148,7 @@ Channel = {
     'INANIS_ch' : 'UCMwGHR0BTZuLsmjY_NT5Pwg',    #一伊那尓栖 にのまえいなにす
     'GawrGura_ch' : 'UCoSrY_IQQVpmIRZ9Xf-y93g',    #がうる・くら
     'AMELIA_ch' : 'UCyl1z3jo3XHR1riLFKG5UAg',  #ワトソン・アメリア
+    'IRyS_ch' : 'UC8rcEBzJSleTkf_-agPM20g',       #IRys / アイリス
 
     #ホロライブ ID
     'RISU_ch' : 'UCOyYb1c43VlX9rc_lT6NKQw',    #Ayunda Risu / アユンダ・リス
@@ -159,6 +160,7 @@ Channel = {
 
     # 運営
     'HOLOLIVE_ch' : 'UCJFZiqLMntJufDCHc6bQixg',   #Hololive
+    'HOLOLIVE_ENGLISH_ch' : 'UCotXwY6s8pWmuWd_snKYjhg',   #Hololive_English
 }
 
 Play_Lists = {
@@ -200,7 +202,7 @@ if __name__ == '__main__':
     while flag:
         # DBへ接続
         hTime = HoloDate()
-        hSql = holo_sql.holo_sql()
+        # hSql = holo_sql.holo_sql()
         photo = PhotoFabrication(LIVE_TMB_IMG_DIR,TRIM_IMG_DIR)
         tw = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
         yt = yApi()
@@ -267,6 +269,7 @@ if __name__ == '__main__':
             elif ID == 'UCMwGHR0BTZuLsmjY_NT5Pwg' : HoloName,live_tag = '一伊那尓栖', '#TAKOTIME'
             elif ID == 'UCoSrY_IQQVpmIRZ9Xf-y93g' : HoloName,live_tag = 'がうる・ぐら', '#gawrgura'
             elif ID == 'UCyl1z3jo3XHR1riLFKG5UAg' : HoloName,live_tag = 'ワトソン・アメリア', '#amelive'
+            elif ID == 'UC8rcEBzJSleTkf_-agPM20g' : HoloName,live_tag = 'アイリス', '#IRyS'
             #ホロライブ ID
             elif ID == 'UCOyYb1c43VlX9rc_lT6NKQw' : HoloName,live_tag = 'アユンダ・リス', '#Risu_Live'
             elif ID == 'UCP0BspO_AMEe3aQqqpo89Dg' : HoloName,live_tag = 'ムーナ・ホシノヴァ', '#MoonA_Live'
@@ -276,6 +279,7 @@ if __name__ == '__main__':
             elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName,live_tag =  'パヴォリア・レイネ', '#Pavolive'
             # 運営
             elif ID == 'UCJFZiqLMntJufDCHc6bQixg' : HoloName,live_tag = 'Hololive','#Hololive'
+            elif ID == 'UCotXwY6s8pWmuWd_snKYjhg' : HoloName,live_tag = 'holo EN','#Hololive'
             print(HoloName)
 
 
@@ -303,6 +307,7 @@ if __name__ == '__main__':
 
     # DB管理バージョンーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
             for entry in feedparser.parse(url).entries:
+                hSql = holo_sql.holo_sql()
                 # ------------------------
                 # param
                 # ------------------------
@@ -333,13 +338,14 @@ if __name__ == '__main__':
                         continue
                 else:
                 # 同じIDがある(既存)
-                    time_lag = dt.now() - result[0]['notification_last_time_at']
-                    if time_lag.total_seconds() >= _TIMELAG:
+                    time_rag = dt.now() - result[0]['notification_last_time_at']
+                    if time_rag.total_seconds() >= _TIMELAG:
                         download_Result = rssImgDownload(line, entry['media_thumbnail'][0]['url'], LIVE_TMB_TMP_DIR)
                         if not download_Result:
                             imgPro = None
                             continue
-                        if not imgPro.imageComparison_hash():
+
+                        if not imgPro.imageComparison_hash() : # 画像変更検知
                             # ---------------image combination------------------
                             img_name = entry['media_thumbnail'][0]['url'].split('/')[-2] + '.jpg'
                             TOP_NAME = './live_temporary_image/'+ img_name
@@ -350,16 +356,23 @@ if __name__ == '__main__':
                             shutil.move(imgPro._TMB_TMP_FilePath, imgPro._TMB_IMG_FilePath)
                             update = True
                             updateKind += 'image'
-                        if entry['title'] != result[0]['title'] :
+
+                        if entry['title'] != result[0]['title'] : # タイトル変更検知
                             update = True
                             updateKind += 'title'
+
+                        # if not result[0]['actual_end_time_at'] and result[0]['scheduled_start_time_at']: # 時間変更検知(live終了していない、かつ、投稿動画ではない)
+                        #     pprint(entry)
+                        #     if entry['scheduled_start_time_at'] == result[0]['scheduled_start_time_at'] :
+                        #         pass
+
                         try:
                             os.remove(imgPro._TMB_TMP_FilePath)
                         except FileNotFoundError as e:
                             pprint(e)
                     else:
                         print('更新多いのでスキップ')
-                        print(time_lag.total_seconds())
+                        print(time_rag.total_seconds())
                         continue
 
                 # 更新時間を日本時間に変換
@@ -367,7 +380,6 @@ if __name__ == '__main__':
 
                 if newdata:
                 # 新規
-                    # results = yApi.videoInfo(youtubeObject,entry['yt_videoid'])
                     results = yt.videoInfo(youtubeObject,entry['yt_videoid'])
                     tube_video_live_details = results.get("items", [])
                     for video_info_result in tube_video_live_details:
@@ -443,6 +455,7 @@ if __name__ == '__main__':
                         updateJST,
                         entry['media_thumbnail'][0]['url'],
                         scheduledStartTimeJPT if scheduledStartTimeJPT else updateJST,
+                        status,
                         ])
 
                 # Line & twitter通知用(アップデート)--------------------------
@@ -453,9 +466,7 @@ if __name__ == '__main__':
                         entry['yt_videoid'],
                         entry['yt_channelid'],
                         bitly.make_yURL(entry['link']),
-                        # updateJST,
                         _time,
-                        # result[0][13],
                         entry['media_thumbnail'][0]['url'],
                         '',
                         dt.now().strftime('%Y/%m/%d %H:%M:%S'),
@@ -479,15 +490,15 @@ if __name__ == '__main__':
                             # タイトル更新
                             del rss[8]
                             hSql.updateTitleYoutubeVideoTable(rss)
-                            message = 'タイトル更新✅\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
-                            line.lineNotify_Img('\n{}チャンネル\nタイトル更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
+                            message = 'Title Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
+                            # line.lineNotify_Img('\n{}チャンネル\nタイトル更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
-                            tw.tweetWithIMG(message,rss[5],TRIM_IMG_DIR)
+                            # tw.tweetWithIMG(message,rss[5],TRIM_IMG_DIR)
                         elif rss[8:9] == ['image']:
                             # サムネ更新
                             del rss[8]
                             hSql.updateTitleYoutubeVideoTable(rss)
-                            message = '画像更新✅\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
+                            message = 'Image Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
                             line.lineNotify_Img('\n{}チャンネル\n画像更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
                             tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR)
@@ -495,13 +506,18 @@ if __name__ == '__main__':
                             # タイトル・サムネ更新
                             del rss[8]
                             hSql.updateTitleYoutubeVideoTable(rss)
-                            message = 'タイトル・画像更新✅\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
+                            message = 'Title & Image Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
                             line.lineNotify_Img('\n{}チャンネル\nタイトル・画像更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
                             tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR)
 
                 for getRss_New in getRss_News:
-                    message = '新着!🆕\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
+                    if getRss_New[7] == 'upcoming':
+                        message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
+                    elif getRss_New[7] == 'live':
+                        message = 'New Live On Air🆕\n\n{}チャンネル\n{}\n\nLive中です!\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
+                    elif getRss_New[7] == 'none':
+                        message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, getRss_New[6], hTime.convert_To_LON(getRss_New[6]), hTime.convert_To_NY(getRss_New[6]), getRss_New[0], getRss_New[3])
                     line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, getRss_New[6], getRss_New[0], getRss_New[3]), getRss_New[5])
                     photo.imgTrim(getRss_New[5])
                     tw.tweetWithIMG(message,getRss_New[5],TRIM_IMG_DIR)
@@ -510,12 +526,11 @@ if __name__ == '__main__':
                     if videos_data[22] == 'live' or videos_data[22] == 'upcoming':
                         hSql.insertKeepWatchTable(videos_data)
                     hSql.insertYoutubeVideoTable_R(videos_data)
-                    # dataDone.append(videos_data)
-                    # pprint(dataDone)
                     pprint(videos_data)
                     time.sleep(1)
+                hSql.dbClose()
 
-        hSql.dbClose()
+        # hSql.dbClose()
         hSql = None
         imgPro = None
         photo = None

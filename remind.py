@@ -200,6 +200,7 @@ def getLiveTag(ID:str)->str:
     elif ID == 'UCMwGHR0BTZuLsmjY_NT5Pwg' : HoloName, live_tag, holo_tag  = '一伊那尓栖', '#TAKOTIME', '🐙'
     elif ID == 'UCoSrY_IQQVpmIRZ9Xf-y93g' : HoloName, live_tag, holo_tag  = 'がうる・ぐら', '#gawrgura', '🔱'
     elif ID == 'UCyl1z3jo3XHR1riLFKG5UAg' : HoloName, live_tag, holo_tag  = 'ワトソン・アメリア', '#amelive', '🔎'
+    elif ID == 'UC8rcEBzJSleTkf_-agPM20g' : HoloName, live_tag, holo_tag  = 'アイリス', '#IRyShow', '💎'
     #ホロライブ ID
     elif ID == 'UCOyYb1c43VlX9rc_lT6NKQw' : HoloName, live_tag, holo_tag  = 'アユンダ・リス', '#Risu_Live', '🐿'
     elif ID == 'UCP0BspO_AMEe3aQqqpo89Dg' : HoloName, live_tag, holo_tag  = 'ムーナ・ホシノヴァ', '#MoonA_Live', '🔮'

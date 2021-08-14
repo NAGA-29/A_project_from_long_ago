@@ -2,16 +2,17 @@ import tweepy
 # import requests
 
 from pprint import pprint
-
+import sys
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
-
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+from config import app
 
 class tweet_components:
     '''
@@ -45,7 +46,8 @@ class tweet_components:
     # トリミング加工済み画像保存先
     TRIM_IMG_DIR = os.environ.get('IMG_TRIM_DIR')
     # プロフィール画像保存先
-    PROFILE_IMG_DIR = os.environ.get('PROFILE_IMG_DIR')
+    # PROFILE_IMG_DIR = os.environ.get('PROFILE_IMG_DIR')
+    PROFILE_IMG_DIR = app.PROFILE_IMG_DIR 
     # イベント用画像保存先
     EVENT_IMG_DIR = os.environ.get('EVENT_IMG_DIR')
 
@@ -107,10 +109,10 @@ class tweet_components:
         try :
             self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
         except Exception as e:
-                message = e
+                # message = e
                 pprint(e)
-                result = False
-                return result
+                # result = False
+                return False
 
 
     def sub_tweetWithIMG(self,message,img_url):
@@ -223,3 +225,6 @@ class tweet_components:
                 pprint(e)
                 result = False
         return result
+
+# tw = tweet_components()
+# pprint(tw.PROFILE_IMG_DIR)

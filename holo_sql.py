@@ -141,6 +141,42 @@ class holo_sql:
             conn.rollback()
             return False
 
+    def insert_HoloJP_ProfileTable_tw(self,channelID:str,follower:int):
+        try:
+            cur.execute("UPDATE holo_profiles SET twitter_subscriber = %(twitter_subscriber)s where channel_id = %(channel_id)s;",
+                        {'channel_id': channelID, 'twitter_subscriber': follower, }
+            )
+            conn.commit()
+            return True
+        except Exception as err:
+            pprint(err)
+            conn.rollback()
+            return False
+        
+    def insert_HoloOS_ProfileTable_tw(self,channelID:str,follower:int):
+        try:
+            cur.execute("UPDATE holo_overseas_profiles SET twitter_subscriber = %(twitter_subscriber)s where channel_id = %(channel_id)s;",
+                        {'channel_id': channelID, 'twitter_subscriber': follower, }
+            )
+            conn.commit()
+            return True
+        except Exception as err:
+            pprint(err)
+            conn.rollback()
+            return False
+
+    def insert_HoloFri_ProfileTable_tw(self,channelID:str,follower:int):
+        try:
+            cur.execute("UPDATE holo_friends_profiles SET twitter_subscriber = %(twitter_subscriber)s where channel_id = %(channel_id)s;",
+                        {'channel_id': channelID, 'twitter_subscriber': follower,}
+            )
+            conn.commit()
+            return True
+        except Exception as err:
+            pprint(err)
+            conn.rollback()
+            return False
+
 # rss_datas RSS data ----------------------------------------------------------
     def createRssTable(self):
         result = cur.execute("""CREATE TABLE IF NOT EXISTS `rss_datas` (
@@ -310,17 +346,6 @@ class holo_sql:
             )""")
         conn.commit()
 
-    # def insertKeepWatchTable_old(self,values):
-    #     try:
-    #         cur.execute("INSERT INTO keep_watchs VALUES(0,%(video_id)s,%(holo_name)s,%(title)s,%(channel_id)s,%(channel_url)s,%(uploaded_at)s,%(scheduled_start_time_at)s,%(actual_start_time_at)s,%(concurrent_viewers)s,%(active_live_chat_id)s,%(image_L)s,%(image_default)s,%(status)s)", 
-    #                 {'holo_name': values[0],'title': values[1],'video_id': values[2], 'channel_id': values[3], 'channel_url': values[4], 'uploaded_at': values[11], 
-    #                 'scheduled_start_time_at': values[12], 'actual_start_time_at': values[13], 'concurrent_viewers': values[15],
-    #                 'active_live_chat_id': values[16], 'image_L': values[17], 'image_default': values[21], 'status': values[22] })
-    #         conn.commit()
-    #     except Exception as err:
-    #         conn.rollback()
-    #         pprint('insertKeepWatchTable:{}'.format(err))
-
     def insertKeepWatchTable(self,values):
         try:
             cur.execute("INSERT INTO keep_watchs VALUES(0,%(video_id)s,%(holo_name)s,%(belongs)s,%(title)s,%(channel_id)s,%(channel_url)s,%(uploaded_at)s,%(scheduled_start_time_at)s,%(actual_start_time_at)s,%(concurrent_viewers)s,%(active_live_chat_id)s,%(image_L)s,%(image_default)s,%(status)s)", 
@@ -343,6 +368,17 @@ class holo_sql:
             conn.rollback()
             pprint('updateKeepWatchTableメソッドエラー:{}'.format(err))
 
+    def update_schedule_keep_watch(self,video_id, schedule_start_time_at):
+        try:
+            cur.execute("UPDATE keep_watchs SET scheduled_start_time_at = %(scheduled_start_time_at)s where video_id = %(video_id)s ", 
+                    {'video_id': video_id, 'scheduled_start_time_at': schedule_start_time_at})
+            conn.commit()
+            return True
+        except Exception as err:
+            conn.rollback()
+            pprint(f'update_schedule_keep_watchメソッドエラー:{err}')
+            return False
+
     def deleteKeepWatchTable(self,video_id):
         cur.execute('DELETE FROM keep_watchs WHERE video_id = %(video_id)s',
             { 'video_id':video_id })
@@ -350,6 +386,12 @@ class holo_sql:
 
     def selectAllKeepWatchTable(self):
         cur.execute("SELECT * FROM keep_watchs ;")
+        result = cur.fetchall()
+        return result
+
+    def select_belongs_keep_watch(self, target):
+        cur.execute("SELECT * FROM keep_watchs where belongs = %(belongs)s ;"
+                    ,{ 'belongs': target })
         result = cur.fetchall()
         return result
 
@@ -575,26 +617,13 @@ class holo_sql:
             conn.rollback()
             pprint('insertYoutubeVideoTable_Rメソッドエラー:{}'.format(err))
 
-    # def insertYoutubeVideoTable(self,video_info:list):
-    #     try:
-    #         cur.execute("INSERT INTO youtube_videos VALUES(0,%(holo_name)s,%(title)s,%(video_id)s,%(channel_id)s,%(channel_url)s,%(view_count)s,%(like_count)s,%(dislike_count)s,%(comment_count)s,%(game_name)s,%(tag)s,%(uploaded_at)s,%(scheduled_start_time_at)s,%(actual_start_time_at)s,%(actual_end_time_at)s,%(max_concurrent_viewers)s,%(active_live_chat_id)s,%(image_L)s,%(image_M)s,%(image_S)s,%(image_XS)s,%(image_Default)s,%(status)s)",
-    #                 {'holo_name':video_info[0][0], 'title':video_info[0][1], 'video_id':video_info[0][2], 'channel_id':video_info[0][3], 'channel_url': video_info[0][4],
-    #                 'view_count': video_info[0][5], 'like_count': video_info[0][6], 'dislike_count': video_info[0][7], 'comment_count': video_info[0][8],'game_name': video_info[0][9], 'tag': video_info[0][10],
-    #                 'uploaded_at': video_info[0][11],'scheduled_start_time_at': video_info[0][12], 'actual_start_time_at': video_info[0][13], 'actual_end_time_at': video_info[0][14],
-    #                 'max_concurrent_viewers': video_info[0][15], 'active_live_chat_id': video_info[0][16], 
-    #                 'image_L': video_info[0][17], 'image_M': video_info[0][18], 'image_S': video_info[0][19], 'image_XS': video_info[0][20], 'image_Default': video_info[0][21],
-    #                 'status': video_info[0][22] })
-    #         conn.commit()
-    #     except Exception as err:
-    #         conn.rollback()
-    #         pprint('insertYoutubeVideoTableメソッドエラー:{}'.format(err))
-    #         # raise err
 
     def updateTitleYoutubeVideoTable(self,values):
         cur.execute("UPDATE youtube_videos SET title = %(title)s, notification_last_time_at = %(notification_last_time_at)s where video_id = %(video_id)s;",
                     {'title': values[0], 'video_id': values[1], 'notification_last_time_at': values[7]}
                 )
         conn.commit() 
+
 
     def updateTimeYoutubeVideoTable(self,values):
         try:
@@ -608,6 +637,19 @@ class holo_sql:
             conn.rollback()
             pprint('updateTimeYoutubeVideoTableメソッドエラー:{}'.format(err))
             return False
+
+
+    def update_schedule_youtube_videos_table(self, video_id, scheduled_start_time_at):
+        try:
+            cur.execute("UPDATE youtube_videos SET scheduled_start_time_at = %(scheduled_start_time_at)s where video_id = %(video_id)s ", 
+                    {'video_id': video_id, 'scheduled_start_time_at': scheduled_start_time_at})
+            conn.commit()
+            return True
+        except Exception as err:
+            conn.rollback()
+            pprint(f'update_schedule_youtube_videos_tableメソッドエラー:{err}')
+            return False
+
 
     def updateMAXViewersYoutubeVideoTable(self,values):
         try:
@@ -632,6 +674,7 @@ class holo_sql:
         cur.execute("UPDATE youtube_videos SET title = %(title)s, image = %(image)s where video_id = %(video_id)s;",
                     {'title': values[0], 'image': values[5], 'video_id': values[1]})
         conn.commit()
+
 
     def updateScrapingYoutubeVideoTable(self,values):
         cur.execute("UPDATE youtube_videos SET title = %(title)s, view_count = %(view_count)s, like_count = %(like_count)s, dislike_count = %(dislike_count)s, comment_count = %(comment_count)s, image_L = %(image_L)s, image_M = %(image_M)s, image_S = %(image_S)s, image_XS = %(image_XS)s, image_Default = %(image_Default)s  where video_id = %(video_id)s;",
