@@ -401,9 +401,9 @@ if __name__ == '__main__':
                             del rss[8]
                             hSql.updateTitleYoutubeVideoTable(rss)
                             message = 'タイトル更新✅\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
-                            line.lineNotify_Img('\n{}チャンネル\nタイトル更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
+                            # line.lineNotify_Img('\n{}チャンネル\nタイトル更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
-                            tw.tweetWithIMG(message,rss[5],TRIM_IMG_DIR)
+                            # tw.tweetWithIMG(message,rss[5],TRIM_IMG_DIR)
                         elif rss[8:9] == ['image']:
                             # サムネ更新
                             del rss[8]
