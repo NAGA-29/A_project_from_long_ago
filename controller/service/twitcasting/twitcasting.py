@@ -14,6 +14,7 @@ import base64
 import sys
 sys.path.append('../../../model/')
 from setting import session
+# from setting import *
 from TwitchVideo import TwitchVideo
 
 class Twitcasting_Oauth2():
@@ -251,8 +252,9 @@ if __name__ == '__main__':
     access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjdiYWUwODU0MDg4YTA2ZTM1NTg4Njg0ZGZmZDM0YTEzNWY4MzEwYzI4YzUzY2NhMzBiYzJjOGViNDcxNjAwZjE5NGM3NjM4YzEwZjZhMDRkIn0.eyJhdWQiOiJjbmFnYWtpLmJlMDA5ZTQxOGIzOGUxYzU4YmM0MzY3OTc2MGM4YjdlMmRjMTNkYjg1OThjYTllNTU1N2I1ZDFjNDc0MDJjZjUiLCJqdGkiOiI3YmFlMDg1NDA4OGEwNmUzNTU4ODY4NGRmZmQzNGExMzVmODMxMGMyOGM1M2NjYTMwYmMyYzhlYjQ3MTYwMGYxOTRjNzYzOGMxMGY2YTA0ZCIsImlhdCI6MTYyODQxOTgzMSwibmJmIjoxNjI4NDE5ODMxLCJleHAiOjE2NDM5NzE4MzEsInN1YiI6IjEyOTUzNDEzMDEzMzY5NjUxMjAiLCJzY29wZXMiOlsicmVhZCIsIndyaXRlIl19.tkzgPiiKL0nWa2P_pJ1xH9NwIjK7MDIEixd8n6652FqvyOsL9lIqqNAuTQc0l3p1duOJ0xinPiW5ENDyLUIt_3cL78s28DU8WiaqLRwaZCtm2xCPvFR7Zl-QVae4R9t4UyPPTuakOVqhLQwNmrV9p2yZr3RwKN32Rg0H_y93Im4bL_-aaZXvMFqUZGiTjjM8-_S7PPHaf2pzMOqjI4J90phM1vLNKWlwe3w1hjtapkCOOUYDAQZHp-kr4fZtQFgJebg88u0QQYpQ5Q9iWmL6_kP6AVoXMUH4dpQ8g4isRQ5t6Wqg6yEcJ6SCcBB_5VtOsZcq9TeqjZUiRkS8qhgfHQ'
     # oauth = Twitcasting_Oauth2(client_id, client_secret, redirect_uri)
     twc_w = Twitcasting_Wrapper(client_id, client_secret, access_token)
-    # t = twc_w.get_user_info('shirakamifubuki')
-    # pprint(t)
+    t = twc_w.get_user_info('minatoaqua')
+    pprint(t)
+
     # video = twc_w.get_movies_by_user('oozorasubaru')
     # pprint(video)
 
@@ -264,8 +266,8 @@ if __name__ == '__main__':
     # pprint(rm)
     # comments = twc_w.get_comments('679488595',limit=50, offset=0)
 
-    mv = twc_w.get_movie_info('695864158')
-    pprint(mv)
+    # mv = twc_w.get_movie_info('695864158')
+    # pprint(mv)
 
     # comments = twc_w.get_comments('679488595',all=True)
     # pprint(comments)
