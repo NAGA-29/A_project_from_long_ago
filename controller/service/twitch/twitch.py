@@ -8,11 +8,13 @@ import time
 import dateutil.parser
 from pytz import timezone
 
+import json
+
 # import sys
 # sys.path.append('../../../model/')
 # from setting import session
 # from TwitchVideo import TwitchVideo
-class Twitch_Wrapper():
+class Twitch_Wrapper:
 
     _AUTH_URL = 'https://id.twitch.tv/oauth2/token'
 
@@ -84,6 +86,79 @@ class Twitch_Wrapper():
         return stream
 
 
+    def register_eventSub(self, my_type:str, call_back_url:str, user_id:str):
+        '''
+        webhook登録
+        :param str my_type: サブスクリプションタイプ
+        :param str call_back_url: call back先のURL
+        :param str user_id: 監視先アカウントID
+        '''
+        URL = 'https://api.twitch.tv/helix/eventsub/subscriptions'
+        call_back = call_back_url
+        headers = {
+                'Client-ID' : self.client_id,
+                'Authorization' :  "Bearer " + self.access_token,
+                'Content-Type' : 'application/json',
+                }
+
+        payload = {
+                "type": my_type,
+                "version": "1",
+                "condition": {
+                    "broadcaster_user_id": user_id,
+                },
+                "transport": {
+                    "method": "webhook",
+                    "callback": call_back,
+                    "secret": self.secret
+                }
+            }
+        r = requests.post(URL, headers=headers, data=json.dumps(payload)).json()
+        return r
+
+    def delete_eventSub(self, subscription_id, call_back_url:str, user_id:str):
+        URL = 'https://api.twitch.tv/helix/eventsub/subscriptions'
+        subscription_id = ''
+        headers = {
+                'Client-ID' : self.client_id,
+                'Authorization' :  "Bearer " + self.access_token,
+                'Content-Type' : 'application/json',
+                }
+
+        r = requests.delete(URL, headers=headers).json()
+        # r.headers
+        pprint(r)
+
+    def eventSub_list(self,status=None):
+        '''
+        登録したサブスクリプションイベントの一覧を取得
+        :param int status: 1:全て, 2:登録成功のみ
+        :rType dict: 取得したレスポンス内容
+        '''
+        URL = 'https://api.twitch.tv/helix/eventsub/subscriptions'
+        if status == 1:
+            URL = 'https://api.twitch.tv/helix/eventsub/subscriptions?status=enabled'
+        elif status == 2:
+            URL = 'https://api.twitch.tv/helix/eventsub/subscriptions?status=webhook_callback_verification_pending'
+        elif status == 3:
+            URL = 'https://api.twitch.tv/helix/eventsub/subscriptions?status=webhook_callback_verification_failed'
+        elif status == 4:
+            URL = 'https://api.twitch.tv/helix/eventsub/subscriptions?status=notification_failures_exceeded'
+        elif status == 5:
+            URL = 'https://api.twitch.tv/helix/eventsub/subscriptions?status=authorization_revoked'
+        elif status == 6:
+            URL = 'https://api.twitch.tv/helix/eventsub/subscriptions?status=user_removed'
+
+        headers = {
+            'Client-ID' : self.client_id,
+            'Authorization' :  "Bearer " + self.access_token,
+            'Content-Type' : 'application/json',
+            }
+        r = requests.get(URL, headers=headers).json()
+        pprint(r)
+        return r
+
+
     def convertToJST(self,time):
         '''
         日本時間に変換
@@ -96,16 +171,20 @@ class Twitch_Wrapper():
             return None
 
 
+
 if __name__ == '__main__':
-    auth_url = 'https://id.twitch.tv/oauth2/token'
+    # auth_url = 'https://id.twitch.tv/oauth2/token'
     client_id = 'dfgvcsi22xnzq1t9c2dpmekadihy4l'
-    secret  = '9yg5fc0iz3wytriy2qfm09ajx0e7eo'
+    secret = '9yg5fc0iz3wytriy2qfm09ajx0e7eo'
+
     tw_w = Twitch_Wrapper(client_id, secret)
-    # r = tw_w.channel_info('usadapekora_hololive')
+    # r = tw_w.channel_info('momosuzunene_hololive')
+    # pprint(r)
 
     
-    # r = tw_w.channel_info('fps_shaka')
+    # r = tw_w.channel_info('615692129')
     # pprint(r)
+    
     # p = tw_w.get_follower('664278586')
     # pprint(p)
 
@@ -113,8 +192,14 @@ if __name__ == '__main__':
     # pprint(p)
     # pprint(len(p))
 
-    stream = tw_w.get_stream('557359020')
+    # stream = tw_w.get_stream('557359020')
+    # pprint(stream)
 
+    url = 'https://pvgllfml6j.execute-api.ap-northeast-1.amazonaws.com/Twitch-eventSub'
+    r = tw_w.register_eventSub('stream.online', url, '715729360')
+    pprint(r)
+
+    # tw_w.eventSub_list(1)
 
     # for da in p :
     #     twitch = TwitchVideo()
@@ -135,3 +220,8 @@ if __name__ == '__main__':
     #     twitch.notification_last_time_at = '2000-01-01 00:00:00'
     #     session.add(twitch)  
     #     session.commit()
+
+# テスト用
+# 'id': '615692129',
+#   'login': 'naganegi35',
+# momosuzunene_hololive

@@ -12,12 +12,12 @@ from pytz import timezone
 import base64
 
 import sys
-sys.path.append('../../../model/')
-from setting import session
+# sys.path.append('../../../model/')
+# from setting import session
 # from setting import *
-from TwitchVideo import TwitchVideo
+# from TwitchVideo import TwitchVideo
 
-class Twitcasting_Oauth2():
+class Twitcasting_Oauth2:
     def __init__(self, client_id, client_secret, redirect_uri):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -210,7 +210,7 @@ class Twitcasting_Wrapper():
 
     def remove_webhook(self, id:str, livestart=False, liveend=False):
         '''
-        ツイキャス webhookに登録中の削除
+        ツイキャス 登録中webhookイベントを削除
         :param str id: 特定ユーザーのユーザーID
         :param livestart bool: 削除するか判定
         :param liveend bool: 削除するか判定
@@ -252,17 +252,17 @@ if __name__ == '__main__':
     access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjdiYWUwODU0MDg4YTA2ZTM1NTg4Njg0ZGZmZDM0YTEzNWY4MzEwYzI4YzUzY2NhMzBiYzJjOGViNDcxNjAwZjE5NGM3NjM4YzEwZjZhMDRkIn0.eyJhdWQiOiJjbmFnYWtpLmJlMDA5ZTQxOGIzOGUxYzU4YmM0MzY3OTc2MGM4YjdlMmRjMTNkYjg1OThjYTllNTU1N2I1ZDFjNDc0MDJjZjUiLCJqdGkiOiI3YmFlMDg1NDA4OGEwNmUzNTU4ODY4NGRmZmQzNGExMzVmODMxMGMyOGM1M2NjYTMwYmMyYzhlYjQ3MTYwMGYxOTRjNzYzOGMxMGY2YTA0ZCIsImlhdCI6MTYyODQxOTgzMSwibmJmIjoxNjI4NDE5ODMxLCJleHAiOjE2NDM5NzE4MzEsInN1YiI6IjEyOTUzNDEzMDEzMzY5NjUxMjAiLCJzY29wZXMiOlsicmVhZCIsIndyaXRlIl19.tkzgPiiKL0nWa2P_pJ1xH9NwIjK7MDIEixd8n6652FqvyOsL9lIqqNAuTQc0l3p1duOJ0xinPiW5ENDyLUIt_3cL78s28DU8WiaqLRwaZCtm2xCPvFR7Zl-QVae4R9t4UyPPTuakOVqhLQwNmrV9p2yZr3RwKN32Rg0H_y93Im4bL_-aaZXvMFqUZGiTjjM8-_S7PPHaf2pzMOqjI4J90phM1vLNKWlwe3w1hjtapkCOOUYDAQZHp-kr4fZtQFgJebg88u0QQYpQ5Q9iWmL6_kP6AVoXMUH4dpQ8g4isRQ5t6Wqg6yEcJ6SCcBB_5VtOsZcq9TeqjZUiRkS8qhgfHQ'
     # oauth = Twitcasting_Oauth2(client_id, client_secret, redirect_uri)
     twc_w = Twitcasting_Wrapper(client_id, client_secret, access_token)
-    t = twc_w.get_user_info('minatoaqua')
-    pprint(t)
+    # t = twc_w.get_user_info('c:nagaki')
+    # pprint(t)
 
     # video = twc_w.get_movies_by_user('oozorasubaru')
     # pprint(video)
 
     # webhook = twc_w.get_webhook_list()
     # pprint(webhook)
-    # webhook = twc_w.register_webhook('1027853566780698624')
+    # webhook = twc_w.register_webhook('c:nagaki')
     # pprint(webhook)
-    # rm = twc_w.remove_webhook('1027853566780698624', liveend=True)
+    # rm = twc_w.remove_webhook('1024528894940987392', liveend=True)
     # pprint(rm)
     # comments = twc_w.get_comments('679488595',limit=50, offset=0)
 
@@ -274,13 +274,34 @@ if __name__ == '__main__':
     # pprint(len(comments))
 
 # oozorasubaru
+# 1027853566780698624
+
 # shirakamifubuki
+# 997786053124616192
+
 # natsuiromatsuri
+# 996645451045617664
+
 # nekomataokayu
+# 1109751762733301760
+
 # himemoriluna
+# 1200396798281445376
+
 # yozoramel
+# 985703615758123008
+
 # yuzukichococh
+# 1024970912859189248
+
 # robocosan
+# 960340787782299648
+
 # akirosenthal
+# 996643748862836736
+
 # akaihaato
+# 998336069992001537
+
 # minatoaqua
+# 1024528894940987392

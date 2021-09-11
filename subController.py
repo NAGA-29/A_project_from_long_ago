@@ -8,6 +8,8 @@ import time
 import datetime
 import schedule
 
+import feedparser
+
 from pprint import pprint
 
 """
@@ -17,7 +19,7 @@ import holo_sql
 from Components.tweet import tweet_components
 from Components.scraping.news import Research as reCh
 from Components import bitly
-
+from controller.tree import Holo_nico_search
 
 """
 指定時間にDBから検索
@@ -89,6 +91,8 @@ def holoNews():
     tw_m.tweet(_MESSAGE)
     reCh.csvFileWrite(_FILE, news)
 
+def niconico_search():
+    Holo_nico_search.main()
 
 # 毎時0分に実行
 schedule.every().hour.at(":00").do(artTweet)
@@ -100,11 +104,19 @@ schedule.every().hour.at(":30").do(artTweet)
 # schedule.every().hour.at(":09").do(searchSubscriber)
 
 # PM00:05 AM12:05にjob実行
+schedule.every().day.at("06:10").do(holoNews)
 schedule.every().day.at("08:10").do(holoNews)
 schedule.every().day.at("12:10").do(holoNews)
 schedule.every().day.at("15:10").do(holoNews)
 schedule.every().day.at("19:10").do(holoNews)
 schedule.every().day.at("23:10").do(holoNews)
+
+# # ニコ動検知
+schedule.every().day.at("00:30").do(niconico_search)
+schedule.every().day.at("06:30").do(niconico_search)
+schedule.every().day.at("12:30").do(niconico_search)
+schedule.every().day.at("18:30").do(niconico_search)
+# schedule.every().day.at("22:20").do(niconico_search)
 
 while True:
     schedule.run_pending()

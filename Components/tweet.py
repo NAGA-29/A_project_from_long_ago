@@ -213,6 +213,8 @@ class tweet_components:
     def reTweet(self, tweet_id:str)->bool:
         """
         リツイートメソッド
+        :param str tweet_id : ツイートid
+        :retrun bool
         """
         try :
             tweet_status = self.API.retweet(tweet_id)
@@ -226,5 +228,11 @@ class tweet_components:
                 result = False
         return result
 
-# tw = tweet_components()
-# pprint(tw.PROFILE_IMG_DIR)
+    def check_str_length(self, message:str)->bool:
+        return True if len(message) < 140 else False
+
+# if __name__ == '__main__':
+#     tw = tweet_components()
+#     message = 'message'
+#     pprint(len(message))
+#     print(tw.check_str_length(message))

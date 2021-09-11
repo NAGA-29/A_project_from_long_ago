@@ -69,6 +69,7 @@ from Components.holo_date import HoloDate
 from Components.tweet import tweet_components
 from Components.lines import lines
 from Components import bitly
+from Components.vtuber.hololive import Hololive
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '.env')
@@ -105,13 +106,7 @@ class YoutubeChannelMonitor:
         self.API_KEY = os.environ.get(self._api_key)
         self.YOUTUBE_API_SERVICE_NAME = 'youtube'
         self.YOUTUBE_API_VERSION = 'v3'
-        # CHANNEL_ID = Channel[]
 
-        # channels = [] #チャンネル情報を格納する配列
-        # searches = [] #video idを格納する配列
-        # videos = [] #各動画情報を格納する配列
-        # BroadCasts = [] #LIVE用データ集計配列
-        # lives = [] #LIVE用データ集計最終配列
         self.nextPagetoken = None
         self.nextpagetoken = None
 
@@ -139,71 +134,77 @@ class YoutubeChannelMonitor:
         # self.ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
         # self.ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET_TEST')
 
-    def select_name_tag(self,ID):
-        '''
-        channel_idから誰のチャンネルか判定
-        @param ID string チャンネルID
-        @return HoloName string
-        @return live_tag string
-        '''
-        HoloName = ''
-        live_tag = ''
-        if ID == 'UChAnqc_AY5_I3Px5dig3X1Q': HoloName,live_tag = '戌神ころね', '#生神もんざえもん'
-        elif ID == 'UC-hM6YJuNYVAmUWxeIr9FeA' : HoloName,live_tag ='さくらみこ', '#みこなま'
-        elif ID == 'UCdn5BQ06XqgXoAxIhbqw5Rg' : HoloName,live_tag = '白上フブキ', '#フブキCh'
-        elif ID == 'UC1opHUrw8rvnsadT-iGp7Cg' : HoloName,live_tag = '湊あくあ', '#湊あくあ生放送'
-        elif ID == 'UC1DCedRgGHBdm81E1llLhOQ' : HoloName,live_tag = '兎田ぺこら', '#ぺこらいぶ'
-        elif ID == 'UCFTLzh12_nrtzqBPsTCqenA' : HoloName,live_tag = 'アキ・ローゼンタール', '#アキびゅーわーるど'
-        elif ID == 'UCp6993wxpyDPHUpavwDFqgg' : HoloName,live_tag = 'ときのそら', '#ときのそら生放送'
-        elif ID == 'UCvzGlP9oQwU--Y0r9id_jnA' : HoloName,live_tag = '大空スバル', '#生スバル'
-        elif ID == 'UCDqI2jOz0weumE8s7paEk6g' : HoloName,live_tag = 'ロボ子さん', '#ロボ子生放送'
-        elif ID == 'UCXTpFs_3PqI41qX2d9tL2Rw' : HoloName,live_tag = '紫咲シオン', '#紫咲シオン'
-        elif ID == 'UCvInZx9h3jC2JzsIzoOebWg' : HoloName,live_tag = '不知火フレア', '#フレアストリーム'
-        elif ID == 'UCD8HOxPs4Xvsm8H0ZxXGiBw' : HoloName,live_tag = '夜空メル', '#メル生放送'
-        elif ID == 'UCp3tgHXw_HI0QMk1K8qh3gQ' : HoloName,live_tag = '癒月ちょこ', '#癒月診療所' # サブ
-        elif ID == 'UC1suqwovbL1kzsoaZgFZLKg' : HoloName,live_tag = '癒月ちょこ', '#癒月診療所'
-        elif ID == 'UC1CfXB_kRs3C-zaeTG3oGyg' : HoloName,live_tag = '赤井はあと', '#はあちゃまなう'
-        elif ID == 'UCvaTdHTWBGv3MKj3KVqJVCw' : HoloName,live_tag = '猫又おかゆ', '#生おかゆ'
-        elif ID == 'UCa9Y57gfeY0Zro_noHRVrnw' : HoloName,live_tag = '姫森ルーナ', '#なのらいぶ'
-        elif ID == 'UC5CwaMl1eIgY8h02uZw7u8A' : HoloName,live_tag = '星街すいせい', '#ほしまちすたじお'
-        elif ID == 'UCQ0UDLQCjY0rmuxCDE38FGg' : HoloName,live_tag = '夏色まつり', '#夏まつch'
-        elif ID == 'UCCzUftO8KOVkV4wQG1vkUvg' : HoloName,live_tag = '宝鐘マリン', '#マリン航海記'
-        elif ID == 'UC7fk0CB07ly8oSl0aqKkqFg' : HoloName,live_tag = '百鬼あやめ', '#百鬼あやめch'
-        elif ID == 'UCdyqAaZDKHXg4Ahi7VENThQ' : HoloName,live_tag = '白銀ノエル', '#ノエルーム'
-        elif ID == 'UCl_gCybOJRIgOXw6Qb4qJzQ' : HoloName,live_tag = '潤羽るしあ', '#るしあらいぶ'
-        elif ID == 'UCS9uQI-jC3DE0L4IpXyvr6w' : HoloName,live_tag = '桐生ココ', '#桐生ココ'
-        elif ID == 'UCZlDXzGoo7d44bwdNObFacg' : HoloName,live_tag = '天音かなた', '#天界学園放送部'
-        elif ID == 'UCp-5t9SrOQwXMU7iIjQfARg' : HoloName,live_tag = '大神ミオ', '#ミオかわいい'
-        elif ID == 'UC1uv2Oq6kNxgATlCiez59hw' : HoloName,live_tag = '常闇トワ', '#トワイライブ'
-        elif ID == 'UCqm3BQLlJfvkTsX_hvm0UmA' : HoloName,live_tag = '角巻わため', '#ドドドライブ'
-        elif ID == 'UCFKOVgVbGmX65RxO3EtH3iw' : HoloName,live_tag = '雪花ラミィ', '#らみらいぶ'
-        elif ID == 'UCAWSyEs_Io8MtpY3m-zqILA' : HoloName,live_tag = '桃鈴ねね', '#ねねいろらいぶ'
-        elif ID == 'UCUKD-uaobj9jiqB-VXt71mA' : HoloName,live_tag = '獅白ぼたん', '#ぐうたらいぶ'
-        elif ID == 'UCK9V2B22uJYu3N7eR_BT9QA' : HoloName,live_tag = '尾丸ポルカ', '#ポルカ公演中'
-        # elif ID == 'UCgZuwn-O7Szh9cAgHqJ6vjw' : HoloName = '魔乃アロエ'
-        # イノナカミュージック
-        elif ID == 'UC0TXe_LYZ4scaW2XMyi5_kw' : HoloName,live_tag = 'AZKi', '#AZKi'
-        #ホロライブ　EN
-        elif ID == 'UCL_qhgtOy0dy1Agp8vkySQg' : HoloName,live_tag = '森美声', '#calliolive'
-        elif ID == 'UCHsx4Hqa-1ORjQTh9TYDhww' : HoloName,live_tag = '小鳥遊キアラ', '#キアライブ'
-        elif ID == 'UCMwGHR0BTZuLsmjY_NT5Pwg' : HoloName,live_tag = '一伊那尓栖', '#TAKOTIME'
-        elif ID == 'UCoSrY_IQQVpmIRZ9Xf-y93g' : HoloName,live_tag = 'がうる・ぐら', '#gawrgura'
-        elif ID == 'UCyl1z3jo3XHR1riLFKG5UAg' : HoloName,live_tag = 'ワトソン・アメリア', '#amelive'
-        elif ID == 'UC8rcEBzJSleTkf_-agPM20g' : HoloName,live_tag = 'アイリス', '#IRyS'
-        #ホロライブ ID
-        elif ID == 'UCOyYb1c43VlX9rc_lT6NKQw' : HoloName,live_tag = 'アユンダ・リス', '#Risu_Live'
-        elif ID == 'UCP0BspO_AMEe3aQqqpo89Dg' : HoloName,live_tag = 'ムーナ・ホシノヴァ', '#MoonA_Live'
-        elif ID == 'UCAoy6rzhSf4ydcYjJw3WoVg' : HoloName,live_tag = 'アイラニ・イオフィフティーン', '#ioLYFE'
-        elif ID == 'UCYz_5n-uDuChHtLo7My1HnQ' : HoloName,live_tag = 'クレイジー・オリー', '#Kureiji_Ollie'
-        elif ID == 'UC727SQYUvx5pDDGQpTICNWg' : HoloName,live_tag = 'アーニャ・メルフィッサ', '#Anya_Melfissa'
-        elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName,live_tag = 'パヴォリア・レイネ', '#Pavolive'
-        # 運営
-        elif ID == 'UCJFZiqLMntJufDCHc6bQixg' : HoloName,live_tag = 'Hololive','#Hololive'
-        elif ID == 'UCotXwY6s8pWmuWd_snKYjhg' : HoloName,live_tag = 'holo EN','#Hololive'
-        elif ID == 'UCfrWoRGlawPQDQxxeIDRP0Q' : HoloName,live_tag = 'holo ID','#Hololive'
+    # def select_name_tag(self,ID):
+    #     '''
+    #     channel_idから誰のチャンネルか判定
+    #     @param ID string チャンネルID
+    #     @return HoloName string
+    #     @return live_tag string
+    #     '''
+    #     HoloName = ''
+    #     live_tag = ''
+    #     if ID == 'UChAnqc_AY5_I3Px5dig3X1Q': HoloName,live_tag = '戌神ころね', '#生神もんざえもん'
+    #     elif ID == 'UC-hM6YJuNYVAmUWxeIr9FeA' : HoloName,live_tag ='さくらみこ', '#みこなま'
+    #     elif ID == 'UCdn5BQ06XqgXoAxIhbqw5Rg' : HoloName,live_tag = '白上フブキ', '#フブキCh'
+    #     elif ID == 'UC1opHUrw8rvnsadT-iGp7Cg' : HoloName,live_tag = '湊あくあ', '#湊あくあ生放送'
+    #     elif ID == 'UC1DCedRgGHBdm81E1llLhOQ' : HoloName,live_tag = '兎田ぺこら', '#ぺこらいぶ'
+    #     elif ID == 'UCFTLzh12_nrtzqBPsTCqenA' : HoloName,live_tag = 'アキ・ローゼンタール', '#アキびゅーわーるど'
+    #     elif ID == 'UCp6993wxpyDPHUpavwDFqgg' : HoloName,live_tag = 'ときのそら', '#ときのそら生放送'
+    #     elif ID == 'UCvzGlP9oQwU--Y0r9id_jnA' : HoloName,live_tag = '大空スバル', '#生スバル'
+    #     elif ID == 'UCDqI2jOz0weumE8s7paEk6g' : HoloName,live_tag = 'ロボ子さん', '#ロボ子生放送'
+    #     elif ID == 'UCXTpFs_3PqI41qX2d9tL2Rw' : HoloName,live_tag = '紫咲シオン', '#紫咲シオン'
+    #     elif ID == 'UCvInZx9h3jC2JzsIzoOebWg' : HoloName,live_tag = '不知火フレア', '#フレアストリーム'
+    #     elif ID == 'UCD8HOxPs4Xvsm8H0ZxXGiBw' : HoloName,live_tag = '夜空メル', '#メル生放送'
+    #     elif ID == 'UCp3tgHXw_HI0QMk1K8qh3gQ' : HoloName,live_tag = '癒月ちょこ', '#癒月診療所' # サブ
+    #     elif ID == 'UC1suqwovbL1kzsoaZgFZLKg' : HoloName,live_tag = '癒月ちょこ', '#癒月診療所'
+    #     elif ID == 'UC1CfXB_kRs3C-zaeTG3oGyg' : HoloName,live_tag = '赤井はあと', '#はあちゃまなう'
+    #     elif ID == 'UCvaTdHTWBGv3MKj3KVqJVCw' : HoloName,live_tag = '猫又おかゆ', '#生おかゆ'
+    #     elif ID == 'UCa9Y57gfeY0Zro_noHRVrnw' : HoloName,live_tag = '姫森ルーナ', '#なのらいぶ'
+    #     elif ID == 'UC5CwaMl1eIgY8h02uZw7u8A' : HoloName,live_tag = '星街すいせい', '#ほしまちすたじお'
+    #     elif ID == 'UCQ0UDLQCjY0rmuxCDE38FGg' : HoloName,live_tag = '夏色まつり', '#夏まつch'
+    #     elif ID == 'UCCzUftO8KOVkV4wQG1vkUvg' : HoloName,live_tag = '宝鐘マリン', '#マリン航海記'
+    #     elif ID == 'UC7fk0CB07ly8oSl0aqKkqFg' : HoloName,live_tag = '百鬼あやめ', '#百鬼あやめch'
+    #     elif ID == 'UCdyqAaZDKHXg4Ahi7VENThQ' : HoloName,live_tag = '白銀ノエル', '#ノエルーム'
+    #     elif ID == 'UCl_gCybOJRIgOXw6Qb4qJzQ' : HoloName,live_tag = '潤羽るしあ', '#るしあらいぶ'
+    #     elif ID == 'UCS9uQI-jC3DE0L4IpXyvr6w' : HoloName,live_tag = '桐生ココ', '#桐生ココ'
+    #     elif ID == 'UCZlDXzGoo7d44bwdNObFacg' : HoloName,live_tag = '天音かなた', '#天界学園放送部'
+    #     elif ID == 'UCp-5t9SrOQwXMU7iIjQfARg' : HoloName,live_tag = '大神ミオ', '#ミオかわいい'
+    #     elif ID == 'UC1uv2Oq6kNxgATlCiez59hw' : HoloName,live_tag = '常闇トワ', '#トワイライブ'
+    #     elif ID == 'UCqm3BQLlJfvkTsX_hvm0UmA' : HoloName,live_tag = '角巻わため', '#ドドドライブ'
+    #     elif ID == 'UCFKOVgVbGmX65RxO3EtH3iw' : HoloName,live_tag = '雪花ラミィ', '#らみらいぶ'
+    #     elif ID == 'UCAWSyEs_Io8MtpY3m-zqILA' : HoloName,live_tag = '桃鈴ねね', '#ねねいろらいぶ'
+    #     elif ID == 'UCUKD-uaobj9jiqB-VXt71mA' : HoloName,live_tag = '獅白ぼたん', '#ぐうたらいぶ'
+    #     elif ID == 'UCK9V2B22uJYu3N7eR_BT9QA' : HoloName,live_tag = '尾丸ポルカ', '#ポルカ公演中'
+    #     # elif ID == 'UCgZuwn-O7Szh9cAgHqJ6vjw' : HoloName = '魔乃アロエ'
+    #     # イノナカミュージック
+    #     elif ID == 'UC0TXe_LYZ4scaW2XMyi5_kw' : HoloName,live_tag = 'AZKi', '#AZKi'
+    #     #ホロライブ　EN
+    #     elif ID == 'UCL_qhgtOy0dy1Agp8vkySQg' : HoloName,live_tag = '森美声', '#calliolive'
+    #     elif ID == 'UCHsx4Hqa-1ORjQTh9TYDhww' : HoloName,live_tag = '小鳥遊キアラ', '#キアライブ'
+    #     elif ID == 'UCMwGHR0BTZuLsmjY_NT5Pwg' : HoloName,live_tag = '一伊那尓栖', '#TAKOTIME'
+    #     elif ID == 'UCoSrY_IQQVpmIRZ9Xf-y93g' : HoloName,live_tag = 'がうる・ぐら', '#gawrgura'
+    #     elif ID == 'UCyl1z3jo3XHR1riLFKG5UAg' : HoloName,live_tag = 'ワトソン・アメリア', '#amelive'
+    #     elif ID == 'UC8rcEBzJSleTkf_-agPM20g' : HoloName,live_tag = 'アイリス', '#IRyS'
         
-        print(HoloName)
-        return HoloName,live_tag
+    #     elif ID == 'UCsUj0dszADCGbF3gNrQEuSQ' : HoloName,live_tag = 'つくもさな', '#つくもさな'
+    #     elif ID == 'UCO_aKKYxn4tvrqPjcTzZ6EQ' : HoloName,live_tag = 'セレス・ファウナ', '#セレス・ファウナ'
+    #     elif ID == 'UCmbs8T6MWqUHP1tIQvSgKrg' : HoloName,live_tag = 'オーロ・クロニー', '#オーロ・クロニー'
+    #     elif ID == 'UC3n5uGu18FoCy23ggWWp8tA' : HoloName,live_tag = 'ななしむめい', '#ななしむめい'
+    #     elif ID == 'UCgmPnx-EEeOrZSg5Tiw7ZRQ' : HoloName,live_tag = 'ハコス・ベールズ', '#ハコス・ベールズ'
+    #     #ホロライブ ID
+    #     elif ID == 'UCOyYb1c43VlX9rc_lT6NKQw' : HoloName,live_tag = 'アユンダ・リス', '#Risu_Live'
+    #     elif ID == 'UCP0BspO_AMEe3aQqqpo89Dg' : HoloName,live_tag = 'ムーナ・ホシノヴァ', '#MoonA_Live'
+    #     elif ID == 'UCAoy6rzhSf4ydcYjJw3WoVg' : HoloName,live_tag = 'アイラニ・イオフィフティーン', '#ioLYFE'
+    #     elif ID == 'UCYz_5n-uDuChHtLo7My1HnQ' : HoloName,live_tag = 'クレイジー・オリー', '#Kureiji_Ollie'
+    #     elif ID == 'UC727SQYUvx5pDDGQpTICNWg' : HoloName,live_tag = 'アーニャ・メルフィッサ', '#Anya_Melfissa'
+    #     elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName,live_tag = 'パヴォリア・レイネ', '#Pavolive'
+    #     # 運営
+    #     elif ID == 'UCJFZiqLMntJufDCHc6bQixg' : HoloName,live_tag = 'Hololive','#Hololive'
+    #     elif ID == 'UCotXwY6s8pWmuWd_snKYjhg' : HoloName,live_tag = 'holo EN','#Hololive'
+    #     elif ID == 'UCfrWoRGlawPQDQxxeIDRP0Q' : HoloName,live_tag = 'holo ID','#Hololive'
+        
+    #     print(HoloName)
+    #     return HoloName,live_tag
 
     def ImgDownload(self, line, img_url:str, dir_path:str) ->bool:
         """
@@ -263,17 +264,6 @@ class YoutubeChannelMonitor:
                 res = requests.get(url, timeout=5.0)
                 res.raise_for_status()
                 soup = BeautifulSoup(res.text, "html.parser")
-
-            # elems = soup.select('div#all > div.container > div.row > div > div.row > div > a')
-            # if elems:
-            #     video_list = []
-            #     for elem in elems:
-            #         # pprint(elem)
-            #         try:
-            #             url = elem.get("href").split('?v=')
-            #             video_list.append( url[1] )
-            #         except IndexError:
-            #             continue
 
             # try:
                 elems = soup.select('div#all > div.container > div.row > div > div.row > div > a')
@@ -347,7 +337,9 @@ class YoutubeChannelMonitor:
                         updateJST = hTime.convertToJST(video_info_result['snippet']['publishedAt'])
                         scheduledStartTimeJPT = hTime.convertToJST(scheduledStartTime)
                         status = video_info_result["snippet"]["liveBroadcastContent"]
-                        HoloName, live_tag = self.select_name_tag(video_info_result['snippet']["channelId"]) # channelIdから誰のチャンネルか判定
+                        # HoloName, live_tag = self.select_name_tag(video_info_result['snippet']["channelId"]) # channelIdから誰のチャンネルか判定
+                        HoloName, live_tag = Hololive.get_name_tag(video_info_result['snippet']["channelId"])
+                        print(HoloName)
 
                         download_result = self.ImgDownload(line, high_img, self.LIVE_TMB_IMG_DIR)
                         if not download_result:
@@ -438,8 +430,13 @@ class YoutubeChannelMonitor:
                     #     line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, new[6], new[0], new[3]), new[5])
                     #     photo.imgTrim(new[5])
                     #     tw.tweetWithIMG(message, new[5], self.TRIM_IMG_DIR)
-
-                        message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, get_news[6], hTime.convert_To_LON(get_news[6]), hTime.convert_To_NY(get_news[6]), get_news[0], get_news[3])
+                        if status == 'upcoming':
+                            message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, get_news[6], hTime.convert_To_LON(get_news[6]), hTime.convert_To_NY(get_news[6]), get_news[0], get_news[3])
+                        if status == 'live':
+                            message = 'New Live On Air🆕\n\n{}チャンネル\n{}\n\nLive中です!\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, get_news[6], hTime.convert_To_LON(get_news[6]), hTime.convert_To_NY(get_news[6]), get_news[0], get_news[3])
+                        if status == 'none':
+                            message = 'New Video Upload🆕\n\n{}チャンネル\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, get_news[6], hTime.convert_To_LON(get_news[6]), hTime.convert_To_NY(get_news[6]), get_news[0], get_news[3])
+                        # message = 'New Live Schedule🆕\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n{}'.format(HoloName, live_tag, get_news[6], hTime.convert_To_LON(get_news[6]), hTime.convert_To_NY(get_news[6]), get_news[0], get_news[3])
                         line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, get_news[6], get_news[0], get_news[3]), get_news[5])
                         photo.imgTrim(get_news[5])
                         tw.tweetWithIMG(message, get_news[5], self.TRIM_IMG_DIR)

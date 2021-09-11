@@ -211,12 +211,17 @@ for Account,Tag in Holo_tags.items():
         # えーちゃん
         elif Account  == 'A-CHAN_tg' : HoloName = 'えーちゃん'
         # ホロライブEN
-        elif Account  == 'CALLIOPE_tg' : HoloName = '森美声'
+        elif Account  == 'CALLIOPE_tg' : HoloName = '森カリオペ'
         elif Account  == 'KIARA_tg' : HoloName = '小鳥遊キアラ'
         elif Account  == 'INANIS_tg' : HoloName = '一伊那尓栖'
         elif Account  == 'GURA_tg' : HoloName = 'がうる・ぐら'
         elif Account  == 'AMELIA_tg' : HoloName = 'ワトソン・アメリア'
         elif Account  == 'IRYS_tg' : HoloName = 'アイリス'
+        elif Account  == 'SANA_tg' : HoloName = '九十九佐命/つくもさな'
+        elif Account  == 'FAUNA_tg' : HoloName = 'セレス・ファウナ'
+        elif Account  == 'KEONII_tg' : HoloName = 'オーロ・クロニー'
+        elif Account  == 'MUMWI_tg' : HoloName = '七詩ムメイ/ななしむめい'
+        elif Account  == 'HAKOS_tg' : HoloName = 'ハコス・ベールズ'
         # ホロライブID
         elif Account  == 'RISU_tg' : HoloName = 'アユンダ・リス'
         elif Account  == 'MOONA_tg' : HoloName = 'ムーナ・ホシノヴァ'

@@ -84,5 +84,6 @@ class NicoNico_Wrapper:
 #         print(title)
 #         print(img)
 #         print(nico.nico_convertToJST(jpt_str))
+
 # t = 'https://img.cdn.nimg.jp/s/nicovideo/thumbnails/38697444/38697444.87274044.original/r1280x720l?key=2377d3045f0a68a887246eabcc2ec5228df770a5268fb56789d112c60fd35aa9'
 # print(t.split('/')[6])

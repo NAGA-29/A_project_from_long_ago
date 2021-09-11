@@ -42,7 +42,7 @@ class Twitcasting_Oauth2():
         pprint(response)
 
 
-class Twitcasting_Wrapper():
+class BiliBili_Wrapper():
     _Api_Base_url = 'https://apiv2.twitcasting.tv'
     _HEADER = {}
     def __init__(self, client_id, secret, access_token):

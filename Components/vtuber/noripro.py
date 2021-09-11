@@ -47,7 +47,7 @@ class NoriPro:
 
     @staticmethod
     def get_name_tag(ID):
-            # 絵師V
+        # 絵師V
         if ID == 'UCt30jJgChL8qeT9VPadidSw' : HoloName,live_tag = 'しぐれうい', '#ういなま'
         # のりプロ
         elif ID == 'UC8NZiqKx6fsDT3AVcMiVFyA' : HoloName,live_tag = '犬山たまき', '#犬山たまき'

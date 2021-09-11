@@ -129,6 +129,9 @@ def check_schedule_time(belongs: str):
 
                         if hSql.update_schedule_keep_watch(db_data['video_id'], jst) and hSql.update_schedule_youtube_videos_table(db_data['video_id'], jst):
                             message = f"LIVE Time Change⏰\n\n{v_name}チャンネル\n{live_tag}\n\n時間変更されたので注意してください。\n\n配信予定時間\n{jst}🇯🇵\n{hTime.convert_To_LON(jst)}🇬🇧\n{hTime.convert_To_NY(jst)}🇺🇸🗽\n\n{db_data['title']}\n{bitly.make_yURL(db_data['channel_url'])}"
+                            if tw.check_str_length(message):
+                                # 140字以上な場合にメッセージ内容を削減
+                                message = f"LIVE Time Change⏰\n\n{v_name}チャンネル\n{live_tag}\n\n時間変更されました。\n\n配信予定時間\n{jst}🇯🇵\n\n{db_data['title']}\n{bitly.make_yURL(db_data['channel_url'])}"
                             tw.tweetWithIMG(message, db_data['image_default'], TRIM_IMG_DIR)
                             message = f"\n{v_name}チャンネル\n時間変更⏰\n{jst}\n\n{db_data['title']}\n{db_data['channel_url']}"
                             line.lineNotify(message)

@@ -16,6 +16,8 @@ class Hololive:
         ch_list = {
             # 運営
             'Hololive' : 'hololivetv',
+            # 'HololiveEN' : 'UCotXwY6s8pWmuWd_snKYjhg',   #hololive EN
+            # 'HololiveID' : 'UCfrWoRGlawPQDQxxeIDRP0Q',   #hololive ID
             # 'Cover' : 'cover_corp',
             'えーちゃん' : 'achan_UGA',
             # ホロライブ
@@ -57,12 +59,17 @@ class Hololive:
             'AZKi' : 'AZKi_VDiVA',     #'AZKI' 
 
             #ホロライブ　EN
-            '森美声' : 'moricalliope',    #森美声 モリ・カリオペ
+            '森カリオペ' : 'moricalliope',    #森カリオペ モリ・カリオペ
             '小鳥遊キアラ' : 'takanashikiara',    #小鳥遊キアラ
             '一伊那尓栖' : 'ninomaeinanis',    #一伊那尓栖 にのまえいなにす
             'がうる・ぐら' : 'gawrgura',    #がうる・くら
             'ワトソン・アメリア' : 'watsonameliaEN',  #ワトソン・アメリア
             'IRyS' : 'irys_en', #IRyS アイリス
+            'つくもさな' : 'tsukumosana',      # 九十九佐命/つくもさな
+            'セレス・ファウナ' : 'ceresfauna',    # セレス・ファウナ
+            'オーロ・クロニー' : 'ourokronii',   # オーロ・クロニー
+            'ななしむめい' : 'nanashimumei_en',  # 七詩ムメイ/ななしむめい
+            'ハコス・ベールズ' : 'hakosbaelz',    # ハコス・ベールズ
 
             #ホロライブ ID
             'アユンダ・リス' : 'ayunda_risu',    #Ayunda Risu / アユンダ・リス
@@ -117,17 +124,24 @@ class Hololive:
 
                 # 運営
                 'Hololive' : 'UCJFZiqLMntJufDCHc6bQixg',   #Hololive
-                'Hololive' : 'UCotXwY6s8pWmuWd_snKYjhg',   #Hololive
+                'HololiveEN' : 'UCotXwY6s8pWmuWd_snKYjhg',   #hololive EN
+                'HololiveID' : 'UCfrWoRGlawPQDQxxeIDRP0Q',   #hololive ID
                 }
 
         Channel_OSea = {
                 #ホロライブ　EN
-                '森美声' : 'UCL_qhgtOy0dy1Agp8vkySQg',    #森美声 モリ・カリオペ
+                '森カリオペ' : 'UCL_qhgtOy0dy1Agp8vkySQg',    #森カリオペ モリ・カリオペ
                 '小鳥遊キアラ' : 'UCHsx4Hqa-1ORjQTh9TYDhww',    #小鳥遊キアラ
                 '一伊那尓栖' : 'UCMwGHR0BTZuLsmjY_NT5Pwg',    #一伊那尓栖 にのまえいなにす
                 'がうる・ぐら' : 'UCoSrY_IQQVpmIRZ9Xf-y93g',    #がうる・くら
                 'ワトソン・アメリア' : 'UCyl1z3jo3XHR1riLFKG5UAg',  #ワトソン・アメリア
                 'IRyS' : 'UC8rcEBzJSleTkf_-agPM20g',       #IRys / アイリス
+
+                'つくもさな' : 'UCsUj0dszADCGbF3gNrQEuSQ',      # 九十九佐命/つくもさな
+                'セレス・ファウナ' : 'UCO_aKKYxn4tvrqPjcTzZ6EQ',    # セレス・ファウナ
+                'オーロ・クロニー' : 'UCmbs8T6MWqUHP1tIQvSgKrg',   # オーロ・クロニー
+                'ななしむめい' : 'UC3n5uGu18FoCy23ggWWp8tA',  # 七詩ムメイ/ななしむめい
+                'ハコス・ベールズ' : 'UCgmPnx-EEeOrZSg5Tiw7ZRQ',    # ハコス・ベールズ
 
                 #ホロライブ ID
                 'アユンダ・リス' : 'UCOyYb1c43VlX9rc_lT6NKQw',    #Ayunda Risu / アユンダ・リス
@@ -142,6 +156,8 @@ class Hololive:
     @staticmethod
     def get_name_tag(ID):
         # ホロライブ
+        HoloName = ''
+        live_tag  = ''
         if ID == 'UChAnqc_AY5_I3Px5dig3X1Q': HoloName,live_tag = '戌神ころね', '#生神もんざえもん'
         elif ID == 'UC-hM6YJuNYVAmUWxeIr9FeA' : HoloName,live_tag ='さくらみこ', '#みこなま'
         elif ID == 'UCdn5BQ06XqgXoAxIhbqw5Rg' : HoloName,live_tag = '白上フブキ', '#フブキCh'
@@ -178,12 +194,18 @@ class Hololive:
         # イノナカミュージック
         elif ID == 'UC0TXe_LYZ4scaW2XMyi5_kw' : HoloName,live_tag = 'AZKi', '#AZKi'
         #ホロライブ　EN
-        elif ID == 'UCL_qhgtOy0dy1Agp8vkySQg' : HoloName,live_tag = '森美声', '#calliolive'
+        elif ID == 'UCL_qhgtOy0dy1Agp8vkySQg' : HoloName,live_tag = '森カリオペ', '#calliolive'
         elif ID == 'UCHsx4Hqa-1ORjQTh9TYDhww' : HoloName,live_tag = '小鳥遊キアラ', '#キアライブ'
         elif ID == 'UCMwGHR0BTZuLsmjY_NT5Pwg' : HoloName,live_tag = '一伊那尓栖', '#TAKOTIME'
         elif ID == 'UCoSrY_IQQVpmIRZ9Xf-y93g' : HoloName,live_tag = 'がうる・ぐら', '#gawrgura'
         elif ID == 'UCyl1z3jo3XHR1riLFKG5UAg' : HoloName,live_tag = 'ワトソン・アメリア', '#amelive'
         elif ID == 'UC8rcEBzJSleTkf_-agPM20g' : HoloName,live_tag = 'アイリス', '#IRyS'
+
+        elif ID == 'UCsUj0dszADCGbF3gNrQEuSQ' : HoloName,live_tag = 'つくもさな', '#SanaLanding'
+        elif ID == 'UCO_aKKYxn4tvrqPjcTzZ6EQ' : HoloName,live_tag = 'セレス・ファウナ', '#faunline'
+        elif ID == 'UCmbs8T6MWqUHP1tIQvSgKrg' : HoloName,live_tag = 'オーロ・クロニー', '#krotime'
+        elif ID == 'UC3n5uGu18FoCy23ggWWp8tA' : HoloName,live_tag = 'ななしむめい', '#watchMEI'
+        elif ID == 'UCgmPnx-EEeOrZSg5Tiw7ZRQ' : HoloName,live_tag = 'ハコス・ベールズ', '#enterbaelz'
         #ホロライブ ID
         elif ID == 'UCOyYb1c43VlX9rc_lT6NKQw' : HoloName,live_tag = 'アユンダ・リス', '#Risu_Live'
         elif ID == 'UCP0BspO_AMEe3aQqqpo89Dg' : HoloName,live_tag = 'ムーナ・ホシノヴァ', '#MoonA_Live'
@@ -193,6 +215,7 @@ class Hololive:
         elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName,live_tag =  'パヴォリア・レイネ', '#Pavolive'
         # 運営
         elif ID == 'UCJFZiqLMntJufDCHc6bQixg' : HoloName,live_tag = 'Hololive','#Hololive'
-        elif ID == 'UCotXwY6s8pWmuWd_snKYjhg' : HoloName,live_tag = 'Hololive','#Hololive'
+        elif ID == 'UCotXwY6s8pWmuWd_snKYjhg' : HoloName,live_tag = 'holoEN','#holoEN'
+        elif ID == 'UCfrWoRGlawPQDQxxeIDRP0Q' : HoloName,live_tag = 'holoID','#holoID'
         
         return HoloName,live_tag

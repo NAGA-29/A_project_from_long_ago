@@ -38,6 +38,7 @@ from Components.holo_date import HoloDate
 from Components.tweet import tweet_components
 from Components.lines import lines
 from Components import bitly
+from Components.vtuber.noripro import NoriPro
 
 # プレイリストバージョン
 # from playlist_detect import playlist_detect
@@ -106,20 +107,20 @@ youtubeObject = build(
     )
 
 
-Channel = {
-    # のりプロ他
-    'SHIGURE_UI_ch' : 'UCt30jJgChL8qeT9VPadidSw', #時雨うい
-    'TAKUMA_ch' : 'UCCXME7oZmXB2VFHJbz5496A',     #熊谷タクマ
-    'TAMAKI_ch' : 'UC8NZiqKx6fsDT3AVcMiVFyA',     #佃煮のりお
-    'SHIRAYUKI_ch' : 'UCC0i9nECi4Gz7TU63xZwodg',  #白雪みしろ
-    'MILK_ch' : 'UCJCzy0Fyrm0UhIrGQ7tHpjg',       #愛宮みるく
-    'YUZURU_ch' : 'UCle1cz6rcyH0a-xoMYwLlAg',     #姫咲ゆずる
-    'HOOZUKI_ch' : 'UCLyTXfCZtl7dyhta9Jg3pZg',    #鬼灯わらべ
-    'YUMENO_ch' : 'UCH11P1Hq4PXdznyw1Hhr3qw',     #夢乃リリス
-    'KURUMIZAWA_ch' : 'UCxrmkJf_X1Yhte_a4devFzA', #胡桃澤もも
-    'OUMAKI_ch' : 'UCBAeKqEIugv69Q2GIgcH7oA',     #逢魔きらら
-    'NIA_ch' : 'UCIRzELGzTVUOARi3Gwf1-yg',        #看谷にぃあ
-}
+# Channel = {
+#     # のりプロ他
+#     'SHIGURE_UI_ch' : 'UCt30jJgChL8qeT9VPadidSw', #時雨うい
+#     'TAKUMA_ch' : 'UCCXME7oZmXB2VFHJbz5496A',     #熊谷タクマ
+#     'TAMAKI_ch' : 'UC8NZiqKx6fsDT3AVcMiVFyA',     #佃煮のりお
+#     'SHIRAYUKI_ch' : 'UCC0i9nECi4Gz7TU63xZwodg',  #白雪みしろ
+#     'MILK_ch' : 'UCJCzy0Fyrm0UhIrGQ7tHpjg',       #愛宮みるく
+#     'YUZURU_ch' : 'UCle1cz6rcyH0a-xoMYwLlAg',     #姫咲ゆずる
+#     'HOOZUKI_ch' : 'UCLyTXfCZtl7dyhta9Jg3pZg',    #鬼灯わらべ
+#     'YUMENO_ch' : 'UCH11P1Hq4PXdznyw1Hhr3qw',     #夢乃リリス
+#     'KURUMIZAWA_ch' : 'UCxrmkJf_X1Yhte_a4devFzA', #胡桃澤もも
+#     'OUMAKI_ch' : 'UCBAeKqEIugv69Q2GIgcH7oA',     #逢魔きらら
+#     'NIA_ch' : 'UCIRzELGzTVUOARi3Gwf1-yg',        #看谷にぃあ
+# }
 
 # Play_Lists = {
 #     # ホロライブアイドル道ラジオ
@@ -167,6 +168,7 @@ if __name__ == '__main__':
         line = lines()
         print('########################################################################')
 
+        Channel = NoriPro.get_video_ids()
         for Name,ID in Channel.items():
             # ------------------------
             # param
@@ -184,20 +186,20 @@ if __name__ == '__main__':
             # _TIMELAG = 900
             # ------------------------
 
-
-            # 絵師V
-            if ID == 'UCt30jJgChL8qeT9VPadidSw' : HoloName,live_tag = 'しぐれうい', '#ういなま'
-            # のりプロ
-            elif ID == 'UC8NZiqKx6fsDT3AVcMiVFyA' : HoloName,live_tag = '犬山たまき', '#犬山たまき'
-            elif ID == 'UCCXME7oZmXB2VFHJbz5496A' : HoloName,live_tag = '熊谷タクマ', '#熊谷タクマ'
-            elif ID == 'UCC0i9nECi4Gz7TU63xZwodg' : HoloName,live_tag = '白雪みしろ', '#白雪みしろ'
-            elif ID == 'UCJCzy0Fyrm0UhIrGQ7tHpjg' : HoloName,live_tag = '愛宮みるく', '#愛宮みるく'
-            elif ID == 'UCle1cz6rcyH0a-xoMYwLlAg' : HoloName,live_tag = '姫咲ゆずる', '#姫咲ゆずる'
-            elif ID == 'UCLyTXfCZtl7dyhta9Jg3pZg' : HoloName,live_tag = '鬼灯わらべ', '#鬼灯わらべ'
-            elif ID == 'UCH11P1Hq4PXdznyw1Hhr3qw' : HoloName,live_tag = '夢乃リリス', '#夢乃リリス'
-            elif ID == 'UCxrmkJf_X1Yhte_a4devFzA' : HoloName,live_tag = '胡桃澤もも', '#胡桃澤もも'
-            elif ID == 'UCBAeKqEIugv69Q2GIgcH7oA' : HoloName,live_tag = '逢魔きらら', '#逢魔きらら'
-            elif ID == 'UCIRzELGzTVUOARi3Gwf1-yg' : HoloName,live_tag = '看谷にぃあ', '#看谷にぃあ'
+            HoloName, live_tag = NoriPro.get_name_tag(ID)
+            # # 絵師V
+            # if ID == 'UCt30jJgChL8qeT9VPadidSw' : HoloName,live_tag = 'しぐれうい', '#ういなま'
+            # # のりプロ
+            # elif ID == 'UC8NZiqKx6fsDT3AVcMiVFyA' : HoloName,live_tag = '犬山たまき', '#犬山たまき'
+            # elif ID == 'UCCXME7oZmXB2VFHJbz5496A' : HoloName,live_tag = '熊谷タクマ', '#熊谷タクマ'
+            # elif ID == 'UCC0i9nECi4Gz7TU63xZwodg' : HoloName,live_tag = '白雪みしろ', '#白雪みしろ'
+            # elif ID == 'UCJCzy0Fyrm0UhIrGQ7tHpjg' : HoloName,live_tag = '愛宮みるく', '#愛宮みるく'
+            # elif ID == 'UCle1cz6rcyH0a-xoMYwLlAg' : HoloName,live_tag = '姫咲ゆずる', '#姫咲ゆずる'
+            # elif ID == 'UCLyTXfCZtl7dyhta9Jg3pZg' : HoloName,live_tag = '鬼灯わらべ', '#鬼灯わらべ'
+            # elif ID == 'UCH11P1Hq4PXdznyw1Hhr3qw' : HoloName,live_tag = '夢乃リリス', '#夢乃リリス'
+            # elif ID == 'UCxrmkJf_X1Yhte_a4devFzA' : HoloName,live_tag = '胡桃澤もも', '#胡桃澤もも'
+            # elif ID == 'UCBAeKqEIugv69Q2GIgcH7oA' : HoloName,live_tag = '逢魔きらら', '#逢魔きらら'
+            # elif ID == 'UCIRzELGzTVUOARi3Gwf1-yg' : HoloName,live_tag = '看谷にぃあ', '#看谷にぃあ'
             print(HoloName)
 
 

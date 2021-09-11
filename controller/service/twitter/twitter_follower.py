@@ -79,7 +79,11 @@ def twitter_subscriber(belongs):
                 profile = None
                 message = ''
                 # =======================
-                user_info = tw.get_user(Holo_twitter[Name])
+                try:
+                    user_info = tw.get_user(Holo_twitter[Name])
+                except KeyError as err:
+                    pprint(err)
+                    continue
                 followers_count = user_info.followers_count  # follower数の取得
 
                 if Account == Holo_JP:  # Hololive
@@ -108,7 +112,11 @@ def twitter_subscriber(belongs):
                 profile = None
                 message = ''
                 # =======================
-                user_info = tw.get_user(Nori_twitter[Name])
+                try: 
+                    user_info = tw.get_user(Nori_twitter[Name])
+                except KeyError as err:
+                    pprint(err)
+                    continue
                 followers_count = user_info.followers_count  # follower数の取得
 
                 profile = hSql.selectFriendsHolo(channel_ID)
