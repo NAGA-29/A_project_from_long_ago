@@ -3,7 +3,6 @@
 # 
 import tweepy
 from pyasn1.type.univ import Boolean, Null
-import requests
 from requests_oauthlib import OAuth1Session
 import urllib.request, urllib.error
 
@@ -12,7 +11,6 @@ from pprint import pprint
 import time
 import datetime
 from datetime import datetime as dt
-import dateutil.parser
 import schedule
 
 from apiclient.discovery import build
@@ -23,8 +21,9 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-
-# Original Modules
+'''
+Original Modules
+'''
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 import holo_sql
 from ImageProcessing import ImageProcessing
@@ -35,6 +34,13 @@ from Components.vtuber.noripro import NoriPro
 from Components.tweet import tweet_components
 from Components.holo_date import HoloDate
 from Components.tubeAnalysts import Analyzer
+
+from sqlalchemy import func
+from model import HoloData
+from model.setting import session
+
+# from model import HoloData
+# from model.setting import session
 
 
 load_dotenv(verbose=True)
@@ -107,7 +113,8 @@ def OverallInfo():
     '''
     tw = tweet_components()
     hTime = HoloDate()
-    youAPI = Youtube_API()
+    # youAPI = Youtube_API()
+    # hdata = HoloData()
     hSql = holo_sql.holo_sql()
     All_Subscriber = 0  # 全体の登録者
     All_VideoCount = 0 #　全体の公開中のビデオ本数
@@ -135,6 +142,8 @@ def OverallInfo():
 
 
     data_list.append([All_Subscriber, All_VideoCount, All_ViewCount, hTime.convertToJST(updated_at)])
+    yestarday_data = session.query(HoloData).filter(func.date(HoloData.updated_at) == (datetime.date.today() - datetime.timedelta(days=1)) ).all()
+    # pprint(yestarday_data)
     message = 'Hololive全体報告!\n全体チャンネル登録者数\n🌟約{}万人!\n全体動画数\n🌟{}本!\n全体再生回数\n🌟{}回!\n\n #Hololive'.format((All_Subscriber)//10000, All_VideoCount, All_ViewCount)
     tw.sub_tweetWithIMG(message,DEFAULT_IMG)
     hSql.insertHoloData(data_list)

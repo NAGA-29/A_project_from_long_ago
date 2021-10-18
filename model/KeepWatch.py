@@ -2,7 +2,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, BIGINT, Integer, String, TEXT, Float, DateTime
 
 import sys
-from setting import Base
+# from setting import Base
+from model.setting import Base
 # sys.path.append('../')
 # from config import Base
 # from config import ENGINE

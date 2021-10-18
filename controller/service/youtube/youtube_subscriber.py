@@ -11,7 +11,7 @@ from pprint import pprint
 
 import time
 import datetime
-from datetime import datetime as dt
+# from datetime import datetime as dt
 import dateutil.parser
 import schedule
 
@@ -23,7 +23,6 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-
 # Original Modules
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../../'))
 import holo_sql
@@ -32,7 +31,13 @@ from Components.vtuber.hololive import Hololive
 from Components.vtuber.noripro import NoriPro
 from Components.tweet import tweet_components
 from Components.holo_date import HoloDate
+from Components.matplotlib import holo_data
 
+# from model.setting import session
+# from model.HoloData import HoloData
+from sqlalchemy import func
+from model import HoloData
+from model.setting import session
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '../../../.env')
@@ -59,6 +64,7 @@ ACCESS_TOKEN_SECRET_B = os.environ.get('ACCESS_TOKEN_SECRET_B')
 # ==========================================================================
 # 代表画像
 DEFAULT_IMG = 'hololive.jpg'
+GRAPH_IMG = 'holo_data.png'
 # BASE_PATH = 'Profile_Images'
 # ==========================================================================
 
@@ -104,7 +110,13 @@ def OverallInfo():
     '''
     tw = tweet_components()
     hTime = HoloDate()
-    youAPI = Youtube_API()
+    # youAPI = Youtube_API()
+
+    # DBからidを検索
+    # result = session.query(HoloData).all()
+    # n = len(result) - 1
+    # result = session.query(HoloData).filter(HoloData.id == n).all()
+    
     hSql = holo_sql.holo_sql()
     All_Subscriber = 0  # 全体の登録者
     All_VideoCount = 0 #　全体の公開中のビデオ本数
@@ -132,11 +144,28 @@ def OverallInfo():
 
 
     data_list.append([All_Subscriber, All_VideoCount, All_ViewCount, hTime.convertToJST(updated_at)])
-    message = 'Hololive全体報告!\n全体チャンネル登録者数\n🌟約{}万人!\n全体動画数\n🌟{}本!\n全体再生回数\n🌟{}回!\n\n #Hololive'.format((All_Subscriber)//10000, All_VideoCount, All_ViewCount)
-    tw.sub_tweetWithIMG(message,DEFAULT_IMG)
+    pprint(datetime.date.today() - datetime.timedelta(days=1))
+    yestarday_data = session.query(HoloData).filter(func.date(HoloData.updated_at) == (datetime.date.today() - datetime.timedelta(days=1)) ).all()
+    # pprint(type(yestarday_data[0].all_youtube_subscriber))
+    All_Subscriber_previous_day = (All_Subscriber//10000) - (yestarday_data[0].all_youtube_subscriber//10000)
+    All_VideoCount_previous_day = All_VideoCount - yestarday_data[0].all_youtube_videoCount
+    All_ViewCount_previous_day = All_ViewCount - yestarday_data[0].all_youtube_viewCount
+
+    message = 'Hololive全体報告!\n\n全体チャンネル登録者数\n🌟約{}万人 (+{}万人)\n全体動画数\n🌟{}本 (+{}本)\n全体再生回数\n🌟{}回 (+{}回)\n\n #Hololive'.format(
+                                                                                    (All_Subscriber)//10000, All_Subscriber_previous_day, 
+                                                                                    All_VideoCount, All_VideoCount_previous_day, 
+                                                                                    All_ViewCount, All_ViewCount_previous_day)
+
     hSql.insertHoloData(data_list)
+    hSql.dbClose()
+    hSql = None
+
+    holo_data.make_holo_data_graph()
+    # tw.sub_tweetWithIMG(message,DEFAULT_IMG)
+    tw.matplotlib_tweetWithIMG(message,GRAPH_IMG)
 
     pprint(str(All_Subscriber+10000) + '万人')
+    # return message
 
 def searchSubscriber(belongs: str):
     """
@@ -209,14 +238,15 @@ def main():
     searchSubscriber('noripro')
 
 
-if __name__ == '__main__':
-    # 登録者検知/通知
-    # schedule.every().hour.at(":00").do(main)
-    # schedule.every().hour.at(":20").do(main)
-    # schedule.every().hour.at(":40").do(main)
+# if __name__ == '__main__':
+#     # 登録者検知/通知
+#     # schedule.every().hour.at(":00").do(main)
+#     # schedule.every().hour.at(":20").do(main)
+#     # schedule.every().hour.at(":40").do(main)
 
-    # 全体登録者通知
-    schedule.every().day.at("00:05").do(OverallInfo)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+#     # 全体登録者通知
+#     # schedule.every().day.at("00:05").do(OverallInfo)
+#     schedule.every().day.at("00:38").do(OverallInfo)
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)

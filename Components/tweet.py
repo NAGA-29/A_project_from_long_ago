@@ -48,6 +48,7 @@ class tweet_components:
     # プロフィール画像保存先
     # PROFILE_IMG_DIR = os.environ.get('PROFILE_IMG_DIR')
     PROFILE_IMG_DIR = app.PROFILE_IMG_DIR 
+    HOLO_DATA_IMG_DIR = app.HOLO_DATA_IMG_DIR
     # イベント用画像保存先
     EVENT_IMG_DIR = os.environ.get('EVENT_IMG_DIR')
 
@@ -124,6 +125,26 @@ class tweet_components:
         try :
             # ↓添付したい画像のファイル名
             FILE_NAME = self.PROFILE_IMG_DIR + img_url
+            tweet_status = self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
+            if tweet_status == 200: #成功
+                pprint("Succeed!")
+                result = True
+            else:
+                result = False
+        except Exception as e:
+                pprint(e)
+                result = False
+        return result
+
+    def matplotlib_tweetWithIMG(self,message,img_url):
+        """
+        ツイートメソッド 画像付き 
+        """
+        #ツイート内容
+        TWEET_TEXT = message
+        try :
+            # ↓添付したい画像のファイル名
+            FILE_NAME = self.HOLO_DATA_IMG_DIR + img_url
             tweet_status = self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
             if tweet_status == 200: #成功
                 pprint("Succeed!")

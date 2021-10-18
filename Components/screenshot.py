@@ -30,7 +30,7 @@ load_dotenv(dotenv_path)
 
 _DRIVER_PATH = os.environ.get('DRIVER_PATH')
 
-SCREENSHOT_FILE = './screenshot_image/'
+SCREENSHOT_FILE = './storage/screenshot_image/'
 
 #twitter本番アカウント
 CONSUMER_KEY = os.environ.get('CONSUMER_KEY')

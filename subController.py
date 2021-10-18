@@ -92,7 +92,9 @@ def holoNews():
     reCh.csvFileWrite(_FILE, news)
 
 def niconico_search():
+    print('ニコサーチ開始')
     Holo_nico_search.main()
+    print('ニコサーチ終了')
 
 # 毎時0分に実行
 schedule.every().hour.at(":00").do(artTweet)
@@ -116,7 +118,7 @@ schedule.every().day.at("00:30").do(niconico_search)
 schedule.every().day.at("06:30").do(niconico_search)
 schedule.every().day.at("12:30").do(niconico_search)
 schedule.every().day.at("18:30").do(niconico_search)
-# schedule.every().day.at("22:20").do(niconico_search)
+# schedule.every().day.at("22:30").do(niconico_search)
 
 while True:
     schedule.run_pending()

@@ -7,9 +7,6 @@ import requests
 from requests_oauthlib import OAuth1Session
 import urllib.request, urllib.error
 
-from apiclient.discovery import build
-from apiclient.errors import HttpError
-
 from pprint import pprint
 
 import time
@@ -29,11 +26,14 @@ from dotenv import load_dotenv
 '''
 Original Modules
 '''
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+from Components.tweet import tweet_components
+from Components import holo_data
 import tube_subscriber
 # from service.twitter import twitter_follower as tw
 # from service.youtube import test_tube_subscriber as yt
 from service import twitter_follower as tw
-from service import test_tube_subscriber as yt
+from service import youtube_subscriber as yt
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '../.env')
@@ -65,6 +65,7 @@ LIVE_TMB_TMP_DIR = os.environ.get('LIVE_TMB_TMP_DIR')
 TRIM_IMG_DIR = os.environ.get('IMG_TRIM_DIR')
 # 代表画像
 DEFAULT_IMG = 'hololive.jpg'
+GRAPH_IMG = 'holo_data.png'
 # ==========================================================================
 
 _api_key = 'YOUTUBE_API_KEY_dev3'
@@ -90,8 +91,12 @@ def youtube_sys():
     yt.main()
 
 def OverallInfo():
-    # tube_subscriber.OverallInfo()
     yt.OverallInfo()
+
+    # message = yt.OverallInfo()
+    # holo_data.make_holo_data_graph()
+    # tw = tweet_components()
+    # tw.matplotlib_tweetWithIMG(message,GRAPH_IMG)
 
 def twitter_sys():
     tw.main()
@@ -113,6 +118,7 @@ if __name__ == '__main__':
 
     # 全体登録者通知
     schedule.every().day.at("00:05").do(OverallInfo)
+    # schedule.every().day.at("00:09").do(OverallInfo)
 
     while True:
         schedule.run_pending()

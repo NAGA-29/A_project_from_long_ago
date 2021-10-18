@@ -57,7 +57,9 @@ SCREENSHOT_DIR = os.path.normpath(screenshot_dir) + '/'
 combine_img_dir = os.path.join(os.path.dirname(__file__), '../'+ os.environ.get('COMBINE_IMG_DIR'))
 COMBINE_IMG_DIR = os.path.normpath(combine_img_dir) + '/'
 
-
+# holo data解析画像フォルダ
+holo_data_img_dir = os.path.join(os.path.dirname(__file__), '../'+ os.environ.get('HOLO_IMG_IMG_DIR'))
+HOLO_DATA_IMG_DIR = os.path.normpath(holo_data_img_dir) + '/'
 
 '''
 google driver
@@ -74,7 +76,6 @@ Twitch api
 # Secret
 ''' 
 TWITCH_CLIENT = os.environ.get('TWITCH_CLIENT')
-
 TWITCH_SECRET = os.environ.get('TWITCH_SECRET')
 
 '''

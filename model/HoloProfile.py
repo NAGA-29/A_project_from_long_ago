@@ -3,7 +3,8 @@ from sqlalchemy import Column, BIGINT, Integer, String, TEXT, Float, DateTime, D
 
 import sys
 # sys.path.append('../')
-from setting import Base
+# from setting import Base
+from model.setting import Base
 # from config import Base
 # from config import ENGINE
 
@@ -32,15 +33,15 @@ class HoloProfile(Base):
     twitch_url = Column('twitch_url', TEXT)
     twitch_follower = Column('twitch_follower', BIGINT)
     twitch_view_count = Column('twitch_view_count', BIGINT)
-    offline_img_url = Column('offline_img_url ', TEXT)
+    offline_image_url = Column('offline_image_url', TEXT)
     twitcasting_name = Column('twitcasting_name', String(255))
     twitcasting_id = Column('twitcasting_id', String(255))
     twitcasting_screen_id = Column('twitcasting_screen_id', String(255))
     twitcasting_level = Column('twitcasting_level', Integer)
-    image1 = Column('image1 ', TEXT)
-    image2 = Column('image2 ', TEXT)
-    image3 = Column('image3 ', TEXT)
-    image4 = Column('image4 ', TEXT)
+    image1 = Column('image1', TEXT)
+    image2 = Column('image2', TEXT)
+    image3 = Column('image3', TEXT)
+    image4 = Column('image4', TEXT)
     image_tag = Column('image_tag', String(255))
     tw_arts_tag = Column('tw_arts_tag', String(255))
     live_tag = Column('live_tag', String(255))

@@ -3,7 +3,7 @@ from sqlalchemy import Column, BIGINT, Integer, String, TEXT, Float, DateTime
 
 import sys
 # sys.path.append('../')
-from setting import Base
+from model.setting import Base
 # from DB_config import Base
 # from DB_config import ENGINE
 

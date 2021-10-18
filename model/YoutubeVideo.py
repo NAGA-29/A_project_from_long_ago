@@ -3,11 +3,12 @@ from sqlalchemy import Column, BIGINT, Integer, String, TEXT, Float, DateTime
 
 import sys
 # sys.path.append('../')
-import setting
+# from setting import Base
+from model.setting import Base
 # from config import Base
 # from config import ENGINE
 
-class YoutubeVideo(setting.Base):
+class YoutubeVideo(Base):
     """
     YoutubeVideoモデル
     """

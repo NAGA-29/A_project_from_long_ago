@@ -3,12 +3,14 @@ from sqlalchemy import Column, BIGINT, Integer, String, TEXT, Float, DateTime
 
 import sys
 # sys.path.append('../')
-import setting
+# from setting import Base
+from model.setting import Base
+# import setting
 # from DB_config import Base
 # from DB_config import ENGINE
 
 
-class TwitchVideo(setting.Base):
+class TwitcastingVideo(Base):
     """
     twitcasting_videosテーブル用モデル
     """
