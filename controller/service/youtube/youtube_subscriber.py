@@ -37,7 +37,9 @@ from Components.matplotlib import holo_data
 # from model.HoloData import HoloData
 from sqlalchemy import func
 from model import HoloData
-from model.setting import session
+from model import HoloProfile
+# from model.setting import session
+from model.setting import session as se
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '../../../.env')
@@ -145,7 +147,8 @@ def OverallInfo():
 
     data_list.append([All_Subscriber, All_VideoCount, All_ViewCount, hTime.convertToJST(updated_at)])
     pprint(datetime.date.today() - datetime.timedelta(days=1))
-    yestarday_data = session.query(HoloData).filter(func.date(HoloData.updated_at) == (datetime.date.today() - datetime.timedelta(days=1)) ).all()
+    # yestarday_data = session.query(HoloData).filter(func.date(HoloData.updated_at) == (datetime.date.today() - datetime.timedelta(days=1)) ).all()
+    yestarday_data = se.query(HoloData).filter(func.date(HoloData.updated_at) == (datetime.date.today() - datetime.timedelta(days=1)) ).all()
     # pprint(type(yestarday_data[0].all_youtube_subscriber))
     All_Subscriber_previous_day = (All_Subscriber//10000) - (yestarday_data[0].all_youtube_subscriber//10000)
     All_VideoCount_previous_day = All_VideoCount - yestarday_data[0].all_youtube_videoCount
@@ -184,7 +187,7 @@ def searchSubscriber(belongs: str):
         for Name,channel_ID in Channel.items():
             channel_info_list = []
             message = ''
-            channel_datas = youAPI.channelInfo(youtubeObject,channel_ID)
+            channel_datas = youAPI.channelInfo(youtubeObject,channel_ID) # youtube APIを使用してチャンネル情報を取得
             CHANNEL_DATAS = channel_datas.get("items", None)
             if CHANNEL_DATAS:
                 if not CHANNEL_DATAS[0]['statistics']['hiddenSubscriberCount']:
@@ -198,9 +201,16 @@ def searchSubscriber(belongs: str):
                     if Channel == Channel_JP: 
                         # Hololive
                         profile = hSql.selectHolo(channel_ID)
+                        # holo_prf = se.query(HoloProfile).filter(HoloProfile.channel_id == channel_ID).all() # dbよりプロフィールを取得
                         if subJudge(int(subscriberCount), profile, belongs):
                             tw = tweet_components()
-                            message = '速報！！\n{}✨ チャンネル\n{}\n\nチャンネル登録者が\n\n🎉{}万人到達!!!🎉`\n\nおめでとうございます!!\nチャンネル登録がまだの方はこちらから!\n {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
+                            
+                            message = '速報！\n{}✨\n{}\n\n<Youtube>チャンネル登録者が\n\n【{}万人】到達!🔥\n\nおめでとうございます！\n\nデビュー日:{}\n誕生日:{}\n{}'.format(
+                                Name, profile[0]['live_tag'], (int(subscriberCount)//10000), 
+                                profile[0]['debut'].strftime('%Y/%m/%d'),
+                                profile[0]['birthday'].strftime('%m/%d'),
+                                profile[0]['channel_short_url'])
+                            
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloJP_ProfileTable(channel_ID, channel_info_list)
@@ -210,7 +220,13 @@ def searchSubscriber(belongs: str):
                         profile = hSql.selectOSHolo(channel_ID)
                         if subJudge(int(subscriberCount), profile, belongs):
                             tw = tweet_components()
-                            message = '速報！！\n{}✨ チャンネル\n{}\n\nチャンネル登録者が\n\n🎉{}万人到達!!!🎉`\n\nおめでとうございます!!\nチャンネル登録がまだの方はこちらから!\n {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
+
+                            message = '速報！\n{}✨\n{}\n\n<Youtube>チャンネル登録者が\n\n【{}万人】到達!🔥\n\nおめでとうございます！\n\nデビュー日:{}\n誕生日:{}\n{}'.format(
+                                Name, profile[0]['live_tag'], (int(subscriberCount)//10000), 
+                                profile[0]['debut'].strftime('%Y/%m/%d'),
+                                profile[0]['birthday'].strftime('%m/%d'),
+                                profile[0]['channel_short_url'])
+
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloOS_ProfileTable(channel_ID, channel_info_list)
@@ -220,7 +236,7 @@ def searchSubscriber(belongs: str):
                         profile = hSql.selectFriendsHolo(channel_ID)
                         if subJudge(int(subscriberCount), profile, belongs):
                             tw = tweet_components(CONSUMER_KEY_B, CONSUMER_SECRET_B, ACCESS_TOKEN_B, ACCESS_TOKEN_SECRET_B)
-                            message = '速報！！\n{}✨ チャンネル\n{}\n\nチャンネル登録者が\n\n🎉{}万人到達!!!🎉`\n\nおめでとうございます!!\nチャンネル登録がまだの方はこちらから!\n {}'.format(Name, profile[0]['live_tag'],(int(subscriberCount)//10000),profile[0]['channel_short_url'])
+                            message = '速報！\n{}✨\n{}\n\n<Youtube>チャンネル登録者が\n\n【{}万人】到達!🔥\n\nおめでとうございます！\n\n{}'.format(Name, profile[0]['live_tag'], (int(subscriberCount)//10000), profile[0]['channel_short_url'])
                             tw.sub_tweetWithIMG(message, profile[0]['image1'])
                             pprint(message)
                         hSql.insert_HoloFri_ProfileTable(channel_ID, channel_info_list)
@@ -238,7 +254,8 @@ def main():
     searchSubscriber('noripro')
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    main()
 #     # 登録者検知/通知
 #     # schedule.every().hour.at(":00").do(main)
 #     # schedule.every().hour.at(":20").do(main)

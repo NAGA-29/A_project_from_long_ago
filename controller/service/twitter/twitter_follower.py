@@ -90,7 +90,13 @@ def twitter_subscriber(belongs):
                     profile = hSql.selectHolo(channel_ID)
                     if subJudge(followers_count, profile, belongs):
                         tweet = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-                        message = '速報！！\n✨{}✨ \n{}\n\nツイッターフォロワー数が\n{}万人到達!!!🎉\nおめでとうございます!!\n{}'.format(Name, profile[0]['live_tag'], (int(followers_count)//10000), 'twitter.com/'+Holo_twitter[Name],)
+
+                        message = '速報！\n{}✨\n{}\n\n<twitter>フォロワー数が\n【{}万人】到達!🔥\n\nおめでとうございます！\n\nデビュー日:{}\n誕生日:{}\n{}'.format(
+                            Name, profile[0]['live_tag'], (int(followers_count)//10000), 
+                            profile[0]['debut'].strftime('%Y/%m/%d'),
+                            profile[0]['birthday'].strftime('%m/%d'),
+                            'twitter.com/'+Holo_twitter[Name],)
+                        
                         tweet.sub_tweetWithIMG(message, profile[0]['image1'])
                         pprint(message)
                         hSql.insert_HoloJP_ProfileTable_tw(channel_ID, followers_count)
@@ -99,7 +105,13 @@ def twitter_subscriber(belongs):
                     profile = hSql.selectOSHolo(channel_ID)
                     if subJudge(followers_count, profile, belongs):
                         tweet = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-                        message = '速報！！\n✨{}✨ \n{}\n\nツイッターフォロワー数が\n{}万人到達!!!🎉\nおめでとうございます!!\n{}'.format(Name, profile[0]['live_tag'], (int(followers_count)//10000), 'twitter.com/'+Holo_twitter[Name],)
+
+                        message = '速報！\n{}✨\n{}\n\n<twitter>フォロワー数が\n【{}万人】到達!🔥\nおめでとうございます！\n\nデビュー日:{}\n誕生日:{}\n{}'.format(
+                            Name, profile[0]['live_tag'], (int(followers_count)//10000),
+                            profile[0]['debut'].strftime('%Y/%m/%d'),
+                            profile[0]['birthday'].strftime('%m/%d'),
+                            'twitter.com/'+Holo_twitter[Name],)
+
                         tweet.sub_tweetWithIMG(message, profile[0]['image1'])
                         pprint(message)
                         hSql.insert_HoloOS_ProfileTable_tw(channel_ID, followers_count)
@@ -122,7 +134,11 @@ def twitter_subscriber(belongs):
                 profile = hSql.selectFriendsHolo(channel_ID)
                 if subJudge(followers_count, profile, belongs):
                     tweet = tweet_components(CONSUMER_KEY_B, CONSUMER_SECRET_B, ACCESS_TOKEN_B, ACCESS_TOKEN_SECRET_B)
-                    message = '速報！！\n✨{}✨ \n{}\n\nツイッターフォロワー数が\n{}万人到達!!!🎉\nおめでとうございます!!\n{}'.format(Name, profile[0]['live_tag'], (int(followers_count)//10000),'twitter.com/'+Nori_twitter[Name],)
+
+                    message = '速報！\n{}✨\n{}\n\n<twitter>フォロワー数が\n【{}万人】到達!🔥\nおめでとうございます！\n{}'.format(
+                        Name, profile[0]['live_tag'], (int(followers_count)//10000),
+                        'twitter.com/'+Nori_twitter[Name],)
+
                     tweet.sub_tweetWithIMG(message, profile[0]['image1'])
                     pprint(message)
                     hSql.insert_HoloFri_ProfileTable_tw(channel_ID, followers_count)

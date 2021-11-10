@@ -153,6 +153,7 @@ def make_holo_data_graph():
     plt.tight_layout()
     fig.savefig(_SAVE_DIR_PATH)
     # plt.show()
+    Session.close()
     print('Done!')
 
 if __name__ == '__main__':

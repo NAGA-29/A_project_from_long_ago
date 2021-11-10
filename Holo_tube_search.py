@@ -136,7 +136,7 @@ def error_catch(error):
     print("NG ", error)
 
 def dead_video_id(video_id):
-    die = ['UTF0Qe3oQVM']
+    die = ['d1HE5cqwgCw']
     if video_id in die:
         return False
     return True
@@ -223,9 +223,9 @@ if __name__ == '__main__':
                 # ------------------------
 
                 # # 緊急処置 2021/09/15 アーニャ #############
-                # if not dead_video_id(entry['yt_videoid']):
-                #     hSql = None
-                #     continue
+                if not dead_video_id(entry['yt_videoid']):
+                    hSql = None
+                    continue
                 # # 緊急処置 2021/09/15 アーニャ #############
 
                 result = hSql.searchVideoIdFromYoutubeVideoTable(entry)  #youtube_videos

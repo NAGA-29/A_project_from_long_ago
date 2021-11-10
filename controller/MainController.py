@@ -118,7 +118,7 @@ if __name__ == '__main__':
 
     # 全体登録者通知
     schedule.every().day.at("00:05").do(OverallInfo)
-    # schedule.every().day.at("00:09").do(OverallInfo)
+    # schedule.every().day.at("03:11").do(OverallInfo)
 
     while True:
         schedule.run_pending()
