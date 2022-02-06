@@ -48,16 +48,21 @@ class tweet_components:
     # プロフィール画像保存先
     # PROFILE_IMG_DIR = os.environ.get('PROFILE_IMG_DIR')
     PROFILE_IMG_DIR = app.PROFILE_IMG_DIR 
+    HOLO_DATA_IMG_DIR = app.HOLO_DATA_IMG_DIR
     # イベント用画像保存先
     EVENT_IMG_DIR = os.environ.get('EVENT_IMG_DIR')
 
 
     def __init__(self, CONSUMER_KEY = os.environ.get('CONSUMER_KEY'), CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET'),
-            ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN'), ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET'),):
+            ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN'), ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET'), API=None):
 
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         self.auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-        self.API = tweepy.API(self.auth)
+        if API is None:
+            self.API = tweepy.API(self.auth)
+        else:
+            self.API = API
+        # self.API = tweepy.API(self.auth)
 
 
     def tweet(self, message:str)->bool:
@@ -135,6 +140,26 @@ class tweet_components:
                 result = False
         return result
 
+    def matplotlib_tweetWithIMG(self,message,img_url):
+        """
+        ツイートメソッド 画像付き 
+        """
+        #ツイート内容
+        TWEET_TEXT = message
+        try :
+            # ↓添付したい画像のファイル名
+            FILE_NAME = self.HOLO_DATA_IMG_DIR + img_url
+            tweet_status = self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
+            if tweet_status == 200: #成功
+                pprint("Succeed!")
+                result = True
+            else:
+                result = False
+        except Exception as e:
+                pprint(e)
+                result = False
+        return result
+
 
     def event_tweetWithIMG(self,message,img_url):
         """
@@ -193,26 +218,25 @@ class tweet_components:
             for filename in media:
                 res = self.API.media_upload(filename)
                 MEDIA.append(res.media_id)
-
             if reply_id:
-                tweet_status = self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT, in_reply_to_status_id=reply_id)
+                return self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT, in_reply_to_status_id=reply_id)
             else:
-                tweet_status = self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT,)
-
+                return self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT,)
             # if tweet_status == 200: #成功
             #     result = True
             # else:
             #     pprint(tweet_status)
             #     result = False
-
         except Exception as e:
                 pprint(e)
-        return tweet_status
+
 
 
     def reTweet(self, tweet_id:str)->bool:
         """
         リツイートメソッド
+        :param str tweet_id : ツイートid
+        :retrun bool
         """
         try :
             tweet_status = self.API.retweet(tweet_id)
@@ -226,5 +250,11 @@ class tweet_components:
                 result = False
         return result
 
-# tw = tweet_components()
-# pprint(tw.PROFILE_IMG_DIR)
+    def check_str_length(self, message:str)->bool:
+        return True if len(message) < 140 else False
+
+# if __name__ == '__main__':
+#     tw = tweet_components()
+#     message = 'message'
+#     pprint(len(message))
+#     print(tw.check_str_length(message))

@@ -16,21 +16,26 @@ import time
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
-
 from pprint import pprint
-
+import shutil
 import tweepy
+import sys
+'''
+original module
+'''
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+from config import app
 
 '''
 Initial Setting
 '''
 load_dotenv(verbose=True)
-dotenv_path = join(dirname(__file__), '.env')
+dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
 
 _DRIVER_PATH = os.environ.get('DRIVER_PATH')
 
-SCREENSHOT_FILE = './screenshot_image/'
+SCREENSHOT_FILE = '../storage/screenshot_image/'
 
 #twitter本番アカウント
 CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
@@ -68,16 +73,18 @@ class ScreenShot:
 
     def screenshot(self, url):
         # driver = selenium.webdriver.Chrome(executable_path=_DRIVER_PATH, chrome_options=self.options)
-        driver_path = _DRIVER_PATH
+        driver_path = app.GOOGLE_DRIVER
         try:
-            driver = selenium.webdriver.Chrome(executable_path=driver_path, chrome_options=self.options)
-            # driver = selenium.webdriver.Chrome(executable_path=DRIVER_PATH, chrome_options=self.options)
+            driver = selenium.webdriver.Chrome(executable_path=driver_path, options=self.options)
+            # driver = selenium.webdriver.Chrome(executable_path=driver_path, chrome_options=self.options)
         except SessionNotCreatedException:
-            driver_path = ChromeDriverManager('../').install()
-            driver = selenium.webdriver.Chrome(executable_path=driver_path, chrome_options=self.options)
+            driver_path = ChromeDriverManager(path='../').install()
+            # driver = selenium.webdriver.Chrome(executable_path=driver_path, chrome_options=self.options)
+            driver = selenium.webdriver.Chrome(executable_path=driver_path, options=self.options)
+            shutil.move(driver_path, '../chromedriver') #TODO: 作成されたゴミファイルの処理が必要
+            os.remove('../drivers.json') #TODO: 制御jsonファイルだが邪魔になるので削除 2022/1/8
         
         driver.get(url)
-        
         # driver.set_window_size(1024, 768)
         page_width = driver.execute_script('return document.body.scrollWidth')
         page_height = driver.execute_script('return document.body.scrollHeight')   
@@ -118,6 +125,7 @@ class ScreenShot:
     #             result = False
     #     return result
 
-# i = ScreenShot(headless=True)
-# i.screenshot('http://localhost/Hololive_Project/public/holo/live_screenshot')
-# i.tweetWithIMG('テスト!! 現在のLIVE中一覧だでな！!')
+# if __name__ == '__main__':
+#     i = ScreenShot(headless=True)
+#     i.screenshot('http://localhost/Hololive_Project/public/holo/live_screenshot')
+#     i.tweetWithIMG('テスト!! 現在のLIVE中一覧だでな！!')

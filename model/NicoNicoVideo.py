@@ -1,11 +1,13 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, BIGINT, Integer, String, TEXT, Float, DateTime
 
-import sys
+# import sys
 # sys.path.append('../')
-import setting
+# import setting
 # from DB_config import Base
 # from DB_config import ENGINE
+
+from model import setting
 
 
 class NicoNicoVideo(setting.Base):

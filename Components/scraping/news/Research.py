@@ -20,6 +20,7 @@ from pprint import pprint
 
 # News API
 NEWS_API_KEY = os.environ.get('NEWS_API')
+# NEWS_API_KEY = 'c7ad8c43a0c34dd8ac105acdc61cad19'
 
 #------------------------------------------GoogleNews スクレイピング------------------------------------------
 def googleNewsResearch():
@@ -97,10 +98,11 @@ def NewsAPIResearch_Every(file_name, fromDay, toDay, keyword='ホロライブ'):
     newsapi = NewsApiClient(NEWS_API_KEY)
     # /v2/everything
     all_articles = newsapi.get_everything(
-                                        q=keyword,
-                                        from_param=fromDay,
-                                        to=toDay,
-                                        sort_by='relevancy')
+                                        q=keyword, 
+                                        from_param=fromDay, 
+                                        to=toDay, 
+                                        sort_by='relevancy',)
+
     if all_articles['articles']:
         for lists in all_articles['articles']:
             if blackFilter(lists['url']):
@@ -126,12 +128,18 @@ def blackFilter(url:str)->bool:
     """
     pattern = "https?://[^/]+/"
     res = re.match(pattern, url)
-    # print(res.group())
     BLACK_LIST = ['http://yaraon-blog.com/','https://www.mdn.co.jp/','https://togetter.com/',
                     'http://onecall2ch.com/','http://alfalfalfa.com/','https://it.srad.jp/',
                     'http://jin115.com/','http://blog.esuteru.com/','https://anond.hatelabo.jp/',
-                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/','http://himasoku.com/','http://www.scienceplus2ch.com/']
+                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/',
+                    'http://himasoku.com/','http://majikichi.com/','http://www.scienceplus2ch.com/',
+                    'https://vtubernews.jp/','http://h-pon.doorblog.jp/', 'http://vtubernews.jp/',
+                    'http://hamusoku.com/', 'http://news4vip.livedoor.biz/', 'http://waranote.livedoor.biz/',
+                    'http://blog.livedoor.jp/',]
     for black in BLACK_LIST:
+        if res is None:
+            return True
+        # TODO: 修正必要
         if res.group() == black:
             return False
     return True

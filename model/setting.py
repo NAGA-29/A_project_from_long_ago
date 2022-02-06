@@ -13,7 +13,8 @@ DATABASE = 'mysql://%s:%s@%s/%s?charset=utf8mb4' % (
 ENGINE = create_engine(
     DATABASE,
     encoding = "utf-8",
-    echo=True # Trueだと実行のたびにSQLが出力される
+    echo=True, # Trueだと実行のたびにSQLが出力される
+    pool_pre_ping=True # 接続の悲観的なテスト
 )
 
 # Sessionの作成
