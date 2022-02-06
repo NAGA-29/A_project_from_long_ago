@@ -84,6 +84,9 @@ def twitter_subscriber(belongs):
                 except KeyError as err:
                     pprint(err)
                     continue
+                except tweepy.TweepError as err:
+                    pprint(err)
+                    continue
                 followers_count = user_info.followers_count  # follower数の取得
 
                 if Account == Holo_JP:  # Hololive

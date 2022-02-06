@@ -29,10 +29,12 @@ Original Modules
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 from Components.tweet import tweet_components
 from Components import holo_data
-import tube_subscriber
+from Components import logging as log
+# import tube_subscriber
 # from service.twitter import twitter_follower as tw
 # from service.youtube import test_tube_subscriber as yt
 from service import twitter_follower as tw
+from service import TrendWatcher
 from service import youtube_subscriber as yt
 
 load_dotenv(verbose=True)
@@ -53,9 +55,13 @@ ACCESS_TOKEN_B = os.environ.get('ACCESS_TOKEN_B')
 ACCESS_TOKEN_SECRET_B = os.environ.get('ACCESS_TOKEN_SECRET_B')
 # ==========================================================================
 
-# auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-# auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-# API = tweepy.API(auth)
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+API = tweepy.API(auth)
+
+auth_B = tweepy.OAuthHandler(CONSUMER_KEY_B, CONSUMER_SECRET_B)
+auth_B.set_access_token(ACCESS_TOKEN_B, ACCESS_TOKEN_SECRET_B)
+API_B = tweepy.API(auth_B)
 
 # ==========================================================================
 # 画像の保存先
@@ -66,6 +72,9 @@ TRIM_IMG_DIR = os.environ.get('IMG_TRIM_DIR')
 # 代表画像
 DEFAULT_IMG = 'hololive.jpg'
 GRAPH_IMG = 'holo_data.png'
+# logging
+file = os.path.splitext(os.path.basename(__file__))[0]
+_FILE_NAME = f'../storage/logs/{file}.log'
 # ==========================================================================
 
 _api_key = 'YOUTUBE_API_KEY_dev3'
@@ -88,20 +97,28 @@ youtubeObject = build(
 # ==========================================================================
 def youtube_sys():
     # tube_subscriber.main()
+    logger = log.get_module_logger(__name__, _FILE_NAME)
+    logger.info('Start youtube_sys')
     yt.main()
+    logger = None
 
 def OverallInfo():
+    logger = log.get_module_logger(__name__, _FILE_NAME)
+    logger.info('Start OverallInfo')
     yt.OverallInfo()
-
-    # message = yt.OverallInfo()
-    # holo_data.make_holo_data_graph()
-    # tw = tweet_components()
-    # tw.matplotlib_tweetWithIMG(message,GRAPH_IMG)
+    logger = None
 
 def twitter_sys():
+    logger = log.get_module_logger(__name__, _FILE_NAME)
+    logger.info('Start twitter_sys')
     tw.main()
+    logger = None
 
-
+def twitter_trend_watcher():
+    logger = log.get_module_logger(__name__, _FILE_NAME)
+    logger.info('Start twitter_trend_watcher')
+    TrendWatcher(API, logger).main(True)
+    logger = None
 
 if __name__ == '__main__':
     # フォロワー検知/通知
@@ -109,16 +126,23 @@ if __name__ == '__main__':
     schedule.every().hour.at(":15").do(twitter_sys)
     schedule.every().hour.at(":30").do(twitter_sys)
     schedule.every().hour.at(":45").do(twitter_sys)
-    # schedule.every().hour.at(":49").do(searchSubscriber)
+
+    # トレンド検知/通知
+    schedule.every().hour.at(":10").do(twitter_trend_watcher)
+    schedule.every().hour.at(":20").do(twitter_trend_watcher)
+    schedule.every().hour.at(":31").do(twitter_trend_watcher)
+    schedule.every().hour.at(":40").do(twitter_trend_watcher)
+    schedule.every().hour.at(":50").do(twitter_trend_watcher)
 
     # チャンネル登録者検知/通知
-    schedule.every().hour.at(":00").do(youtube_sys)
-    schedule.every().hour.at(":20").do(youtube_sys)
-    schedule.every().hour.at(":40").do(youtube_sys)
+    schedule.every().hour.at(":09").do(youtube_sys)
+    # schedule.every().hour.at(":38").do(youtube_sys)
+    schedule.every().hour.at(":29").do(youtube_sys)
+    schedule.every().hour.at(":49").do(youtube_sys)
 
     # 全体登録者通知
     schedule.every().day.at("00:05").do(OverallInfo)
-    # schedule.every().day.at("03:11").do(OverallInfo)
+    # schedule.every().day.at("00:11").do(OverallInfo)
 
     while True:
         schedule.run_pending()

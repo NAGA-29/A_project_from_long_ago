@@ -128,17 +128,18 @@ def blackFilter(url:str)->bool:
     """
     pattern = "https?://[^/]+/"
     res = re.match(pattern, url)
-    # print(res.group())
     BLACK_LIST = ['http://yaraon-blog.com/','https://www.mdn.co.jp/','https://togetter.com/',
                     'http://onecall2ch.com/','http://alfalfalfa.com/','https://it.srad.jp/',
                     'http://jin115.com/','http://blog.esuteru.com/','https://anond.hatelabo.jp/',
-                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/','http://himasoku.com/',
-                    'http://majikichi.com/','http://www.scienceplus2ch.com/','https://vtubernews.jp','http://h-pon.doorblog.jp']
+                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/',
+                    'http://himasoku.com/','http://majikichi.com/','http://www.scienceplus2ch.com/',
+                    'https://vtubernews.jp/','http://h-pon.doorblog.jp/', 'http://vtubernews.jp/',
+                    'http://hamusoku.com/', 'http://news4vip.livedoor.biz/', 'http://waranote.livedoor.biz/',
+                    'http://blog.livedoor.jp/',]
     for black in BLACK_LIST:
         if res is None:
             return True
-        # pprint(res.group())
-        # @TODO 修正必要
+        # TODO: 修正必要
         if res.group() == black:
             return False
     return True

@@ -54,11 +54,15 @@ class tweet_components:
 
 
     def __init__(self, CONSUMER_KEY = os.environ.get('CONSUMER_KEY'), CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET'),
-            ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN'), ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET'),):
+            ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN'), ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET'), API=None):
 
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         self.auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-        self.API = tweepy.API(self.auth)
+        if API is None:
+            self.API = tweepy.API(self.auth)
+        else:
+            self.API = API
+        # self.API = tweepy.API(self.auth)
 
 
     def tweet(self, message:str)->bool:
@@ -214,21 +218,18 @@ class tweet_components:
             for filename in media:
                 res = self.API.media_upload(filename)
                 MEDIA.append(res.media_id)
-
             if reply_id:
-                tweet_status = self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT, in_reply_to_status_id=reply_id)
+                return self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT, in_reply_to_status_id=reply_id)
             else:
-                tweet_status = self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT,)
-
+                return self.API.update_status(media_ids=MEDIA, status=TWEET_TEXT,)
             # if tweet_status == 200: #成功
             #     result = True
             # else:
             #     pprint(tweet_status)
             #     result = False
-
         except Exception as e:
                 pprint(e)
-        return tweet_status
+
 
 
     def reTweet(self, tweet_id:str)->bool:

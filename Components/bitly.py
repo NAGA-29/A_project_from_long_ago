@@ -10,6 +10,8 @@ load_dotenv(dotenv_path)
 
 #bitly本番アカウント
 ACCESS_TOKEN = os.environ.get('BITLY_ACCESS_TOKEN')
+# 予備
+# ACCESS_TOKEN = os.environ.get('SECOND_BITLY_ACCESS_TOKEN')
 
 
 '''

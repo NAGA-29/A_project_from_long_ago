@@ -1,18 +1,14 @@
 '''
 指定された日までのカウントダウンを行う
 '''
-
-import time
 from datetime import datetime as dt
 import dateutil.parser
-import schedule
-
-from pprint import pprint
-
-import sys
+from dotenv import load_dotenv
 import os
 from os.path import join, dirname
-from dotenv import load_dotenv
+import sys
+import schedule
+from pprint import pprint
 
 '''
 Original Modules
@@ -68,7 +64,6 @@ def Main():
                     else:
                         hSql.updateStatus_SchedulesTable(schedule['scheduled_start_time_at'])
                         pass
-
             else:
                 hSql.updateStatus_SchedulesTable(schedule['scheduled_start_time_at'])
                 pprint('予定時間を過ぎています')

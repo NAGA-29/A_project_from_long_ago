@@ -178,14 +178,14 @@ if __name__ == '__main__':
     secret = '9yg5fc0iz3wytriy2qfm09ajx0e7eo'
 
     tw_w = Twitch_Wrapper(client_id, secret)
-    # r = tw_w.channel_info('momosuzunene_hololive')
+    # r = tw_w.channel_info('minatoaquach_hololive')
     # pprint(r)
 
     
     # r = tw_w.channel_info('615692129')
     # pprint(r)
     
-    # p = tw_w.get_follower('664278586')
+    # p = tw_w.get_follower('738746247')
     # pprint(p)
 
     # p = tw_w.get_video_list('557359020')
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     # pprint(stream)
 
     url = 'https://pvgllfml6j.execute-api.ap-northeast-1.amazonaws.com/Twitch-eventSub'
-    r = tw_w.register_eventSub('stream.online', url, '715729360')
+    r = tw_w.register_eventSub('stream.online', url, '738746247')
     pprint(r)
 
     # tw_w.eventSub_list(1)

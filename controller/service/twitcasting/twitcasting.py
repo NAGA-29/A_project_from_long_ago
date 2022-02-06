@@ -252,7 +252,9 @@ if __name__ == '__main__':
     access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjdiYWUwODU0MDg4YTA2ZTM1NTg4Njg0ZGZmZDM0YTEzNWY4MzEwYzI4YzUzY2NhMzBiYzJjOGViNDcxNjAwZjE5NGM3NjM4YzEwZjZhMDRkIn0.eyJhdWQiOiJjbmFnYWtpLmJlMDA5ZTQxOGIzOGUxYzU4YmM0MzY3OTc2MGM4YjdlMmRjMTNkYjg1OThjYTllNTU1N2I1ZDFjNDc0MDJjZjUiLCJqdGkiOiI3YmFlMDg1NDA4OGEwNmUzNTU4ODY4NGRmZmQzNGExMzVmODMxMGMyOGM1M2NjYTMwYmMyYzhlYjQ3MTYwMGYxOTRjNzYzOGMxMGY2YTA0ZCIsImlhdCI6MTYyODQxOTgzMSwibmJmIjoxNjI4NDE5ODMxLCJleHAiOjE2NDM5NzE4MzEsInN1YiI6IjEyOTUzNDEzMDEzMzY5NjUxMjAiLCJzY29wZXMiOlsicmVhZCIsIndyaXRlIl19.tkzgPiiKL0nWa2P_pJ1xH9NwIjK7MDIEixd8n6652FqvyOsL9lIqqNAuTQc0l3p1duOJ0xinPiW5ENDyLUIt_3cL78s28DU8WiaqLRwaZCtm2xCPvFR7Zl-QVae4R9t4UyPPTuakOVqhLQwNmrV9p2yZr3RwKN32Rg0H_y93Im4bL_-aaZXvMFqUZGiTjjM8-_S7PPHaf2pzMOqjI4J90phM1vLNKWlwe3w1hjtapkCOOUYDAQZHp-kr4fZtQFgJebg88u0QQYpQ5Q9iWmL6_kP6AVoXMUH4dpQ8g4isRQ5t6Wqg6yEcJ6SCcBB_5VtOsZcq9TeqjZUiRkS8qhgfHQ'
     # oauth = Twitcasting_Oauth2(client_id, client_secret, redirect_uri)
     twc_w = Twitcasting_Wrapper(client_id, client_secret, access_token)
-    # t = twc_w.get_user_info('c:nagaki')
+
+    # ユーザー情報取得
+    # t = twc_w.get_user_info('murasakishionch')
     # pprint(t)
 
     # video = twc_w.get_movies_by_user('oozorasubaru')
@@ -260,8 +262,11 @@ if __name__ == '__main__':
 
     # webhook = twc_w.get_webhook_list()
     # pprint(webhook)
-    # webhook = twc_w.register_webhook('c:nagaki')
-    # pprint(webhook)
+
+    # webhookに登録
+    webhook = twc_w.register_webhook('1027853566780698624')
+    pprint(webhook)
+
     # rm = twc_w.remove_webhook('1024528894940987392', liveend=True)
     # pprint(rm)
     # comments = twc_w.get_comments('679488595',limit=50, offset=0)

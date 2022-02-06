@@ -13,7 +13,7 @@ class ImageProcessing:
     _LIVE_TMB_TMP_DIR = ''
     # 画像の保存先
     _LIVE_TMB_IMG_DIR = ''
-    _OTHER_TMB_TMP_DIR = './other_temporary_image/'
+    _OTHER_TMB_TMP_DIR = '../src/other_temporary_image/'
 
     _TMB_TMP_FilePath = ''
     _TMB_IMG_FilePath = ''
