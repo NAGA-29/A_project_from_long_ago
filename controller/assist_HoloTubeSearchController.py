@@ -169,7 +169,7 @@ class YoutubeChannelMonitor:
         logger = log.get_module_logger(__name__, self._LOG_FILE)
         logger.info('Start Assist Hololive Research Controller')
 
-        hSql = holo_sql()
+        # hSql = holo_sql()
         line = lines()
         yt = yApi()
         hTime = HoloDate()
@@ -231,6 +231,7 @@ class YoutubeChannelMonitor:
 
             pprint('##########################')
             for video_id in video_list:
+                hSql = holo_sql()
                 result = hSql.searchVideoIdFromYoutubeVideoTable_test(video_id)
                 if result == False:
                     # # 緊急処置 2021/09/15 アーニャ
@@ -365,6 +366,9 @@ class YoutubeChannelMonitor:
                     # 同じIDがある(既存)
                     pprint(video_id)
                     pass
+                
+                hSql.dbClose()
+                hSql = None
             time.sleep(2)
 
 if __name__ == '__main__':

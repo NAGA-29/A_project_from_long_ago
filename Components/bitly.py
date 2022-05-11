@@ -3,6 +3,7 @@ import requests
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
+from pprint import pprint
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '.env')
@@ -39,5 +40,7 @@ def get_shortenURL(longUrl:str):
 Youtube専用 短縮URL
 '''
 def make_yURL(l_URL:str):
-	_list = l_URL.split('=')
-	return 'https://youtu.be/' + _list[1]
+    l_URL = l_URL.decode('utf-8')
+    # pprint(l_URL)
+    _list = l_URL.split('=')
+    return 'https://youtu.be/' + _list[1]

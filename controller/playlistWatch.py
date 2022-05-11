@@ -142,7 +142,8 @@ class playlistWatch:
                 result = False
         except Exception as err:
                 # message = err
-                pprint(err)
+                # pprint(err)
+                self.lineNotify(f"ツイート失敗 : {err}")
                 result = False
         return result
 

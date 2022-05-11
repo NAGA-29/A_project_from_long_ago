@@ -1,7 +1,8 @@
+from datetime import datetime
 import logging
 from hypothesis import target
 import tweepy
-
+from datetime import datetime
 from dotenv import load_dotenv
 import os
 from os.path import join, dirname
@@ -28,6 +29,7 @@ class TrendWatcher:
         self.WOEID_DICT         = app.WOEID_DICT
         self.DEFAULT_CHECK_LIST = app.DEFAULT_CHECK_LIST
         self.CHECK_LIST         = app.CHECK_LIST
+        self._NOTIFICATION_SEC = 3600   # 通知基準 60分
         self.TREND_SAVE_FILE    = '/Users/nagaki/Documents/naga-sample-code/python/MyHololiveProject_stg/My_Hololive_Project/config/trend_log_JP.pkl'
         if trend_save_file != None:
             self.TREND_SAVE_FILE = trend_save_file
@@ -40,15 +42,15 @@ class TrendWatcher:
     def tweet(self, twitter_api:tweepy, message:str)->bool:
         #ツイート内容
         try :
+            message += '\n' + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             tweet_status = twitter_api.update_status(message)
             if tweet_status == 200: #成功
-                # pprint(tweet_status)
                 return True
             else:
-                # pprint(tweet_status)
                 return False
-        except TimeoutError as e:
-                # pprint(e)
+        except TimeoutError as err:
+                return False
+        except tweepy.TweepError as err:
                 return False
 
 
@@ -65,6 +67,14 @@ class TrendWatcher:
             for tag in tags:
                 hashtags.append(re.sub('＃', '#', tag))
         return hashtags
+
+    '''
+    '''
+    def check_notice_time(self, last_notice_time:str, sec:int)->bool:
+        if (datetime.now() - last_notice_time).seconds >= sec:
+            return True
+        else:
+            return False
 
 
     '''
@@ -113,64 +123,73 @@ class TrendWatcher:
             # キーワ-ドが出現しなかったらリセット
             Read_Trend_log = []
 
-        # TODO:前回より順位が上がったか判定する
-        pprint(Read_Trend_log)
-        if Read_Trend_log:
-            for key, value in Read_Trend_log.items():
-                messaege = f'Hololive Trend (β ver)\n\n'
-                messaege += f'{key}\n\n'
-
-                # 順位が1位になったか判定
-                if value['rank'] == 1:
-                    Write_Trend_log[key] = New_Trend[key]
-                    messaege += f'twitterトレンドランキング1位獲得!\n'
-                    # print('トレンドランキング1位獲得!')
-                    self.tweet(self.TWITTER_API, messaege)
-                    # self.logger.info(messaege)
-                    continue
-
-                # 新規
-                if key not in New_Trend:
-                    Write_Trend_log[key] = New_Trend[key]
-                    messaege += '新着トレンド入りしています!\n'
-                    self.tweet(self.TWITTER_API, messaege)
-                    print(f'{key}が新着トレンド入り')
-                    continue
-
-                # 前回より順位が急上昇しているか判定
-                if value['rank'] > New_Trend[key]['rank'] \
-                        and value['rank'] - New_Trend[key]['rank'] >= 9:
-                    Write_Trend_log[key] = New_Trend[key]
-                    messaege += f'ランキング急上昇中!\n'
-                    self.tweet(self.TWITTER_API, messaege)
-                    print(f'{key}がランキング上昇中!')
-                # tweet(TWITTER_API, messaege)
-                # self.logger.info(messaege)
-        else:
-            pprint('pklは空です')
-            for key, value in New_Trend.items():
-                messaege = f'Hololive Trend (β ver)\n\n'
-                messaege += f'{key}\n\n'
-
-                # 順位が1位になったか判定
-                if value['rank'] == 1:
-                    Write_Trend_log[key] = New_Trend[key]
-                    messaege += f'twitterトレンドランキング1位獲得!\n'
-                    self.tweet(self.TWITTER_API, messaege)
-                    # self.logger.info(messaege)
-                    continue
-
-                # 新規
-                if key not in New_Trend:
-                    Write_Trend_log[key] = New_Trend[key]
-                    messaege += '新着トレンド入りしています!\n'
-                    # print(f'{key}が新着トレンド入り')
-                    self.tweet(self.TWITTER_API, messaege)
-                    # self.logger.info(messaege)
-                    continue
-
         try:
+            if Read_Trend_log: #前回のトレンドがある場合
+                for key, value in Read_Trend_log.items():
+                    message = f'Hololive Trend (β ver)\n\n'
+                    message += f'{key}\n\n'
+
+                    # 順位が1位になったか判定
+                    if value['rank'] == 1:
+                        Write_Trend_log[key] = New_Trend[key]
+                        message += f'twitterトレンドランキング1位獲得!\n'
+                        if self.check_notice_time(tr['last_notice_time'], self._NOTIFICATION_SEC):
+                            # FIXME:
+                            Write_Trend_log[key]['last_notice_time'] = datetime.now()
+                            self.tweet(self.TWITTER_API, message)
+                        continue
+
+                    # 新規
+                    if key not in New_Trend:
+                        message += '新着トレンド入りです!\n'
+                        Write_Trend_log[key] = New_Trend[key]
+                        self.tweet(self.TWITTER_API, message)
+                        print(f'{key}が新着トレンド入り')
+                        continue
+
+                    # 前回より順位上昇しているか判定
+                    if value['rank'] > New_Trend[key]['rank']:
+                        message += f'ランキング上昇!\n'
+                        if self.check_notice_time(tr['last_notice_time'], 0):
+                            # FIXME:
+                            Write_Trend_log[key]['last_notice_time'] = datetime.now()
+                            Write_Trend_log[key] = New_Trend[key]
+                            self.tweet(self.TWITTER_API, message)
+                            print(f'{key}がランキング上昇中!')
+                        continue
+
+                    # 前回より順位が急上昇しているか判定
+                    if value['rank'] > New_Trend[key]['rank'] \
+                            and value['rank'] - New_Trend[key]['rank'] >= 9:
+                        message += f'ランキング急上昇中!\n'
+                        Write_Trend_log[key] = New_Trend[key]
+                        self.tweet(self.TWITTER_API, message)
+                        print(f'{key}がランキング上昇中!')
+
+            else: #前回のトレンドがない場合
+                for key, value in New_Trend.items():
+                    message = f'Hololive Trend (β ver)\n\n'
+                    message += f'{key}\n\n'
+
+                    # 順位が1位
+                    if value['rank'] == 1:
+                        Write_Trend_log[key] = New_Trend[key]
+                        message += '新着トレンド入りです!\n'
+                        message += f'twitterトレンドランキング1位獲得!\n'
+                        # FIXME:
+                        tr['last_notice_time'] = datetime.now()
+                        self.tweet(self.TWITTER_API, message)
+                        continue
+
+                    # 新規
+                    Write_Trend_log[key] = New_Trend[key]
+                    message += '新着トレンド入りです!\n'
+                    message += f'ランキング{value["rank"]}位獲得!\n'
+                    self.tweet(self.TWITTER_API, message)
+
+        # try:
             # pklファイルに保存
+            pprint('pklファイルに保存')
             with open(self.TREND_SAVE_FILE, 'wb') as f:
                 pickle.dump(Write_Trend_log, f)
         except Exception as err:

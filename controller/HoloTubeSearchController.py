@@ -61,6 +61,7 @@ CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
 CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
+BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
 
 # # ##twitterテストアカウント
 # CONSUMER_KEY = "OgUS1y3y7vuxy54NoKZvlOdq9"
@@ -72,20 +73,13 @@ ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
 file = os.path.splitext(os.path.basename(__file__))[0]
 _LOG_FILE = f'../storage/logs/{file}.log'
 
+# V1
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 API = tweepy.API(auth)
 
 # 所属
 BELONGS = 'hololive'
-
-# # 画像の保存先
-# LIVE_TMB_IMG_DIR = os.environ.get('LIVE_TMB_IMG_DIR')
-# LIVE_TMB_TMP_DIR = os.environ.get('LIVE_TMB_TMP_DIR')
-# # トリミング加工済み画像保存先
-# TRIM_IMG_DIR = os.environ.get('IMG_TRIM_DIR')
-# # 画像結合加工済み画像保存先
-# COMBINE_IMG_DIR = os.environ.get('COMBINE_IMG_DIR')
 
 # 画像の保存先
 LIVE_TMB_IMG_DIR = '../src/live_thumbnail_image/'
@@ -153,7 +147,7 @@ def error_catch(error):
     print("NG ", error)
 
 def dead_video_id(video_id):
-    die = ['d1HE5cqwgCw']
+    die = ['d1HE5cqwgCw', 'yjU-wdsBdQs']
     if video_id in die:
         return False
     return True
@@ -242,11 +236,12 @@ if __name__ == '__main__':
                 scheduledStartTimeJPT = None
                 # ------------------------
 
-                # # # 緊急処置 2021/09/15 アーニャ #############
-                # if not dead_video_id(entry['yt_videoid']):
-                #     hSql = None
-                #     continue
-                # # # 緊急処置 2021/09/15 アーニャ #############
+                # # # 緊急処置 2022/05/08 ペコら #############
+                if not dead_video_id(entry['yt_videoid']):
+                    hSql = None
+                    print('dead video id')
+                    continue
+                # # # 緊急処置 2022/05/08 ペコら #############
 
                 result = hSql.searchVideoIdFromYoutubeVideoTable(entry)  #youtube_videos
                 # imgPro = ImageProcessing.ImageProcessing(entry['media_thumbnail'][0]['url'])
@@ -290,11 +285,6 @@ if __name__ == '__main__':
                         if entry['title'] != result[0]['title'] : # タイトル変更検知
                             update = True
                             updateKind += 'title'
-
-                        # if not result[0]['actual_end_time_at'] and result[0]['scheduled_start_time_at']: # 時間変更検知(live終了していない、かつ、投稿動画ではない)
-                        #     pprint(entry)
-                        #     if entry['scheduled_start_time_at'] == result[0]['scheduled_start_time_at'] :
-                        #         pass
 
                         try:
                             os.remove(imgPro._TMB_TMP_FilePath)

@@ -128,6 +128,7 @@ if __name__ == '__main__':
     schedule.every().hour.at(":45").do(twitter_sys)
 
     # トレンド検知/通知
+    schedule.every().hour.at(":01").do(twitter_trend_watcher)
     schedule.every().hour.at(":10").do(twitter_trend_watcher)
     schedule.every().hour.at(":20").do(twitter_trend_watcher)
     schedule.every().hour.at(":31").do(twitter_trend_watcher)

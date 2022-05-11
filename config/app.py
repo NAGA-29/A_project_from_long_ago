@@ -189,5 +189,5 @@ WOEID_DICT = {'日本': 23424856,}
 '''
 トレンド検索で常に監視するワード
 '''
-DEFAULT_CHECK_LIST = ['#hololive', '#尾丸ポルカ誕生祭']
+DEFAULT_CHECK_LIST = ['#hololive',]
 CHECK_LIST = ['#hololive']
