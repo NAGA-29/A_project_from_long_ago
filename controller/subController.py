@@ -103,8 +103,8 @@ def niconico_search():
     logger = None
 
 # 毎時0分に実行
-schedule.every().hour.at(":00").do(artTweet)
-schedule.every().hour.at(":30").do(artTweet)
+#schedule.every().hour.at(":00").do(artTweet)
+#schedule.every().hour.at(":30").do(artTweet)
 
 # PM00:05 AM12:05にjob実行
 schedule.every().day.at("06:10").do(holoNews)

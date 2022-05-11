@@ -135,7 +135,9 @@ def blackFilter(url:str)->bool:
                     'http://himasoku.com/','http://majikichi.com/','http://www.scienceplus2ch.com/',
                     'https://vtubernews.jp/','http://h-pon.doorblog.jp/', 'http://vtubernews.jp/',
                     'http://hamusoku.com/', 'http://news4vip.livedoor.biz/', 'http://waranote.livedoor.biz/',
-                    'http://blog.livedoor.jp/',]
+                    'http://blog.livedoor.jp/','http://burusoku-vip.com/', 'http://vipsister23.com/',
+                    'http://itaishinja.com/',  'http://doujinsokuhou45.com/', 'https://forest-life-japan.com/',
+                    'http://tarosoku.com/', 'https://vtuber-matomeblog.com/', 'http://hamusoku.com/' ]
     for black in BLACK_LIST:
         if res is None:
             return True

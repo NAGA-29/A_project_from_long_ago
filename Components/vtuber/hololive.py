@@ -35,7 +35,7 @@ class Hololive:
             '大空スバル' : 'oozorasubaru',      #'大空スバル'
             '百鬼あやめ' : 'nakiriayame',       #'百鬼あやめ'
             '猫又おかゆ' : 'nekomataokayu',      #'猫又おかゆ' 
-            '潤羽るしあ' : 'uruharushia',       #'潤羽るしあ'
+            # '潤羽るしあ' : 'uruharushia',       #'潤羽るしあ'
             '戌神ころね' : 'inugamikorone',     #'戌神ころね'
             '角巻わため' : 'tsunomakiwatame',        #'角巻わため' 
             '白銀ノエル' : 'shiroganenoel',     #'白銀ノエル'
@@ -85,6 +85,9 @@ class Hololive:
             'クレイジー・オリー' : 'kureijiollie',     #Kureiji Ollie / クレイジー・オリー 
             'アーニャ・メルフィッサ' : 'anyamelfissa',       #Anya Melfissa / アーニャ・メルフィッサ
             'パヴォリア・レイネ' : 'pavoliareine',       #Pavolia Reine / パヴォリア・レイネ
+            'ベスティア・ゼータ' : 'vestiazeta',       #vestiazeta / ベスティア・ゼータ
+            'カエラ・コヴァルスキア' : 'kaelakovalskia',       #Kaela Kovalskia / カエラ・コヴァルスキア
+            'こぼ・かなえる' : 'kobokanaeru',       #kobokanaeru/こぼ・かなえる
         }
         return ch_list
 
@@ -115,7 +118,7 @@ class Hololive:
                 '宝鐘マリン' : 'UCCzUftO8KOVkV4wQG1vkUvg',   #宝鐘マリン
                 '百鬼あやめ' : 'UC7fk0CB07ly8oSl0aqKkqFg',   #百鬼あやめ
                 '白銀ノエル' : 'UCdyqAaZDKHXg4Ahi7VENThQ',     #白銀ノエル
-                '潤羽るしあ' : 'UCl_gCybOJRIgOXw6Qb4qJzQ',   #潤羽るしあ
+                # '潤羽るしあ' : 'UCl_gCybOJRIgOXw6Qb4qJzQ',   #潤羽るしあ
                 '桐生ココ' : 'UCS9uQI-jC3DE0L4IpXyvr6w',     #桐生ココ
                 '天音かなた' : 'UCZlDXzGoo7d44bwdNObFacg',   #天音かなた
                 '大神ミオ' : 'UCp-5t9SrOQwXMU7iIjQfARg',      #大神ミオ
@@ -163,6 +166,9 @@ class Hololive:
                 'クレイジー・オリー' : 'UCYz_5n-uDuChHtLo7My1HnQ',     #Kureiji Ollie / クレイジー・オリー 
                 'アーニャ・メルフィッサ' : 'UC727SQYUvx5pDDGQpTICNWg',       #Anya Melfissa / アーニャ・メルフィッサ
                 'パヴォリア・レイネ' : 'UChgTyjG-pdNvxxhdsXfHQ5Q',       #Pavolia Reine / パヴォリア・レイネ
+                'ベスティア・ゼータ' : 'UCTvHWSfBZgtxE4sILOaurIQ',       #vestiazeta / ベスティア・ゼータ
+                'カエラ・コヴァルスキア' : 'UCZLZ8Jjx_RN2CXloOmgTHVg',       #Kaela Kovalskia / カエラ・コヴァルスキア
+                'こぼ・かなえる' : 'UCjLEmnpCNeisMxy134KPwWw',       #kobokanaeru/こぼ・かなえる
                 }
         return Channel_JP, Channel_OSea
 
@@ -232,6 +238,10 @@ class Hololive:
         elif ID == 'UCYz_5n-uDuChHtLo7My1HnQ' : HoloName,live_tag =  'クレイジー・オリー', '#Kureiji_Ollie'
         elif ID == 'UC727SQYUvx5pDDGQpTICNWg' : HoloName,live_tag =  'アーニャ・メルフィッサ', '#Anya_Melfissa'
         elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName,live_tag =  'パヴォリア・レイネ', '#Pavolive'
+        elif ID == 'UCTvHWSfBZgtxE4sILOaurIQ' : HoloName,live_tag =  'ベスティア・ゼータ', '#ZecretLive'
+        elif ID == 'UCZLZ8Jjx_RN2CXloOmgTHVg' : HoloName,live_tag =  'カエラ・コヴァルスキア', '#Kaelaif'
+        elif ID == 'UCjLEmnpCNeisMxy134KPwWw' : HoloName,live_tag =  'こぼ・かなえる', '#OnAeru'
+
         # 運営
         elif ID == 'UCJFZiqLMntJufDCHc6bQixg' : HoloName,live_tag = 'Hololive','#Hololive'
         elif ID == 'UCotXwY6s8pWmuWd_snKYjhg' : HoloName,live_tag = 'holoEN','#holoEN'
@@ -273,7 +283,7 @@ class Hololive:
         elif ID == 'UC1uv2Oq6kNxgATlCiez59hw' : HoloName, live_tag, holo_tag  = '常闇トワ', '#トワイライブ', '👾'
         elif ID == 'UCqm3BQLlJfvkTsX_hvm0UmA' : HoloName, live_tag, holo_tag  = '角巻わため', '#ドドドライブ', '🐏'
         elif ID == 'UCFKOVgVbGmX65RxO3EtH3iw' : HoloName, live_tag, holo_tag  = '雪花ラミィ', '#らみらいぶ', '☃️'
-        elif ID == 'UCAWSyEs_Io8MtpY3m-zqILA' : HoloName, live_tag, holo_tag  = '桃鈴ねね', '#ねねいろらいぶ', '🥟'
+        elif ID == 'UCAWSyEs_Io8MtpY3m-zqILA' : HoloName, live_tag, holo_tag  = '桃鈴ねね', '#桃鈴ねね生放送', '🍑'
         elif ID == 'UCUKD-uaobj9jiqB-VXt71mA' : HoloName, live_tag, holo_tag  = '獅白ぼたん', '#ぐうたらいぶ', '👅'
         elif ID == 'UCK9V2B22uJYu3N7eR_BT9QA' : HoloName, live_tag, holo_tag  = '尾丸ポルカ', '#ポルカ公演中', '🎪'
         elif ID == 'UCENwRMx5Yh42zWpzURebzTw' : HoloName, live_tag, holo_tag = 'ラプラス・ダークネス', '#laplus_great', '🛸💜'
@@ -305,6 +315,10 @@ class Hololive:
         elif ID == 'UCYz_5n-uDuChHtLo7My1HnQ' : HoloName, live_tag, holo_tag  =  'クレイジー・オリー', '#Kureiji_Ollie', '🧟‍♀️'
         elif ID == 'UC727SQYUvx5pDDGQpTICNWg' : HoloName, live_tag, holo_tag  =  'アーニャ・メルフィッサ', '#Anya_Melfissa', '🍂'
         elif ID == 'UChgTyjG-pdNvxxhdsXfHQ5Q' : HoloName, live_tag, holo_tag  =  'パヴォリア・レイネ', '#Pavolive', '🦚'
+
+        elif ID == 'UCTvHWSfBZgtxE4sILOaurIQ' : HoloName, live_tag, holo_tag  =  'ベスティア・ゼータ', '#ZecretLive', '📜'
+        elif ID == 'UCZLZ8Jjx_RN2CXloOmgTHVg' : HoloName, live_tag, holo_tag  =  'カエラ・コヴァルスキア', '#Kaelaif', '🔨'
+        elif ID == 'UCjLEmnpCNeisMxy134KPwWw' : HoloName, live_tag, holo_tag  =  'こぼ・かなえる', '#OnAeru', '☔'
         # 運営
         elif ID == 'UCJFZiqLMntJufDCHc6bQixg' : HoloName, live_tag, holo_tag  = 'Hololive','#Hololive', '▶️'
         # 絵師
@@ -319,5 +333,8 @@ class Hololive:
         elif ID == 'UCxrmkJf_X1Yhte_a4devFzA' : HoloName, live_tag, holo_tag  = '胡桃澤もも', '#胡桃澤もも', '🎀'
         elif ID == 'UCBAeKqEIugv69Q2GIgcH7oA' : HoloName, live_tag, holo_tag  = '逢魔きらら', '#逢魔きらら', '👿'
         elif ID == 'UCIRzELGzTVUOARi3Gwf1-yg' : HoloName, live_tag, holo_tag  = '看谷にぃあ', '#看谷にぃあ', '🌙❤️'
-        elif ID == 'UCCXME7oZmXB2VFHJbz5496A' : HoloName, live_tag, holo_tag  = '熊谷タクマ', '#熊谷タクマ', '🧸'
+        elif ID == 'UCCXME7oZmXB2VFHJbz5496A' : HoloName, live_tag, holo_tag  = '熊谷タクマ', '#熊谷タクマ', '🐻🍨'
+        elif ID == 'UCWIPfdcux1WxuX5yZLPJDww' : HoloName, live_tag, holo_tag = '稲荷いろは', '#稲荷いろは', '🦊🍂'
+        elif ID == 'UCuycJ_IsA5ESbTYhe05ozqQ' : HoloName, live_tag, holo_tag = 'レグルシュ・ライオンハート', '#レグライブ', '🔔🐾'
+        elif ID == 'UCMxIxoMdtcLkZ1wTq7qjztg' : HoloName, live_tag, holo_tag = '猫瀬乃しん' , ' #猫瀬乃しん', '🐈🎩'
         return live_tag, holo_tag 

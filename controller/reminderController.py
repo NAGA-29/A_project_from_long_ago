@@ -56,9 +56,9 @@ def reMinder(target:str):
     hSql = holo_sql.holo_sql()
     today_live = hSql.selectTodayKeepWatchTable(target)
 
-    if(target is 'hololive'):
+    if(target == 'hololive'):
         tw = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    elif(target is 'noripro'):
+    elif(target == 'noripro'):
         tw = tweet_components(CONSUMER_KEY_NORI, CONSUMER_SECRET_NORI, ACCESS_TOKEN_NORI, ACCESS_TOKEN_SECRET_NORI)
 
     today = datetime.date.today()
@@ -66,7 +66,7 @@ def reMinder(target:str):
     month = today.month
     day = today.day
     FILE_NAME = []
-    message = '本日[{}/{}]のLive予定はコチラ!🌟\n'.format(month, day)
+    message = '本日[ {}/{} ]のLive予定はコチラ!🌟\n'.format(month, day)
     if today_live:
         live_count = len(today_live)
         # 回した回数
@@ -77,7 +77,8 @@ def reMinder(target:str):
             for live in today_live:
                 if live['scheduled_start_time_at'].date() == today :
                     live_tag, holo_tag = Hololive.getLiveTag(live['channel_id'])
-                    message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                    # message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                    message += '{}{} : {}~\n'.format(holo_tag, live['holo_name'], live['scheduled_start_time_at'].time().strftime('%H:%M'))
                 # ↓添付したい画像のファイル名
                 FILE_NAME.append(IMG_TRIM_DIR + live['video_id'] +'.jpg')
             print(message) #ツイート
@@ -88,7 +89,8 @@ def reMinder(target:str):
                 if loop <=4:
                     if live['scheduled_start_time_at'].date() == today :
                         live_tag, holo_tag  = Hololive.getLiveTag(live['channel_id'])
-                        message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                        # message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                        message += '{}{} : {}~\n'.format(holo_tag, live['holo_name'], live['scheduled_start_time_at'].time().strftime('%H:%M'))
                         # ↓添付したい画像のファイル名
                         FILE_NAME.append(IMG_TRIM_DIR + live['video_id'] +'.jpg')
                         loop += 1
@@ -99,7 +101,7 @@ def reMinder(target:str):
                             result = tw.remind_tweetWithIMG_test(message, FILE_NAME, next_id)
                             next_id = result.id
                             FILE_NAME = []
-                            message = '本日[{}/{}]のLive予定はコチラ!🌟\n'.format(month, day)
+                            message = '本日[ {}/{} ]のLive予定はコチラ!🌟\n'.format(month, day)
                             loop = 1
                             time.sleep(1)
     else:
@@ -114,9 +116,9 @@ def tomorrowReminder(target):
     hSql = holo_sql.holo_sql()
     tomorrow_live = hSql.selectTomorrow_KeepWatch(target)
 
-    if(target is 'hololive'):
+    if(target == 'hololive'):
         tw = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    elif(target is 'noripro'):
+    elif(target == 'noripro'):
         tw = tweet_components(CONSUMER_KEY_NORI, CONSUMER_SECRET_NORI, ACCESS_TOKEN_NORI, ACCESS_TOKEN_SECRET_NORI)
 
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
@@ -124,7 +126,7 @@ def tomorrowReminder(target):
     month = tomorrow.month
     day = tomorrow.day
     FILE_NAME = []
-    message = '明日[{}/{}]のLive予定はコチラ!🌟\n\n'.format(month, day)
+    message = '明日[ {}/{} ]のLive予定はコチラ!🌟\n\n'.format(month, day)
     if tomorrow_live:
         live_count = len(tomorrow_live)
         # 回した回数
@@ -135,7 +137,8 @@ def tomorrowReminder(target):
             for live in tomorrow_live:
                 if live['scheduled_start_time_at'].date() == tomorrow :
                     live_tag, holo_tag = Hololive.getLiveTag(live['channel_id'])
-                    message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                    # message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                    message += '{}{} : {}~\n'.format(holo_tag, live['holo_name'], live['scheduled_start_time_at'].time().strftime('%H:%M'))
                 # ↓添付したい画像のファイル名
                 FILE_NAME.append(IMG_TRIM_DIR + live['video_id'] +'.jpg')
             print(message) #ツイート
@@ -143,10 +146,11 @@ def tomorrowReminder(target):
             tw.remind_tweetWithIMG_test(message, FILE_NAME)
         else:
             for live in tomorrow_live:
-                if loop <=4:
+                if loop <= 4:
                     if live['scheduled_start_time_at'].date() == tomorrow :
                         live_tag, holo_tag  = Hololive.getLiveTag(live['channel_id'])
-                        message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                        # message += '{}{}({}) : {}~\n'.format(holo_tag, live['holo_name'], live_tag, live['scheduled_start_time_at'].time().strftime('%H:%M'))
+                        message += '{}{} : {}~\n'.format(holo_tag, live['holo_name'], live['scheduled_start_time_at'].time().strftime('%H:%M'))
                         # ↓添付したい画像のファイル名
                         # print(FILE_NAME)
                         FILE_NAME.append(IMG_TRIM_DIR + live['video_id'] +'.jpg')
@@ -158,7 +162,7 @@ def tomorrowReminder(target):
                             result = tw.remind_tweetWithIMG_test(message, FILE_NAME, next_id)
                             next_id = result.id
                             FILE_NAME = []
-                            message = '明日[{}/{}]のLive予定はコチラ!🌟\n\n'.format(month, day)
+                            message = '明日[ {}/{} ]のLive予定はコチラ!🌟\n\n'.format(month, day)
                             loop = 1
                             time.sleep(1)
     else:

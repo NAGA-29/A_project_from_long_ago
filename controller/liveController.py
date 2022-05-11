@@ -131,7 +131,7 @@ class LiveController:
     一定数のチャンネルがlive中の場合通知
     """
     def createLiveMessage(self, count:int) -> str:
-        message = '現在のLIVE速報!!\n\n'
+        message = 'LIVE速報▶!!\n\n'
         message += '現在【 {} 】件の枠でLIVE中です🔥\n見逃さないよう注意してください!\n\n'.format(str(count))
         if self.Belongs == 'hololive':
             message += '#ホロライブ\n\n'
@@ -254,7 +254,7 @@ class LiveController:
                 time.sleep(5)
                 self.tweet.tweet_With_Image(self.createLiveMessage(count), SCREENSHOT_FILE+'screenshot.png')
                 notice_times[self.Belongs] = dt_now
-                print(notice_times)
+                # print(notice_times)
                 self.logger.info('複数Live 通知')
         # END LIVEが複数の場合通知-------
 
@@ -357,6 +357,7 @@ def main(notice_times:dict):
     Live = LiveController('hololive')
     notice_times = Live.live(notice_times)
     Live=None
+    print('======================================')
     Live = LiveController('noripro')
     notice_times = Live.live(notice_times)
     Live=None

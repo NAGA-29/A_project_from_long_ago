@@ -1,6 +1,4 @@
 import tweepy
-# import requests
-
 from pprint import pprint
 import sys
 import os
@@ -75,14 +73,14 @@ class tweet_components:
             tweet_status = self.API.update_status(TWEET_TEXT)
             if tweet_status == 200: #成功
                 pprint(tweet_status)
-                result = True
+                return True
             else:
                 pprint(tweet_status)
-                result = False
-        except Exception as e:
-                # pprint(e)
-                result = False
-        return result
+                return False
+        except tweepy.TweepError as err:
+            return False
+        except Exception as err:
+            return False
 
 
     def tweetWithIMG(self, message:str, img_url:str, DIR=None)->bool:
@@ -101,9 +99,11 @@ class tweet_components:
                 result = True
             else:
                 result = False
-        except Exception as e:
-                pprint(e)
-                result = False
+        except tweepy.TweepError as err:
+            return False
+        except Exception as err:
+            pprint(err)
+            result = False
         return result
 
 
@@ -113,11 +113,11 @@ class tweet_components:
         FILE_NAME = file_name
         try :
             self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
+        except tweepy.TweepError as err:
+            return False
         except Exception as e:
-                # message = e
-                pprint(e)
-                # result = False
-                return False
+            pprint(e)
+            return False
 
 
     def sub_tweetWithIMG(self,message,img_url):

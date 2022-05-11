@@ -154,6 +154,7 @@ def make_holo_data_graph():
     fig.savefig(_SAVE_DIR_PATH)
     # plt.show()
     Session.close()
+    Session.bind.dispose()
     print('Done!')
 
 if __name__ == '__main__':
