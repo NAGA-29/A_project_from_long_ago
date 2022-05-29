@@ -83,7 +83,7 @@ class tweet_components:
             return False
 
 
-    def tweetWithIMG(self, message:str, img_url:str, DIR=None)->bool:
+    def tweetWithIMG(self, message:str, img_url:str, DIR=None):
         """
         ツイートメソッド 画像付き url分解機能
         """
@@ -91,8 +91,11 @@ class tweet_components:
         TWEET_TEXT = message
         IMG_DIR = DIR if DIR else self.LIVE_TMB_IMG_DIR
         try :
+            url = ''
+            if type(img_url) is bytes:
+                url = img_url.decode('utf-8')
             # ↓添付したい画像のファイル名
-            FILE_NAME = IMG_DIR + img_url.split('/')[-2] + '.jpg'
+            FILE_NAME = IMG_DIR + url.split('/')[-2] + '.jpg'
             tweet_status = self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
             if tweet_status == 200: #成功
                 pprint("Succeed!")

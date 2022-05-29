@@ -1,6 +1,6 @@
 import time
 from datetime import datetime, timedelta
-from dateutil.tz import gettz
+# from dateutil.tz import gettz
 from dotenv import load_dotenv
 import tweepy
 import os
