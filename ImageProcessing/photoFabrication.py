@@ -20,8 +20,8 @@ class PhotoFabrication:
     param img_url:画像url
     '''
     def imgTrim(self,img_url:str):
-        img_url = img_url.decode('utf-8')
-        
+        if type(img_url) is bytes:
+            img_url = img_url.decode('utf-8')
         img_name = img_url.split('/')[-2] + '.jpg'
         FILE_NAME = self.LIVE_TMB_IMG_DIR + img_name
         img = Image.open(FILE_NAME) #画像の読み込み

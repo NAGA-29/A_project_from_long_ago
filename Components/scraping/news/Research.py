@@ -109,10 +109,11 @@ def NewsAPIResearch_Every(file_name, fromDay, toDay, keyword='ホロライブ'):
                 News[lists['url']] = [lists['title'], lists['publishedAt']]
         past_news = csvFileRead(file_name)
         for key in past_news.keys():
-            try:
-                del News[key]
-            except KeyError as err:
-                pprint(err)
+            # try:
+            del News[key]
+            # except KeyError as err:
+                # pprint(err)
+                
         # os.remove(file_name)
         # past_news.update(News)
         url, val = random.choice(list(News.items()))
@@ -128,6 +129,8 @@ def blackFilter(url:str)->bool:
     """
     pattern = "https?://[^/]+/"
     res = re.match(pattern, url)
+    if res is None:
+        return True
     BLACK_LIST = ['http://yaraon-blog.com/','https://www.mdn.co.jp/','https://togetter.com/',
                     'http://onecall2ch.com/','http://alfalfalfa.com/','https://it.srad.jp/',
                     'http://jin115.com/','http://blog.esuteru.com/','https://anond.hatelabo.jp/',
@@ -137,13 +140,12 @@ def blackFilter(url:str)->bool:
                     'http://hamusoku.com/', 'http://news4vip.livedoor.biz/', 'http://waranote.livedoor.biz/',
                     'http://blog.livedoor.jp/','http://burusoku-vip.com/', 'http://vipsister23.com/',
                     'http://itaishinja.com/',  'http://doujinsokuhou45.com/', 'https://forest-life-japan.com/',
-                    'http://tarosoku.com/', 'https://vtuber-matomeblog.com/', 'http://hamusoku.com/' ]
-    for black in BLACK_LIST:
-        if res is None:
-            return True
-        # TODO: 修正必要
-        if res.group() == black:
-            return False
+                    'http://tarosoku.com/', 'https://vtuber-matomeblog.com/', 'http://hamusoku.com/',
+                    'http://vippers.jp/', 'https://yaraon-blog.com/','https://www.mutyun.com/',]
+    # pprint(res.group())
+    print(type(BLACK_LIST))
+    if res.group() in BLACK_LIST:
+        return False
     return True
 
 
@@ -162,11 +164,7 @@ def csvFileRead(filename:str) :
             try:
                 val = [rows[1], rows[2]]
                 past_all[rows[0]] = val
-                # past_url.append(rows[1])
-                # past_time.append(rows[2])
-                # past_all.append( dict([rows[1],list(rows[0], rows[2])]) )
                 return past_all
-
             except IndexError as err:
                 print(err)
         # past_all = dict(zip(past_title, [past_url, past_time]))   
