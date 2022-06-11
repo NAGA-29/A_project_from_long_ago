@@ -8,6 +8,7 @@ from os.path import join, dirname
 import pickle
 from pprint import pprint
 import sys
+from http.client import RemoteDisconnected
 
 '''origin'''
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../../'))
@@ -32,8 +33,8 @@ Client = tweepy.Client(bearer_token=BEARER_TOKEN, consumer_key=CONSUMER_KEY,
                         consumer_secret=CONSUMER_SECRET, access_token=ACCESS_TOKEN, 
                         access_token_secret=ACCESS_TOKEN_SECRET, wait_on_rate_limit=True,)
 
-# os.path.dirname(os.path.abspath(__file__))
 LAST_TW_FILE = os.path.dirname(os.path.abspath(__file__)) + '/last_tw_id.pkl'
+NOTICED_SPACE_FILE = os.path.dirname(os.path.abspath(__file__)) + '/noticed_space_id.pkl'
 
 # # ###############################################################################
 
@@ -76,43 +77,100 @@ def main():
     user_fields = ['created_at', 'description', 'entities', 'id', 
                     'location, name', 'pinned_tweet_id', 'profile_image_url',
                     'protected', 'public_metrics', 'url', 'username', 'verified', 'withheld']
-
-    # live中のスペースidを取得
-    search_result = Client.get_spaces(user_ids=space_owner_convert2str, expansions=expansions_4search,
-                            space_fields=space_fields_4search, user_fields=user_fields_4search)
-    # pprint( datetime.now().astimezone(gettz('Asia/Tokyo')) - (search_result[0][0]['started_at']).astimezone(gettz('Asia/Tokyo')) )
-    # if ( datetime.now().astimezone(gettz('Asia/Tokyo')) - (search_result[0][0]['started_at']).astimezone(gettz('Asia/Tokyo')) ) > timedelta(seconds=300):
-    #     print('条件に合うスペースはありません')
-    #     return
-        # (search_result[0][0]['started_at']).astimezone(gettz('Asia/Tokyo')).strftime('%Y-%m-%d %H:%M:%S') #start time
-        # (datetime.now() - timedelta(seconds=300,)).strftime('%Y-%m-%d %H:%M:%S'): #now time - 5min
-        # pprint(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) #now time
+    
+    try:
+        # live中のスペースidを取得
+        search_result = Client.get_spaces(user_ids=space_owner_convert2str, expansions=expansions_4search,
+                                space_fields=space_fields_4search, user_fields=user_fields_4search)
+        # pprint( datetime.now().astimezone(gettz('Asia/Tokyo')) - (search_result[0][0]['started_at']).astimezone(gettz('Asia/Tokyo')) )
+        # if ( datetime.now().astimezone(gettz('Asia/Tokyo')) - (search_result[0][0]['started_at']).astimezone(gettz('Asia/Tokyo')) ) > timedelta(seconds=300):
+        #     print('条件に合うスペースはありません')
+        #     return
+            # (search_result[0][0]['started_at']).astimezone(gettz('Asia/Tokyo')).strftime('%Y-%m-%d %H:%M:%S') #start time
+            # (datetime.now() - timedelta(seconds=300,)).strftime('%Y-%m-%d %H:%M:%S'): #now time - 5min
+            # pprint(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) #now time
+    except RemoteDisconnected as err:
+        pprint(err)
+        return
+        
 
     if search_result[3]['result_count'] > 0:
         live_space_id = [{i['id']:i['title']} for i in search_result.data]
-        
         tw_result = None
         last_tw_id = None
         for n in live_space_id:
             for id, title in n.items():
+                if noticed_space_id_check(id):
+                    continue
                 try:
                     with open(LAST_TW_FILE, 'rb') as f:
                         last_tw_id = pickle.load(f)
+                        print(last_tw_id)
                 except EOFError as err:
                         print(f'EOFError on load pickle file: {err}')
-                tw_result = Client.create_tweet(text=f"<Twitter Space>\n\n{title}\n\nスペース展開中です!\nhttps://twitter.com/i/spaces/{id}",
+                        
+                tw_result = Client.create_tweet(text=f"<Twitter Space>\n\n{title}\n\nスペース展開中です!\n#ホロスペース\n\nhttps://twitter.com/i/spaces/{id}",
                                                 in_reply_to_tweet_id=last_tw_id if last_tw_id else None,)
+                write_space_id(id, read_noticed_space_id())
+                
+                try:
+                    with open(LAST_TW_FILE, 'wb') as f:
+                        pickle.dump(tw_result[0]['id'], f)
+                except EOFError as err:
+                    print(f'ERROR on save pickle file: {err}')
                 time.sleep(3)
-        try:
-            with open(LAST_TW_FILE, 'wb') as f:
-                pickle.dump(tw_result[0]['id'], f)
-        except EOFError as err:
-            print(f'ERROR on save pickle file: {err}')
-                    # self.logger.error(f'ERROR on save pickle file: {err}')
     else:
         print('条件に合うスペースはありません')
                     
+    
+def noticed_space_id_check(space_id):
+    noticed_space_id = None
+    # noticed_space_id_list = 
+    try:
+        with open(NOTICED_SPACE_FILE, 'rb') as f:
+            noticed_space_id_list = pickle.load(f)
+    except EOFError as err:
+            print(f'EOFError on load pickle file: {err}')
+            
+    if space_id in noticed_space_id_list:
+        return True
+    else:
+        return False
+    
+def read_noticed_space_id():
+    try:
+        with open(NOTICED_SPACE_FILE, 'rb') as f:
+            noticed_space_id_list = pickle.load(f)
+            return noticed_space_id_list
+    except EOFError as err:
+            print(f'EOFError on load pickle file: {err}')
+
+def read_last_tw_id():
+    try:
+        with open(LAST_TW_FILE, 'rb') as f:
+            last_tw_id = pickle.load(f)
+            print(last_tw_id)
+            return last_tw_id
+    except EOFError as err:
+        print(f'EOFError on load pickle file: {err}')
+        # TODO:エラーの際にどうするか検討必要
+    
+def write_space_id(space_id, noticed_space_id: list):
+    noticed_space_id.append(space_id)
+    try:
+        with open(NOTICED_SPACE_FILE, 'wb') as f:
+            pickle.dump(noticed_space_id, f)
+    except EOFError as err:
+        print(f'ERROR on save pickle file: {err}')
+        
 if __name__ == '__main__':
     while True:
         main()
-        time.sleep(300)
+        time.sleep(360)
+    
+    # write_space_id('test', [])
+    # try:    
+    #     with open(LAST_TW_FILE, 'wb') as f:
+    #         pickle.dump(1529120279469105152, f)
+    # except EOFError as err:
+    #     print(f'ERROR on save pickle file: {err}')
