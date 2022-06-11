@@ -42,5 +42,9 @@ Youtube専用 短縮URL
 def make_yURL(l_URL:str):
     if type(l_URL) is bytes:
         l_URL = l_URL.decode('utf-8')
+<<<<<<< HEAD
+=======
+        pprint(l_URL)
+>>>>>>> 821c066f681c233ddc947df98390e4a9d1f391f3
     _list = l_URL.split('=')
     return 'https://youtu.be/' + _list[1]

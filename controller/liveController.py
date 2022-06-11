@@ -313,6 +313,7 @@ class LiveController:
                                                     または視聴者が3万人増える
                                                     いずれかの条件をクリアした場合に通知する
                                                     '''
+                                                    # print(live_table['channel_url'])
                                                     message = '✨{}✨\n{}\n\n{} \n\n現在ホットなLIVE!!🔥{}人が視聴中!!👀\n{}'.format(live_table['holo_name'], tag, live_title, concurrentViewers,bitly.make_yURL(live_table['channel_url']) )
                                                     '''
                                                     DBに対応画像があるか確認
@@ -326,8 +327,8 @@ class LiveController:
                                                     # 画像加工とツイート
                                                     img_path = (live_table['image_L'] if live_table['image_L'] else live_table['image_default'])
                                                     photo.imgTrim(img_path)
-                                                    self.tweet.tweetWithIMG(message,img_path,TRIM_IMG_DIR)
                                                     print(message)
+                                                    self.tweet.tweetWithIMG(message,img_path,TRIM_IMG_DIR)
                                                 
                                         print('<<{}>> {}  LIVE中!!! {}人が視聴中!!'.format(live_table['holo_name'], tubeTabelOne[0]['title'], concurrentViewers))
                                     # メンバー限定配信(人数とチャット欄が取得できない)
