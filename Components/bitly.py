@@ -3,6 +3,7 @@ import requests
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
+from pprint import pprint
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '.env')
@@ -10,6 +11,8 @@ load_dotenv(dotenv_path)
 
 #bitly本番アカウント
 ACCESS_TOKEN = os.environ.get('BITLY_ACCESS_TOKEN')
+# 予備
+# ACCESS_TOKEN = os.environ.get('SECOND_BITLY_ACCESS_TOKEN')
 
 
 '''
@@ -37,5 +40,11 @@ def get_shortenURL(longUrl:str):
 Youtube専用 短縮URL
 '''
 def make_yURL(l_URL:str):
-	_list = l_URL.split('=')
-	return 'https://youtu.be/' + _list[1]
+    if type(l_URL) is bytes:
+        l_URL = l_URL.decode('utf-8')
+<<<<<<< HEAD
+=======
+        pprint(l_URL)
+>>>>>>> 821c066f681c233ddc947df98390e4a9d1f391f3
+    _list = l_URL.split('=')
+    return 'https://youtu.be/' + _list[1]

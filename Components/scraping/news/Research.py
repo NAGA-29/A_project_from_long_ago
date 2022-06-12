@@ -20,6 +20,7 @@ from pprint import pprint
 
 # News API
 NEWS_API_KEY = os.environ.get('NEWS_API')
+# NEWS_API_KEY = 'c7ad8c43a0c34dd8ac105acdc61cad19'
 
 #------------------------------------------GoogleNews スクレイピング------------------------------------------
 def googleNewsResearch():
@@ -97,20 +98,22 @@ def NewsAPIResearch_Every(file_name, fromDay, toDay, keyword='ホロライブ'):
     newsapi = NewsApiClient(NEWS_API_KEY)
     # /v2/everything
     all_articles = newsapi.get_everything(
-                                        q=keyword,
-                                        from_param=fromDay,
-                                        to=toDay,
-                                        sort_by='relevancy')
+                                        q=keyword, 
+                                        from_param=fromDay, 
+                                        to=toDay, 
+                                        sort_by='relevancy',)
+
     if all_articles['articles']:
         for lists in all_articles['articles']:
             if blackFilter(lists['url']):
                 News[lists['url']] = [lists['title'], lists['publishedAt']]
         past_news = csvFileRead(file_name)
         for key in past_news.keys():
-            try:
-                del News[key]
-            except KeyError as err:
-                pprint(err)
+            # try:
+            del News[key]
+            # except KeyError as err:
+                # pprint(err)
+                
         # os.remove(file_name)
         # past_news.update(News)
         url, val = random.choice(list(News.items()))
@@ -126,14 +129,23 @@ def blackFilter(url:str)->bool:
     """
     pattern = "https?://[^/]+/"
     res = re.match(pattern, url)
-    # print(res.group())
+    if res is None:
+        return True
     BLACK_LIST = ['http://yaraon-blog.com/','https://www.mdn.co.jp/','https://togetter.com/',
                     'http://onecall2ch.com/','http://alfalfalfa.com/','https://it.srad.jp/',
                     'http://jin115.com/','http://blog.esuteru.com/','https://anond.hatelabo.jp/',
-                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/','http://himasoku.com/','http://www.scienceplus2ch.com/']
-    for black in BLACK_LIST:
-        if res.group() == black:
-            return False
+                    'https://srad.jp/','https://www.moeyo.com/','https://yro.srad.jp/',
+                    'http://himasoku.com/','http://majikichi.com/','http://www.scienceplus2ch.com/',
+                    'https://vtubernews.jp/','http://h-pon.doorblog.jp/', 'http://vtubernews.jp/',
+                    'http://hamusoku.com/', 'http://news4vip.livedoor.biz/', 'http://waranote.livedoor.biz/',
+                    'http://blog.livedoor.jp/','http://burusoku-vip.com/', 'http://vipsister23.com/',
+                    'http://itaishinja.com/',  'http://doujinsokuhou45.com/', 'https://forest-life-japan.com/',
+                    'http://tarosoku.com/', 'https://vtuber-matomeblog.com/', 'http://hamusoku.com/',
+                    'http://vippers.jp/', 'https://yaraon-blog.com/','https://www.mutyun.com/',]
+    # pprint(res.group())
+    print(type(BLACK_LIST))
+    if res.group() in BLACK_LIST:
+        return False
     return True
 
 
@@ -152,11 +164,7 @@ def csvFileRead(filename:str) :
             try:
                 val = [rows[1], rows[2]]
                 past_all[rows[0]] = val
-                # past_url.append(rows[1])
-                # past_time.append(rows[2])
-                # past_all.append( dict([rows[1],list(rows[0], rows[2])]) )
                 return past_all
-
             except IndexError as err:
                 print(err)
         # past_all = dict(zip(past_title, [past_url, past_time]))   

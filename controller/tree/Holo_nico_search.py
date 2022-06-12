@@ -26,15 +26,18 @@ import sys
 '''
 Original Modules
 '''
-sys.path.append('../service/niconico/')
-from niconico import NicoNico_Wrapper as nico
+# 単体でバックの時はこちら
+# sys.path.append('../')
+# from niconico.niconico import NicoNico_Wrapper
+# sys.path.append('../../model/') 
+# from setting import session
+# from NicoNicoVideo import NicoNicoVideo
 
-sys.path.append('../../model/')
-from setting import session
-from NicoNicoVideo import NicoNicoVideo
+from controller.service import NicoNico_Wrapper
+from model.setting import session
+from model.NicoNicoVideo import NicoNicoVideo
 
 sys.path.append('../../')
-import holo_sql
 from Components.holo_date import HoloDate
 from Components.tweet import tweet_components
 from Components.lines import lines
@@ -76,7 +79,8 @@ def rssImgDownload(img_url:str, video_id:str, dir_path:str) -> bool:
         print('Image Download OK ' + img_url)
         return True
     except Exception as err:
-        error_catch(err, 'ダウンロードが失敗しました')
+        line = lines()
+        error_catch(err, 'ダウンロードが失敗しました', line)
         return False
 
 
@@ -89,79 +93,85 @@ def error_catch(error, message:str, line:lines):
 
 # ---------------------------------------Main---------------------------------------
 # ----------------------------------------------------------------------------------
-if __name__ == '__main__':
-    while True:
-        hTime = HoloDate()
-        print('##########################開 始##########################')
-        w2525 = nico()
-        url = 'https://ch.nicovideo.jp/hololive/video?rss=2.0'
-        rss = feedparser.parse(url).entries
+# if __name__ == '__main__':
+    # while True:
+def main():
+    hTime = HoloDate()
+    print('##########################開 始##########################')
+    w2525 = NicoNico_Wrapper()
+    url = 'https://ch.nicovideo.jp/hololive/video?rss=2.0'
+    rss = feedparser.parse(url).entries
 
-        videos = []
-        if rss:
-            for i in rss:
-                if i['nicoch_ispremium'] == 'true':
-                    videos.append(i)
-                else:
-                    continue
-                
-        for vi in videos:
-            tw = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-            line = lines()
+    videos = []
+    if rss:
+        for i in rss:
+            if i['nicoch_ispremium'] == 'true':
+                videos.append(i)
+            else:
+                continue
+            
+    for vi in videos:
+        tw = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+        line = lines()
 
-            link = vi['link'] #URL
-            published = vi['published'] #未使用
-            published_parsed = vi['published_parsed'] #公開時間
-            title = vi['title'] #動画タイトル
+        link = vi['link'] #URL
+        published = vi['published'] #未使用
+        published_parsed = vi['published_parsed'] #公開時間
+        title = vi['title'] #動画タイトル
+        video_id = link.split('/')[-1]
 
-            video_id = link.split('/')[-1]
+        # DBからidを検索
+        result = session.query(NicoNicoVideo).filter(NicoNicoVideo.video_id==video_id).all()
+
+        if not result:
+            # 同じIDがない(新規)
             img = w2525.search_thumbnail(video_id) #サムネURLの検出
+            time.sleep(5)
             if not img:
                 line.lineNotify('サムネの検出に失敗しました')
                 continue
 
-            # DBからidを検索
-            result = session.query(NicoNicoVideo).filter(NicoNicoVideo.video_id==video_id).all()
-
-            if not result:
-            # 同じIDがない(新規)
-                newdata = True
-                download_Result = rssImgDownload(img, video_id, '../../storage/niconico/')
-                if not download_Result:
-                    newdata = False
-                    imgPro = None
-                    continue
-
-                jpt_str = w2525.parse_time(published_parsed)
-                JST = w2525.nico_convertToJST(jpt_str)
-                
-                # dbに保存
-                # try:
-                nico = NicoNicoVideo()
-                nico.name = 'hololive'
-                nico.belongs = 'hololive'
-                nico.title = title
-                nico.video_id = video_id
-                nico.url = link
-                nico.published_at = JST
-                nico.thumbnail_url  = img
-                nico.notification_last_time_at = '2000-01-01 00:00:00'
-                session.add(nico)
-                session.commit()
-                # except:
-                #     pprint('SQLAlchemy でエラー')
-
-                message = 'ニコ動検知テストだお\n\nNew Niconico Video🆕\n\nHololive official fan club\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format('#hololive', JST, hTime.convert_To_LON(JST), hTime.convert_To_NY(JST), title, link)
-                # message = 'New Niconico Video🆕\n\nHololive official fan club\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format('#hololive', JST, hTime.convert_To_LON(JST), hTime.convert_To_NY(JST), title, link)
-                line.lineNotify_Img('\nNew NicoNico Video🆕\n\nHololive official fan club\n{}\n\n投稿時間\n{}🇯🇵\n\n{}\n{}'.format('#hololive', JST, title, link), f'../../storage/niconico/{video_id}.jpg')
-                tw.tweet_With_Image(message, f'../../storage/niconico/{video_id}.jpg')
-            else:
-            # 同じIDがある(既存)
+            newdata = True
+            # download_Result = rssImgDownload(img, video_id, '../../storage/niconico/') # 単体テストの時用
+            download_Result = rssImgDownload(img, video_id, './storage/niconico/')
+            if not download_Result:
+                # newdata = False
+                # imgPro = None
                 continue
 
-            # 後始末
-            nico = None
-            # sql = None
-            line = None
-        
-        time.sleep(60*10)
+            jpt_str = w2525.parse_time(published_parsed)
+            JST = w2525.nico_convertToJST(jpt_str)
+            
+            # try:
+            # dbに保存
+            nico = NicoNicoVideo()
+            nico.name = 'hololive'
+            nico.belongs = 'hololive'
+            nico.title = title
+            nico.video_id = video_id
+            nico.url = link
+            nico.published_at = JST
+            nico.thumbnail_url  = img
+            nico.notification_last_time_at = '2000-01-01 00:00:00'
+            session.add(nico)
+            session.commit()
+            # except:
+            #     pprint('SQLAlchemy でエラー')
+
+            message = 'New Niconico Video🆕\n\nHololive official fan club\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format('#hololive', JST, hTime.convert_To_LON(JST), hTime.convert_To_NY(JST), title, link)
+            # message = 'New Niconico Video🆕\n\nHololive official fan club\n{}\n\n投稿時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format('#hololive', JST, hTime.convert_To_LON(JST), hTime.convert_To_NY(JST), title, link)
+            line.lineNotify_Img('\nNew NicoNico Video🆕\n\nHololive official fan club\n{}\n\n投稿時間\n{}🇯🇵\n\n{}\n{}'.format('#hololive', JST, title, link), f'../../storage/niconico/{video_id}.jpg')
+            # tw.tweet_With_Image(message, f'../../storage/niconico/{video_id}.jpg')
+            tw.tweet_With_Image(message, f'./storage/niconico/{video_id}.jpg')
+        else:
+        # 同じIDがある(既存)
+            continue
+
+        # 後始末
+        nico = None
+        # sql = None
+        line = None
+        # time.sleep(6)
+    # time.sleep(60*60)
+# if __name__ == '__main__':
+#     main()

@@ -18,7 +18,7 @@ from datetime import datetime as dt
 
 from pprint import pprint
 
-# original
+'''original'''
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 import holo_sql
 from YoutubeAPI.YoutubeAPI import Youtube_API as yApi
@@ -125,13 +125,7 @@ def get_chat(chat_id, pageToken, log_file):
 #         except:
 #             break
 
-
-
-
-if __name__ == '__main__':
-    # yt_url = input('Input YouTube URL > ')
-    # main(yt_url)
-
+def main(id, chat_id):
     nextPageToken = ''
 
     while True:
@@ -141,9 +135,11 @@ if __name__ == '__main__':
         # live_info = hsql.selectAllLiveTable()
         # file_name = live_info[4] + '.csv'
         """テスト"""
-        video_id = 'LAVJjIu03mA'
+        video_id = id
+        CHAT_ID = chat_id
         file_name = './chat_csv/' + video_id  + '.csv'
-
+        # video_id = 'LAVJjIu03mA'
+        
         CHAT_ID = 'Cg0KC0xBVkpqSXUwM21BKicKGFVDaEFucWNfQVk1X0kzUHg1ZGlnM1gxURILTEFWSmpJdTAzbUE'
         messages = yApi.get_chat(youtubeObject, CHAT_ID, nextPageToken)
 
@@ -222,3 +218,8 @@ if __name__ == '__main__':
             # time.sleep(30)
         else:
             break
+
+if __name__ == '__main__':
+    video_id = ''
+    # video_id = input('Input YouTube URL > ')
+    main(video_id)
