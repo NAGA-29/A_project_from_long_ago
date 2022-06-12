@@ -25,7 +25,7 @@ class NoriPro:
             # '夢乃リリス' : 'yumenolilith',     #夢乃リリス
             '胡桃澤もも' : 'kurumizawamomo', #胡桃澤もも
             '逢魔きらら' : 'omakirara',     #逢魔きらら
-            '看谷にぃあ' : 'mirutani_nia',   #看谷にぃあ
+            # '看谷にぃあ' : 'mirutani_nia',   #看谷にぃあ
             '稲荷いろは' : 'inariiroha_',       #稲荷いろは
             'レグルシュ・ライオンハート' : 'Reg_Lionheart',       #レグルシュ・ライオンハート
             '猫瀬乃しん' : 'nekozenoshin',       #猫瀬乃しん
@@ -45,7 +45,7 @@ class NoriPro:
             # '夢乃リリス' : 'UCH11P1Hq4PXdznyw1Hhr3qw',     #夢乃リリス
             '胡桃澤もも' : 'UCxrmkJf_X1Yhte_a4devFzA',     #胡桃澤もも
             '逢魔きらら' : 'UCBAeKqEIugv69Q2GIgcH7oA',     #逢魔きらら
-            '看谷にぃあ' : 'UCIRzELGzTVUOARi3Gwf1-yg',     #看谷にぃあ
+            # '看谷にぃあ' : 'UCIRzELGzTVUOARi3Gwf1-yg',     #看谷にぃあ
             '稲荷いろは' : 'UCWIPfdcux1WxuX5yZLPJDww',       #稲荷いろは
             'レグルシュ・ライオンハート' : 'UCuycJ_IsA5ESbTYhe05ozqQ',       #レグルシュ・ライオンハート
             '猫瀬乃しん' : 'UCMxIxoMdtcLkZ1wTq7qjztg',       #猫瀬乃しん
@@ -65,7 +65,7 @@ class NoriPro:
         # elif ID == 'UCH11P1Hq4PXdznyw1Hhr3qw' : HoloName,live_tag = '夢乃リリス', '#夢乃リリス'
         elif ID == 'UCxrmkJf_X1Yhte_a4devFzA' : HoloName,live_tag = '胡桃澤もも', '#胡桃澤もも'
         elif ID == 'UCBAeKqEIugv69Q2GIgcH7oA' : HoloName,live_tag = '逢魔きらら', '#逢魔きらら'
-        elif ID == 'UCIRzELGzTVUOARi3Gwf1-yg' : HoloName,live_tag = '看谷にぃあ', '#看谷にぃあ'
+        # elif ID == 'UCIRzELGzTVUOARi3Gwf1-yg' : HoloName,live_tag = '看谷にぃあ', '#看谷にぃあ'
         elif ID == 'UCWIPfdcux1WxuX5yZLPJDww' : HoloName,live_tag = '稲荷いろは', '#稲荷いろは'
         elif ID == 'UCuycJ_IsA5ESbTYhe05ozqQ' : HoloName,live_tag = 'レグルシュ・ライオンハート', '#レグライブ'
         elif ID == 'UCMxIxoMdtcLkZ1wTq7qjztg' : HoloName,live_tag = '猫瀬乃しん' , ' #猫瀬乃しん'
