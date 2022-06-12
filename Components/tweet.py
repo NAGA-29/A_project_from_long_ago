@@ -91,11 +91,11 @@ class tweet_components:
         TWEET_TEXT = message
         IMG_DIR = DIR if DIR else self.LIVE_TMB_IMG_DIR
         try :
-            url = ''
             if type(img_url) is bytes:
-                url = img_url.decode('utf-8')
+                img_url = img_url.decode('utf-8')
+            # pprint(img_url)
             # ↓添付したい画像のファイル名
-            FILE_NAME = IMG_DIR + url.split('/')[-2] + '.jpg'
+            FILE_NAME = IMG_DIR + img_url.split('/')[-2] + '.jpg'
             tweet_status = self.API.update_with_media(filename=FILE_NAME, status=TWEET_TEXT)
             if tweet_status == 200: #成功
                 pprint("Succeed!")
@@ -103,6 +103,7 @@ class tweet_components:
             else:
                 result = False
         except tweepy.TweepError as err:
+            pprint(err)
             return False
         except Exception as err:
             pprint(err)

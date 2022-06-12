@@ -115,10 +115,10 @@ schedule.every().day.at("19:10").do(holoNews)
 schedule.every().day.at("23:10").do(holoNews)
 
 # # ニコ動検知
-schedule.every().day.at("00:30").do(niconico_search)
-schedule.every().day.at("06:30").do(niconico_search)
-schedule.every().day.at("12:30").do(niconico_search)
-schedule.every().day.at("18:30").do(niconico_search)
+# schedule.every().day.at("00:30").do(niconico_search)
+# schedule.every().day.at("06:30").do(niconico_search)
+# schedule.every().day.at("12:30").do(niconico_search)
+# schedule.every().day.at("18:30").do(niconico_search)
 # schedule.every().day.at("22:30").do(niconico_search)
 
 while True:
