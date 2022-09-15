@@ -3,8 +3,8 @@
 # 
 from xml.sax import make_parser
 import feedparser
-import pandas as pd
-import numpy as np
+# import pandas as pd
+# import numpy as np
 from pyasn1.type.univ import Boolean, Null
 import requests
 from requests_oauthlib import OAuth1Session
@@ -216,7 +216,10 @@ if __name__ == '__main__':
 
 
     # DB管理バージョンーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+            num = 1
             for entry in feedparser.parse(url).entries:
+                if num >=5 : # 5件まで CHANGE: 2022/09/15
+                    continue
                 hSql = holo_sql.holo_sql()
                 # ------------------------
                 # param
@@ -270,9 +273,6 @@ if __name__ == '__main__':
                         if not imgPro.imageComparison_hash() : # 画像変更検知
                             # ---------------image combination------------------
                             img_name = entry['media_thumbnail'][0]['url'].split('/')[-2] + '.jpg'
-                            # TOP_NAME = './live_temporary_image/'+ img_name
-                            # BOTTOM_NAME = './Trim_Images/'+ img_name
-                            # SAVE_NAME = './Combine_Image/'+ img_name
                             TOP_NAME = BASE_TOP_NAME+ img_name
                             BOTTOM_NAME = BASE_BOTTOM_NAME+ img_name
                             SAVE_NAME = BASE_SAVE_NAME+ img_name
@@ -398,6 +398,8 @@ if __name__ == '__main__':
                 update = False
                 updateKind = ''
                 imgPro = None
+                num += 1 # CHANGE: 最新5件のみにして負担軽減 2022/09/15
+                time.sleep(1)
 
             # dataDone = []
             if len(getRss) + len(getRss_News) == 0:
@@ -474,4 +476,4 @@ if __name__ == '__main__':
 
         logger.info('End Hololive RSS Research Controller')
         logger = None
-        time.sleep(180)
+        time.sleep(450)
