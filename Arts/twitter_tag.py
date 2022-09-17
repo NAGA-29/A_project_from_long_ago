@@ -93,7 +93,7 @@ pprint(art_tags)
 for Account, Tag in art_tags.items():
     for hTag in Tag :
         MAX_ID = ''
-        # print(hTag)
+        print(hTag)
         
         while True:
             data_count = []
