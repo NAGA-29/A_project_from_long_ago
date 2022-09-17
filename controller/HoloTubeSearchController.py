@@ -64,10 +64,11 @@ ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
 BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
 
 # # ##twitterテストアカウント
-# CONSUMER_KEY = "OgUS1y3y7vuxy54NoKZvlOdq9"
-# CONSUMER_SECRET = "hCRRA4WX5cEe50ScugCkF4MvFJeFvU8YFAiwGDBi2vkJ9PqyZL"
-# ACCESS_TOKEN = "1000217159446945793-0LiJPmZvvyfaQvNhiY1pgL52pCTnuW"
-# ACCESS_TOKEN_SECRET = "enagarkdimg1cdR4w8ZFZhEr0kyjVj8ekNRzmiZviz4z8"
+# CONSUMER_KEY = os.environ.get('CONSUMER_KEY_TEST')
+# CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET_TEST')
+# ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN_TEST')
+# ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET_TEST')
+# BEARER_TOKEN = os.environ.get('BEARER_TOKEN_TEST')
 
 # Logging設定
 file = os.path.splitext(os.path.basename(__file__))[0]
@@ -122,7 +123,7 @@ Play_Lists = {
     'heikosen_scramble' : 'PLOzC5vqgb2w_r7zlJjt9zaQ4nWMrmc2F1',
 }
 
-def rssImgDownload(line, img_url:str, dir_path:str) ->Boolean:
+def rssImgDownload(line, img_url:str, dir_path:str):
     """
     画像のダウンロード
     """
@@ -162,7 +163,6 @@ if __name__ == '__main__':
         logger.info('Start Hololive RSS Research Controller')
         # DBへ接続
         hTime = HoloDate()
-        # hSql = holo_sql.holo_sql()
         photo = PhotoFabrication(LIVE_TMB_IMG_DIR,TRIM_IMG_DIR)
         tw = tweet_components(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
         yt = yApi()
@@ -218,7 +218,7 @@ if __name__ == '__main__':
     # DB管理バージョンーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
             num = 1
             for entry in feedparser.parse(url).entries:
-                if num >=5 : # 5件まで CHANGE: 2022/09/15
+                if num > 5 : # 5件まで CHANGE: 2022/09/16
                     continue
                 hSql = holo_sql.holo_sql()
                 # ------------------------
@@ -247,7 +247,6 @@ if __name__ == '__main__':
                 # # # 緊急処置 2022/05/08 ペコら #############
 
                 result = hSql.searchVideoIdFromYoutubeVideoTable(entry)  #youtube_videos
-                # imgPro = ImageProcessing.ImageProcessing(entry['media_thumbnail'][0]['url'])
                 imgPro = ImageProcessing.ImageProcessing(entry['media_thumbnail'][0]['url'], TMP_DIR=LIVE_TMB_TMP_DIR, IMG_DIR= LIVE_TMB_IMG_DIR)
 
                 if not result:

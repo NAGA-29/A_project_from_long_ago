@@ -70,3 +70,21 @@ class NoriPro:
         elif ID == 'UCuycJ_IsA5ESbTYhe05ozqQ' : HoloName,live_tag = 'レグルシュ・ライオンハート', '#レグライブ'
         elif ID == 'UCMxIxoMdtcLkZ1wTq7qjztg' : HoloName,live_tag = '猫瀬乃しん' , ' #猫瀬乃しん'
         return HoloName, live_tag
+    
+    @staticmethod
+    def get_art_tag():
+        return {
+            'SHIGURE_UI_tg' : ['#ういしぐれぇ'],     #しぐれうい
+            'TAMAKI_tg' : ['#たまきあーと'],     #犬山たまき
+            'SHIRAYUKI_tg' : ['#みしろんあーと'],       #白雪みしろ
+            'MILK_tg' : ['#みるくあるばむ'],       #愛宮みるく
+            'HIMESAKI_tg' : ['#ゆずるあーと'],     #姫咲ゆずる
+            'WARABE_tg' : ['#ばあちゃんこれ見て'],       #鬼灯わらべ
+            'LILITH_tg' : ['#夢の中絵'],                #夢乃リリス
+            'MOMO_tg' : ['#魔法少女活動報告書'],                #胡桃澤もも
+            'KIRARA_tg' : ['#あくまびじゅつかん'],                #逢魔きらら
+            
+            'IROHA_tg' : ['#いろは絵ほへと'],                #稲荷いろは
+            'LION_tg' : ['#らいおんはあーと'],          #レグルシュ・ライオンハート
+            'SHIN_tg' : ['#しん様へ届け'],              #猫瀬乃しん
+        }

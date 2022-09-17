@@ -1,33 +1,31 @@
-# 
-#ツイッターからタグを検索して画像を保存する
-# 
+"""
+ツイッターからタグを検索して画像を保存する
+"""
 import tweepy
-import csv
-import pandas as pd
 import pytz
-import copy
 import urllib.request, urllib.error
 
 import datetime
 from dateutil.parser import parse
 from datetime import datetime as dt
-import dateutil.parser
-import schedule
-
+import sys
 import os
 from os.path import join, dirname
-from dotenv import load_dotenv
-
-# import holo_sql
 from pprint import pprint
+from dotenv import load_dotenv
+from pprint import pprint
+
+'''
+original
+'''
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+import holo_sql
+from config.vtuber.hololive import Hololive
+from config.vtuber.noripro import NoriPro
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
-
-import sys
-sys.path.append(os.path.join(dirname(__file__), '../'))
-import holo_sql
 
 ##twitterテストアカウント
 CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
@@ -41,10 +39,8 @@ API = tweepy.API(auth)
 
 _FAVORITE_COUNT = 1000
 
+IMG_DIR = './art_images/' # 画像の保存先
 
-# 画像の保存先
-IMG_DIR = './images/'
-# -------------------- メソッド -----------------------
 # 画像のダウンロード
 def download(url):
     url_orig = '%s:orig' % url
@@ -74,75 +70,8 @@ def error_catch(error):
     """
     print("NG ", error)
 
-
-Holo_tags = {
-    'A-CHAN_tg' : ['#絵ーちゃん'],       #えーちゃん
-    'MIKO_tg' : ['#miko_Art'],       #さくらみこ
-    'KORONE_tg' : ['#できたてころね'],       #戌神ころね
-    'KANATA_tg' : ['#かなたーと'],       #天音かなた
-    'OKAYU_tg' : ['#絵かゆ'],       #猫又おかゆ
-    'AKIROSE_tg' : ['#アロ絵'],       #アキロゼ
-    # 'AKIROSE_tg' : ['#アロ絵','#スケべなアロ絵'],       #アキロゼ
-    'MIO_tg' : ['#みおーん絵'],     #大神みお
-    'SORA_tg' : ['#soraArt'],      #ときのそら
-    'ROBOCO_tg' : ['#ロボ子Art'],        #ロボ子
-    'SUISEI_tg' : ['#ほしまちぎゃらりー'],     #星街すいせい
-    'MEL_tg' : ['#メルArt'],        #夜空メル
-    'MATSURI_tg' : ['#祭絵'],      #夏色祭り
-    # 'MATSURI_tg' : ['#祭絵','まつりは絵っち'],      #夏色祭り
-    'FUBUKI_tg' : ['#絵フブキ'],         #白上フブキ
-    'HAATO_tg' : ['#はあとart'],        #赤井はあと
-    'AQUA_tg' : ['#あくあーと'],         #湊あくあ
-    'NAKIRI_tg' : ['#百鬼絵巻'],         #百鬼あやめ
-    'SHION_tg' : ['#シオンの書物'],     #紫咲シオン
-    'CHOCO_tg' : ['#しょこらーと'],     #癒月ちょこ
-    'SUBARU_tg' : ['#プロテインザスバル'],       #大空スバル
-    'A-CHAN_tg' : ['#絵ーちゃん'],       #えーちゃん
-    'PEKORA_tg' : ['#ぺこらーと'],       #兎田ぺこら
-    'RUSHIA_tg' : ['#絵クロマンサー'],       #潤羽るしあ
-    'MARINE_tg' : ['#マリンのお宝'],     #宝鐘マリン
-    'NOEL_tg' : ['#ノエラート'],        #白銀ノエル
-    'FLARE_tg' : ['#しらぬえ'],       #不知火フレア
-    'TOWA_tg' : ['#TOWART'],          #常闇トワ
-    'LUNA_tg' : ['#ルーナート'],      #姫森ルーナ
-    # 'LUNA_tg' : ['#ルーナート','#セクシールーナート'],      #姫森ルーナ
-    'COCO_tg' : ['#みかじ絵'],        #桐生ココ
-    'WATAME_tg' : ['#つのまきあーと'],       #角巻わため
-    'LAMY_tg' : ['#らみあ〜と', 'LamyArt'],      #雪花ラミィ
-    'BOTAN_tg' : ['#ししらーと'],      #獅白ぼたん
-    'NENE_tg' : ['#ねねアルバム'],        #桃鈴ねね
-    'ALOE_tg' : ['#まのあろ絵'],       #魔乃アロエ
-    'POLKA_tg' : ['#絵まる'],      #尾丸ポルカ
-
-    'AZKI_tg' : ['#AZKiART'],        #AZKI
-
-    'CALLIOPE_tg' : ['#callillust'],   #森美声
-    'KIARA_tg' : ['#絵ニックス'],       #小鳥遊キアラ
-    'INANIS_tg' : ['#inART','#いなート'],       #一伊那尓栖
-    'GURA_tg' : ['#gawrt'],     #がうる・ぐら
-    'AMELIA_tg' : ['#ameliaRT'],      #ワトソン・アメリア
-
-    'RISU_tg' : ['#GambaRisu'],   #Ayunda Risu / アユンダ・リス
-    'MOONA_tg' : ['#HoshinovArt'],       #Moona Hoshinova / ムーナ・ホシノヴァ
-    'IOFI_tg' : ['#ioarts'],       #Airani Iofifteen / アイラニ・イオフィフティーン
-    'OLLIE_tg' : ['#graveyART'],     #Kureiji Ollie / クレイジー・オリー 
-    'ANYA_tg' : ['#anyatelier'],      #Anya Melfissa / アーニャ・メルフィッサ
-    'REINE_tg' : ['#Reinessance'],     #Pavolia Reine / パヴォリア・レイネ
-    'IRYS_tg' : ['#IRySart'],           #IRyS / アイリス
-
-    'SHIGURE_UI_tg' : ['#ういしぐれぇ'],     #しぐれうい
-    'TAMAKI_tg' : ['#たまきあーと'],     #犬山たまき
-    'SHIRAYUKI_tg' : ['#みしろんあーと'],       #白雪みしろ
-    'MILK_tg' : ['#みるくあるばむ'],       #愛宮みるく
-    'HIMESAKI_tg' : ['#ゆずるあーと'],     #姫咲ゆずる
-    'WARABE_tg' : ['#ばあちゃんこれ見て'],       #鬼灯わらべ
-    'LILITH_tg' : ['#夢の中絵'],                #夢乃リリス
-    'MOMO_tg' : ['#魔法少女活動報告書'],                #胡桃澤もも
-    'KIRARA_tg' : ['#あくまびじゅつかん'],                #逢魔きらら
-}
-
-
-# pprint(tweet_url_list)
+art_tags = Hololive().get_art_tag()
+art_tags.update(NoriPro().get_art_tag())
 
 d_today = datetime.date.today()
 since_day = d_today - datetime.timedelta(days=1)
@@ -154,94 +83,18 @@ aT_native = dt.combine(d_today, aTime)
 bT_native = dt.combine(since_day, bTime)
 today_daytime = pytz.timezone('Asia/Tokyo').localize(aT_native)
 since_daytime = pytz.timezone('Asia/Tokyo').localize(bT_native)
-print(today_daytime)
-print(since_daytime)
-
-
-# ディレクトリを作成
-# new_dir_path = './images/{}/'.format(str(d_today))
-# if not os.path.exists(new_dir_path) :
-#     os.makedirs(new_dir_path)
-
+print(f'Research Term : {since_daytime} ~ {today_daytime}')
 
 hSql = holo_sql.holo_sql()  # DBインスタンス作成
 # hSql.createArtsTable()  #  テーブル作成
-    # タグ検索
-for Account,Tag in Holo_tags.items():
+# タグ検索
+pprint(art_tags)
+
+for Account, Tag in art_tags.items():
     for hTag in Tag :
         MAX_ID = ''
-        HoloName = ''
-        # final_data = []
-        print(hTag)
-        # ホロライブ
-        if Account == 'KORONE_tg': HoloName = '戌神ころね'
-        elif Account  == 'MIKO_tg' : HoloName ='さくらみこ'
-        elif Account  == 'FUBUKI_tg' : HoloName = '白上フブキ'
-        elif Account  == 'AQUA_tg' : HoloName = '湊あくあ'
-        elif Account  == 'PEKORA_tg' : HoloName = '兎田ぺこら'
-        elif Account  == 'AKIROSE_tg' : HoloName = 'アキ・ローゼンタール'
-        elif Account  == 'SORA_tg' : HoloName = 'ときのそら'
-        elif Account  == 'SUBARU_tg' : HoloName = '大空スバル'
-        elif Account  == 'ROBOCO_tg' : HoloName = 'ロボ子さん'
-        elif Account  == 'SHION_tg'  : HoloName = '紫咲シオン'
-        elif Account  == 'FLARE_tg' : HoloName = '不知火フレア'
-        elif Account  == 'MEL_tg' : HoloName = '夜空メル'
-        elif Account  == 'CHOCO_tg' : HoloName = '癒月ちょこ'
-        elif Account  == 'HAATO_tg': HoloName = '赤井はあと'
-        elif Account  == 'OKAYU_tg' : HoloName = '猫又おかゆ'
-        elif Account  == 'LUNA_tg' : HoloName = '姫森ルーナ'
-        elif Account  == 'SUISEI_tg' : HoloName = '星街すいせい'
-        elif Account  == 'MATSURI_tg' : HoloName = '夏色まつり'
-        elif Account  == 'MARINE_tg' : HoloName = '宝鐘マリン'
-        elif Account  == 'NAKIRI_tg' : HoloName = '百鬼あやめ'
-        elif Account  == 'NOEL_tg' : HoloName = '白銀ノエル'
-        elif Account  == 'RUSHIA_tg' : HoloName = '潤羽るしあ'
-        elif Account  == 'COCO_tg' : HoloName = '桐生ココ'
-        elif Account  == 'KANATA_tg' : HoloName = '天音かなた'
-        elif Account  == 'MIO_tg' : HoloName = '大神ミオ'
-        elif Account  == 'TOWA_tg' : HoloName = '常闇トワ'
-        elif Account  == 'WATAME_tg' : HoloName = '角巻わため'
-        elif Account  == 'LAMY_tg' : HoloName = '雪花ラミィ'
-        elif Account  == 'NENE_tg' : HoloName = '桃鈴ねね'
-        elif Account  == 'BOTAN_tg' : HoloName = '獅白ぼたん'
-        elif Account  == 'POLKA_tg'  : HoloName = '尾丸ポルカ'
-        elif Account  == 'ALOE_tg' : HoloName = '魔乃アロエ'
-        # イノナカミュージック
-        elif Account  == 'AZKI_tg' : HoloName = 'AZKi'
-        # えーちゃん
-        elif Account  == 'A-CHAN_tg' : HoloName = 'えーちゃん'
-        # ホロライブEN
-        elif Account  == 'CALLIOPE_tg' : HoloName = '森カリオペ'
-        elif Account  == 'KIARA_tg' : HoloName = '小鳥遊キアラ'
-        elif Account  == 'INANIS_tg' : HoloName = '一伊那尓栖'
-        elif Account  == 'GURA_tg' : HoloName = 'がうる・ぐら'
-        elif Account  == 'AMELIA_tg' : HoloName = 'ワトソン・アメリア'
-        elif Account  == 'IRYS_tg' : HoloName = 'アイリス'
-        elif Account  == 'SANA_tg' : HoloName = '九十九佐命/つくもさな'
-        elif Account  == 'FAUNA_tg' : HoloName = 'セレス・ファウナ'
-        elif Account  == 'KEONII_tg' : HoloName = 'オーロ・クロニー'
-        elif Account  == 'MUMWI_tg' : HoloName = '七詩ムメイ/ななしむめい'
-        elif Account  == 'HAKOS_tg' : HoloName = 'ハコス・ベールズ'
-        # ホロライブID
-        elif Account  == 'RISU_tg' : HoloName = 'アユンダ・リス'
-        elif Account  == 'MOONA_tg' : HoloName = 'ムーナ・ホシノヴァ'
-        elif Account  == 'IOFI_tg' : HoloName = 'アイラニ・イオフィフティーン'
-        elif Account  == 'OLLIE_tg' : HoloName = 'クレイジー・オリー'
-        elif Account  == 'ANYA_tg' : HoloName = 'アーニャ・メルフィッサ'
-        elif Account  == 'REINE_tg' : HoloName = 'パヴォリア・レイネ'
-        # 絵師
-        elif Account  == 'SHIGURE_UI_tg' : HoloName = 'しぐれうい'
-        # のりプロ
-        elif Account  == 'TAMAKI_tg' : HoloName = '犬山たまき'
-        elif Account  == 'SHIRAYUKI_tg' : HoloName = '白雪みしろ'
-        elif Account  == 'MILK_tg' : HoloName = '愛宮みるく'
-        elif Account  == 'HIMESAKI_tg' : HoloName = '姫咲ゆずる'
-        elif Account  == 'WARABE_tg' : HoloName = '鬼灯わらべ'
-        elif Account  == 'LILITH_tg' : HoloName = '夢乃リリス'
-        elif Account  == 'MOMO_tg' : HoloName = '胡桃澤もも'
-        elif Account  == 'KIRARA_tg' : HoloName = '逢魔きらら'
-
-
+        # print(hTag)
+        
         while True:
             data_count = []
             for tweet in tweepy.Cursor(API.search,q=hTag + " -filter:retweets", max_id = MAX_ID, exclude_replies = True, wait_on_rate_limit = True,tweet_mode='extended',include_entities=True).items(100):
@@ -252,6 +105,7 @@ for Account,Tag in Holo_tags.items():
                     MAX_ID = tweet.id
                     # DBに同一tweetIDがないかチェック(既存データかチェック)
                     result = hSql.searchTweetId(tweet.id)
+                    # pprint(result)
                     if result:
                         # 更新されているかチェックして、アップデート
                         if tweet.favorite_count != result[0]['favorite']: 
@@ -263,7 +117,6 @@ for Account,Tag in Holo_tags.items():
                         jst_timestamp = pytz.timezone('Asia/Tokyo').localize( tweet.created_at + datetime.timedelta(hours=9) )
                         updateJST = jst_timestamp.strftime('%Y-%m-%d %H:%M:%S')
                         tweet_url = f"https://twitter.com/user/status/{tweet.id}"
-                        
 
 # ===========================================================================================
 
@@ -295,7 +148,7 @@ for Account,Tag in Holo_tags.items():
                                     # final_data.append([tweet.id,updateJST,tweet.text.replace('\n',''),tweet.favorite_count,tweet.retweet_count,tweet_url])  #最終的に書き込むデータリスト(CSV)
 
                                     # DBへ新規登録
-                                    hSql.insertArtsTable(HoloName, hTag, insert_data)
+                                    hSql.insertArtsTable(Account, hTag, insert_data)
 
                                 if i >= 1:
                                     if tweet.extended_entities['media'][i]:
@@ -330,8 +183,6 @@ for Account,Tag in Holo_tags.items():
                                 error_catch(e3)
                                 pprint('3エラー')
                                 break
-
-
 # ===========================================================================================
                 else:
                     MAX_ID = tweet.id
@@ -341,12 +192,6 @@ for Account,Tag in Holo_tags.items():
             if len(data_count) < 100:
                 print('ブレイク入ります')
                 break
-
-        # filename = new_dir_path + Account + csv_base
-        # # CSV登録
-        # lives_report = pd.DataFrame(final_data)
-        # # pprint(lives_report)
-        # lives_report.to_csv(filename, header=False, index=False, mode='w')
 
 hSql.dbClose()  #  DBクローズ
 hSql = None
