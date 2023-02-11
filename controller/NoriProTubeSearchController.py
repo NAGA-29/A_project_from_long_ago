@@ -55,10 +55,11 @@ ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN_B')
 ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET_B')
 
 # ##twitterテストアカウント
-# CONSUMER_KEY = "OgUS1y3y7vuxy54NoKZvlOdq9"
-# CONSUMER_SECRET = "hCRRA4WX5cEe50ScugCkF4MvFJeFvU8YFAiwGDBi2vkJ9PqyZL"
-# ACCESS_TOKEN = "1000217159446945793-0LiJPmZvvyfaQvNhiY1pgL52pCTnuW"
-# ACCESS_TOKEN_SECRET = "enagarkdimg1cdR4w8ZFZhEr0kyjVj8ekNRzmiZviz4z8"
+# CONSUMER_KEY = os.environ.get('CONSUMER_KEY_TEST')
+# CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET_TEST')
+# ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN_TEST')
+# ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET_TEST')
+# BEARER_TOKEN = os.environ.get('BEARER_TOKEN_TEST')
 
 # Logging設定
 file = os.path.splitext(os.path.basename(__file__))[0]
@@ -196,8 +197,6 @@ if __name__ == '__main__':
     # DB管理バージョンーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
             num = 1
             for entry in feedparser.parse(url).entries:
-                if num >=5 : # 5件まで CHANGE: 2022/09/15
-                    continue
                 # ------------------------
                 # param
                 # ------------------------

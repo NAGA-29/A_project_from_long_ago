@@ -177,6 +177,7 @@ if __name__ == '__main__':
     client_id = 'dfgvcsi22xnzq1t9c2dpmekadihy4l'
     secret = '9yg5fc0iz3wytriy2qfm09ajx0e7eo'
 
+
     # tw_w = Twitch_Wrapper(client_id, secret)
     # r = tw_w.channel_info('_hololive')
     # pprint(r)

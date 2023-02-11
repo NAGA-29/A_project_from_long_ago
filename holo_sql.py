@@ -15,9 +15,10 @@ class holo_sql:
         # コネクションの作成
         conn = mydb.connect(
             host='localhost',
+            port='8889',
             user='root',
             password='root',
-            database='HololiveProject'
+            database='Hololive_Project'
         )
 
         # コネクションが切れた時に再接続してくれるよう設定
