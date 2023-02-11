@@ -276,7 +276,7 @@ class Hololive:
         elif ID == 'UCCzUftO8KOVkV4wQG1vkUvg' : HoloName, live_tag, holo_tag  = '宝鐘マリン', '#マリン航海記', '🏴‍☠️'
         elif ID == 'UC7fk0CB07ly8oSl0aqKkqFg' : HoloName, live_tag, holo_tag  = '百鬼あやめ', '#百鬼あやめch', '😈'
         elif ID == 'UCdyqAaZDKHXg4Ahi7VENThQ' : HoloName, live_tag, holo_tag  = '白銀ノエル', '#ノエルーム', '⚔️'
-        elif ID == 'UCl_gCybOJRIgOXw6Qb4qJzQ' : HoloName, live_tag, holo_tag  = '潤羽るしあ', '#るしあらいぶ', '🦋'
+        # elif ID == 'UCl_gCybOJRIgOXw6Qb4qJzQ' : HoloName, live_tag, holo_tag  = '潤羽るしあ', '#るしあらいぶ', '🦋'
         elif ID == 'UCS9uQI-jC3DE0L4IpXyvr6w' : HoloName, live_tag, holo_tag  = '桐生ココ', '#桐生ココ', '🐉'
         elif ID == 'UCZlDXzGoo7d44bwdNObFacg' : HoloName, live_tag, holo_tag  = '天音かなた', '#天界学園放送部', '💫'
         elif ID == 'UCp-5t9SrOQwXMU7iIjQfARg' : HoloName, live_tag, holo_tag  = '大神ミオ', '#ミオかわいい', '🌲'
@@ -343,6 +343,7 @@ class Hololive:
     def get_twitter_num():
         return {
             '友人A(えーちゃん)' : 1064352899705143297,
+            '春先のどか' : 1499026372089778181,
             # 0期生
             'ときのそら' : 880317891249188864,
             'AZKi' : 1062499145267605504,
