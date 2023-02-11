@@ -148,7 +148,7 @@ def error_catch(error):
     print("NG ", error)
 
 def dead_video_id(video_id):
-    die = ['d1HE5cqwgCw', 'yjU-wdsBdQs']
+    die = ['d1HE5cqwgCw', 'yjU-wdsBdQs', 'Y9V58IRul24']
     if video_id in die:
         return False
     return True
@@ -398,7 +398,7 @@ if __name__ == '__main__':
                 updateKind = ''
                 imgPro = None
                 num += 1 # CHANGE: 最新5件のみにして負担軽減 2022/09/15
-                time.sleep(1)
+                time.sleep(2)
 
             # dataDone = []
             if len(getRss) + len(getRss_News) == 0:

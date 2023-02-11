@@ -197,8 +197,6 @@ if __name__ == '__main__':
     # DB管理バージョンーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
             num = 1
             for entry in feedparser.parse(url).entries:
-                if num > 5 : # 5件まで CHANGE: 2022/09/16
-                    continue
                 # ------------------------
                 # param
                 # ------------------------
