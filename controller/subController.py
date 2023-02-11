@@ -110,7 +110,7 @@ def niconico_search():
 schedule.every().day.at("06:10").do(holoNews)
 schedule.every().day.at("08:10").do(holoNews)
 schedule.every().day.at("12:10").do(holoNews)
-schedule.every().day.at("15:10").do(holoNews)
+schedule.every().day.at("16:47").do(holoNews)
 schedule.every().day.at("19:10").do(holoNews)
 schedule.every().day.at("23:10").do(holoNews)
 

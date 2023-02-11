@@ -383,4 +383,4 @@ if __name__ == '__main__':
             line = None
             y_c_m.reset_error_count()
 
-        time.sleep(20)
+        time.sleep(60)
