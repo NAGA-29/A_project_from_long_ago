@@ -71,15 +71,6 @@ API = tweepy.API(auth)
 # 所属
 BELONGS = 'noripro'
 
-# # 画像の保存先
-# LIVE_TMB_IMG_DIR = os.environ.get('LIVE_TMB_IMG_DIR')
-# # LIVE_TMB_TMP_DIR = os.environ.get('LIVE_TMB_TMP_DIR') #ホロライブ用
-# LIVE_TMB_TMP_DIR = os.environ.get('NoriP_LIVE_TMB_TMP_DIR') #のりプロ用
-# # トリミング加工済み画像保存先
-# TRIM_IMG_DIR = os.environ.get('IMG_TRIM_DIR')
-# # 画像結合加工済み画像保存先
-# COMBINE_IMG_DIR = os.environ.get('COMBINE_IMG_DIR')
-
 # 画像の保存先
 LIVE_TMB_IMG_DIR = '../src/live_thumbnail_image/'
 LIVE_TMB_TMP_DIR = '../src/live_temporary_image_NoriP/'
@@ -203,7 +194,10 @@ if __name__ == '__main__':
 
 
     # DB管理バージョンーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+            num = 1
             for entry in feedparser.parse(url).entries:
+                if num >=5 : # 5件まで CHANGE: 2022/09/15
+                    continue
                 # ------------------------
                 # param
                 # ------------------------
@@ -371,6 +365,8 @@ if __name__ == '__main__':
                 update = False
                 updateKind = ''
                 imgPro = None
+                num += 1 # CHANGE: 最新5件のみにして負担軽減 2022/09/15
+                time.sleep(1)
 
             dataDone = []
             if len(getRss) + len(getRss_News) == 0:

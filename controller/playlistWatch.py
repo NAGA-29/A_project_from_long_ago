@@ -230,7 +230,10 @@ class playlistWatch:
 
 
         # DB管理バージョンーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+            num = 1
             for entry in feedparser.parse(url).entries:
+                if num >=5 : # 5件まで CHANGE: 2022/09/15
+                    continue
                 # ------------------------
                 # param
                 # ------------------------
@@ -387,6 +390,8 @@ class playlistWatch:
                 update = False
                 updateKind = ''
                 imgPro = None
+                num += 1 # CHANGE: 最新5件のみにして負担軽減 2022/09/15
+                time.sleep(1)
 
             dataDone = []
             if len(getRss) + len(getRss_News) == 0:

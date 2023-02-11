@@ -177,12 +177,12 @@ if __name__ == '__main__':
     client_id = 'dfgvcsi22xnzq1t9c2dpmekadihy4l'
     secret = '9yg5fc0iz3wytriy2qfm09ajx0e7eo'
 
-    tw_w = Twitch_Wrapper(client_id, secret)
-    # r = tw_w.channel_info('murasakishionch_hololive')
+    # tw_w = Twitch_Wrapper(client_id, secret)
+    # r = tw_w.channel_info('_hololive')
     # pprint(r)
 
     # チャンネル情報
-    # r = tw_w.channel_info('773041510')
+    # r = tw_w.channel_info('770319696')
     # pprint(r)
     
     # フォロワー数
@@ -198,7 +198,7 @@ if __name__ == '__main__':
 
     # webhook登録
     # url = 'https://pvgllfml6j.execute-api.ap-northeast-1.amazonaws.com/Twitch-eventSub'
-    # r = tw_w.register_eventSub('stream.online', url, '773041510')
+    # r = tw_w.register_eventSub('stream.online', url, '770319696')
     # pprint(r)
 
     # tw_w.eventSub_list(1)
