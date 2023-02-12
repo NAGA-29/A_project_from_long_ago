@@ -248,14 +248,14 @@ class LiveController:
 
         # LIVEが複数の場合通知-------
         count = 0 if LiveTable == False else len(LiveTable)
-        if self.liveCount(count):
-            if ( dt_now - notice_times[self.Belongs] ).total_seconds() >= self._MANY_LIVE_NOTIFICATION_SEC:
-                screen.screenshot(self.SCREENSHOT_URL) # 指定URLのスクリーンショット
-                time.sleep(5)
-                self.tweet.tweet_With_Image(self.createLiveMessage(count), SCREENSHOT_FILE+'screenshot.png')
-                notice_times[self.Belongs] = dt_now
-                # print(notice_times)
-                self.logger.info('複数Live 通知')
+        # if self.liveCount(count): CHANGE: 2023/02/12 OFFに
+        #     if ( dt_now - notice_times[self.Belongs] ).total_seconds() >= self._MANY_LIVE_NOTIFICATION_SEC:
+        #         screen.screenshot(self.SCREENSHOT_URL) # 指定URLのスクリーンショット
+        #         time.sleep(5)
+        #         self.tweet.tweet_With_Image(self.createLiveMessage(count), SCREENSHOT_FILE+'screenshot.png')
+        #         notice_times[self.Belongs] = dt_now
+        #         # print(notice_times)
+        #         self.logger.info('複数Live 通知')
         # END LIVEが複数の場合通知-------
 
         if LiveTable:
@@ -328,7 +328,7 @@ class LiveController:
                                                     img_path = (live_table['image_L'] if live_table['image_L'] else live_table['image_default'])
                                                     photo.imgTrim(img_path)
                                                     print(message)
-                                                    self.tweet.tweetWithIMG(message,img_path,TRIM_IMG_DIR)
+                                                    # self.tweet.tweetWithIMG(message,img_path,TRIM_IMG_DIR) CHANGE: 2023/02/12 OFFに
                                                 
                                         print('<<{}>> {}  LIVE中!!! {}人が視聴中!!'.format(live_table['holo_name'], tubeTabelOne[0]['title'], concurrentViewers))
                                     # メンバー限定配信(人数とチャット欄が取得できない)

@@ -128,12 +128,12 @@ if __name__ == '__main__':
     schedule.every().hour.at(":45").do(twitter_sys)
 
     # トレンド検知/通知
-    schedule.every().hour.at(":01").do(twitter_trend_watcher)
-    schedule.every().hour.at(":10").do(twitter_trend_watcher)
-    schedule.every().hour.at(":20").do(twitter_trend_watcher)
-    schedule.every().hour.at(":31").do(twitter_trend_watcher)
-    schedule.every().hour.at(":40").do(twitter_trend_watcher)
-    schedule.every().hour.at(":50").do(twitter_trend_watcher)
+    # schedule.every().hour.at(":01").do(twitter_trend_watcher)
+    # schedule.every().hour.at(":10").do(twitter_trend_watcher)
+    # schedule.every().hour.at(":20").do(twitter_trend_watcher)
+    # schedule.every().hour.at(":31").do(twitter_trend_watcher)
+    # schedule.every().hour.at(":40").do(twitter_trend_watcher)
+    # schedule.every().hour.at(":50").do(twitter_trend_watcher)
 
     # チャンネル登録者検知/通知
     schedule.every().hour.at(":09").do(youtube_sys)
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     schedule.every().hour.at(":49").do(youtube_sys)
 
     # 全体登録者通知
-    schedule.every().day.at("00:05").do(OverallInfo)
+    # schedule.every().day.at("00:05").do(OverallInfo)
     # schedule.every().day.at("00:11").do(OverallInfo)
 
     while True:

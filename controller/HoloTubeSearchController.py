@@ -422,7 +422,7 @@ if __name__ == '__main__':
                             message = 'Image Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
                             line.lineNotify_Img('\n{}チャンネル\n画像更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
-                            tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR)
+                            # tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR) CHANGE: 2023/02/12 OFFに
                             logger.info(f'tweet message: {message}')
                         else :
                             # タイトル・サムネ更新
@@ -431,7 +431,7 @@ if __name__ == '__main__':
                             message = 'Title & Image Change✅\n\n{}チャンネル\n{}\n\n配信予定時間\n{}🇯🇵\n{}🇬🇧\n{}🇺🇸🗽\n\n{}\n\n{}'.format(HoloName, live_tag, rss[4], hTime.convert_To_LON(rss[4]), hTime.convert_To_NY(rss[4]), rss[0], rss[3])
                             line.lineNotify_Img('\n{}チャンネル\nタイトル・画像更新✅\n{}\n\n{}\n{}'.format(HoloName,rss[4],rss[0],rss[3]),rss[5])
                             photo.imgTrim(rss[5])
-                            tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR)
+                            # tw.tweetWithIMG(message,rss[5],COMBINE_IMG_DIR) CHANGE: 2023/02/12 OFFに
                             logger.info(f'tweet message: {message}')
 
                 for getRss_New in getRss_News:
@@ -447,7 +447,7 @@ if __name__ == '__main__':
                     
                     line.lineNotify_Img('\n{}チャンネル 新着!🆕\n配信予定時間:{}\n\n{}\n{}'.format(HoloName, getRss_New[6], getRss_New[0], getRss_New[3]), getRss_New[5])
                     photo.imgTrim(getRss_New[5])
-                    tw.tweetWithIMG(message,getRss_New[5],TRIM_IMG_DIR)
+                    # tw.tweetWithIMG(message,getRss_New[5],TRIM_IMG_DIR) CHANGE: 2023/02/12 OFFに
                     logger.info(f'tweet message: {message}')
 
                 for videos_data in videos_datas:
