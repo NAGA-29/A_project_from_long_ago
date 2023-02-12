@@ -107,12 +107,12 @@ def niconico_search():
 #schedule.every().hour.at(":30").do(artTweet)
 
 # PM00:05 AM12:05にjob実行
-schedule.every().day.at("06:10").do(holoNews)
-schedule.every().day.at("08:10").do(holoNews)
-schedule.every().day.at("12:10").do(holoNews)
-schedule.every().day.at("16:47").do(holoNews)
-schedule.every().day.at("19:10").do(holoNews)
-schedule.every().day.at("23:10").do(holoNews)
+# schedule.every().day.at("06:10").do(holoNews)
+# schedule.every().day.at("08:10").do(holoNews)
+# schedule.every().day.at("12:10").do(holoNews)
+# schedule.every().day.at("16:47").do(holoNews)
+# schedule.every().day.at("19:10").do(holoNews)
+# schedule.every().day.at("23:10").do(holoNews)
 
 # # ニコ動検知
 # schedule.every().day.at("00:30").do(niconico_search)
